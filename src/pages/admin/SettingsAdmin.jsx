@@ -1,13 +1,27 @@
 import { useRef, useState } from 'react'
-import { Save, Download, Upload, RotateCcw, Check } from 'lucide-react'
+import { Save, Download, Upload, RotateCcw, Check, Database, UploadCloud } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
 import { PageTitle, Card, Field, inputCls, btnPrimary, btnGhost } from './ui'
 
 export default function SettingsAdmin() {
-  const { settings, updateSettings, exportData, importData, resetData } = useStore()
+  const { settings, updateSettings, exportData, importData, resetData, supabaseAtivo, migrarParaSupabase } = useStore()
   const [form, setForm] = useState(settings)
   const [salvo, setSalvo] = useState(false)
+  const [migrando, setMigrando] = useState(false)
+  const [migrado, setMigrado] = useState(false)
   const fileRef = useRef(null)
+
+  const migrar = async () => {
+    setMigrando(true)
+    const r = await migrarParaSupabase()
+    setMigrando(false)
+    if (r?.ok) {
+      setMigrado(true)
+      setTimeout(() => setMigrado(false), 2500)
+    } else {
+      alert('Não consegui enviar ao Supabase. Confira se você está logado como admin.')
+    }
+  }
 
   const set = (campo, valor) => setForm((f) => ({ ...f, [campo]: valor }))
 
@@ -107,6 +121,24 @@ export default function SettingsAdmin() {
       </form>
 
       <Card className="mt-8">
+        <div className="flex items-center gap-2">
+          <Database className={`h-5 w-5 ${supabaseAtivo ? 'text-emerald-600' : 'text-navy-400'}`} />
+          <h2 className="font-display font-bold text-navy-900">Banco de dados (Supabase)</h2>
+        </div>
+        <p className="mt-2 text-sm text-navy-500">
+          {supabaseAtivo
+            ? 'Conectado. Os dados do painel são salvos no banco e aparecem em qualquer dispositivo. Use o botão abaixo para reenviar os dados atuais ao banco, se precisar.'
+            : 'Ainda não conectado (rodando só neste navegador). As variáveis do Supabase são configuradas no deploy.'}
+        </p>
+        {supabaseAtivo && (
+          <button type="button" onClick={migrar} disabled={migrando} className={`${btnGhost} mt-4`}>
+            {migrado ? <Check className="h-4 w-4" /> : <UploadCloud className="h-4 w-4" />}
+            {migrando ? 'Enviando...' : migrado ? 'Enviado!' : 'Enviar dados ao Supabase'}
+          </button>
+        )}
+      </Card>
+
+      <Card className="mt-6">
         <h2 className="mb-1 font-display font-bold text-navy-900">Backup dos dados</h2>
         <p className="mb-4 text-sm text-navy-500">
           Os dados ficam salvos neste navegador. Exporte um backup de vez em quando (e antes de trocar

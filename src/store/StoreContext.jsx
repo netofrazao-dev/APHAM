@@ -7,12 +7,18 @@ import {
   novidadesSeed,
   cuponsSeed,
 } from './seed'
+import { isSupabaseEnabled, supabase } from '../lib/supabaseClient'
+import * as sb from './sync'
 
 // ============================================================================
 //  CONTEXTO DA LOJA
-//  Guarda produtos, categorias, configurações, novidades, pedidos e carrinho.
-//  Persiste no navegador (localStorage). Preparado para, no futuro, trocar a
-//  camada de dados por um banco (Supabase) sem mudar os componentes.
+//  Guarda produtos, categorias, cupons, novidades, pedidos, mensagens, etc.
+//  - Sem Supabase: tudo no navegador (localStorage).
+//  - Com Supabase (variáveis de ambiente configuradas): o banco é a fonte da
+//    verdade — lê do banco ao abrir e grava no banco a cada alteração; o
+//    localStorage continua como cache/reserva.
+//  Login do admin: Supabase Auth (e-mail+senha) quando o banco está ligado;
+//  senão, a senha simples das configurações.
 // ============================================================================
 
 const PREFIX = 'apham:'
@@ -29,10 +35,9 @@ function save(key, value) {
   try {
     localStorage.setItem(PREFIX + key, JSON.stringify(value))
   } catch {
-    /* modo privado / storage cheio — ignora */
+    /* modo privado / cheio */
   }
 }
-
 function usePersistent(key, seed) {
   const [state, setState] = useState(() => load(key, seed))
   useEffect(() => {
@@ -41,7 +46,6 @@ function usePersistent(key, seed) {
   return [state, setState]
 }
 
-// Helper CRUD por id (merge por id; adiciona se não existir).
 function upsert(list, item) {
   const i = list.findIndex((x) => x.id === item.id)
   if (i >= 0) {
@@ -85,7 +89,9 @@ export function StoreProvider({ children }) {
   const [favoritos, setFavoritos] = usePersistent('favoritos', [])
   const [mensagens, setMensagens] = usePersistent('mensagens', [])
   const [recentes, setRecentes] = usePersistent('recentes', [])
+
   const [isAdmin, setIsAdmin] = useState(() => {
+    if (isSupabaseEnabled) return false
     try {
       return sessionStorage.getItem(PREFIX + 'admin') === '1'
     } catch {
@@ -93,7 +99,66 @@ export function StoreProvider({ children }) {
     }
   })
 
-  // ----- Carrinho -----
+  // ----- Supabase: hidrata o conteúdo público ao abrir -----
+  useEffect(() => {
+    if (!isSupabaseEnabled) return
+    let alive = true
+    ;(async () => {
+      const prod = await sb.sbSelect('produtos')
+      if (!alive || !prod || prod.length === 0) return // banco ainda vazio: mantém o seed
+      setProdutos(prod)
+      const [cat, cup, nov, sto, setg] = await Promise.all([
+        sb.sbSelect('categorias'),
+        sb.sbSelect('cupons'),
+        sb.sbSelect('novidades'),
+        sb.sbSelect('stories'),
+        sb.sbSelectSettings(),
+      ])
+      if (!alive) return
+      if (cat && cat.length) setCategorias(cat)
+      if (cup) setCupons(cup)
+      if (nov) setNovidades(nov)
+      if (sto) setStories(sto)
+      if (setg) setSettings((s) => ({ ...s, ...setg }))
+    })()
+    return () => {
+      alive = false
+    }
+  }, [setProdutos, setCategorias, setCupons, setNovidades, setStories, setSettings])
+
+  // ----- Supabase: sessão do admin -----
+  useEffect(() => {
+    if (!isSupabaseEnabled) return
+    supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session))
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => setIsAdmin(!!session))
+    return () => sub?.subscription?.unsubscribe?.()
+  }, [])
+
+  // ----- Supabase: ao logar como admin, traz pedidos/mensagens e migra se vazio -----
+  useEffect(() => {
+    if (!isSupabaseEnabled || !isAdmin) return
+    let alive = true
+    ;(async () => {
+      const [ped, msg, prod] = await Promise.all([
+        sb.sbSelect('pedidos'),
+        sb.sbSelect('mensagens'),
+        sb.sbSelect('produtos'),
+      ])
+      if (!alive) return
+      if (ped) setOrders(ped)
+      if (msg) setMensagens(msg)
+      if (!prod || prod.length === 0) {
+        // Primeira vez: envia os dados atuais para o banco.
+        await sb.sbSeedAll({ produtos, categorias, cupons, novidades, stories, settings })
+      }
+    })()
+    return () => {
+      alive = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAdmin])
+
+  // ----- Carrinho (sempre local) -----
   const cartKey = (x) => `${x.id}|${x.tamanho || ''}|${x.cor || ''}`
   const addToCart = useCallback(
     (item) =>
@@ -112,15 +177,56 @@ export function StoreProvider({ children }) {
     (idx, qtd) => setCart((c) => c.map((x, i) => (i === idx ? { ...x, qtd: Math.max(1, qtd) } : x))),
     [setCart]
   )
-  const removeFromCart = useCallback(
-    (idx) => setCart((c) => c.filter((_, i) => i !== idx)),
-    [setCart]
-  )
+  const removeFromCart = useCallback((idx) => setCart((c) => c.filter((_, i) => i !== idx)), [setCart])
   const clearCart = useCallback(() => setCart([]), [setCart])
 
+  // ----- Produtos -----
+  const saveProduto = useCallback(
+    (p) => {
+      setProdutos((l) => upsert(l, p))
+      sb.sbUpsert('produtos', p)
+    },
+    [setProdutos]
+  )
+  const deleteProduto = useCallback(
+    (id) => {
+      setProdutos((l) => l.filter((x) => x.id !== id))
+      sb.sbDelete('produtos', id)
+    },
+    [setProdutos]
+  )
+
+  // ----- Categorias -----
+  const saveCategoria = useCallback(
+    (c) => {
+      setCategorias((l) => upsert(l, c))
+      sb.sbUpsert('categorias', c)
+    },
+    [setCategorias]
+  )
+  const deleteCategoria = useCallback(
+    (id) => {
+      setCategorias((l) => l.filter((x) => x.id !== id))
+      sb.sbDelete('categorias', id)
+    },
+    [setCategorias]
+  )
+
   // ----- Cupons -----
-  const saveCupom = useCallback((c) => setCupons((l) => upsert(l, c)), [setCupons])
-  const deleteCupom = useCallback((id) => setCupons((l) => l.filter((x) => x.id !== id)), [setCupons])
+  const saveCupom = useCallback(
+    (c) => {
+      setCupons((l) => upsert(l, c))
+      sb.sbUpsert('cupons', c)
+    },
+    [setCupons]
+  )
+  const deleteCupom = useCallback(
+    (id) => {
+      setCupons((l) => l.filter((x) => x.id !== id))
+      sb.sbDelete('cupons', id)
+    },
+    [setCupons]
+  )
   const aplicarCupom = useCallback(
     (codigo, subtotal) => {
       const c = cupons.find(
@@ -130,40 +236,108 @@ export function StoreProvider({ children }) {
       if (subtotal < (Number(c.minimo) || 0))
         return { ok: false, motivo: 'Pedido mínimo não atingido para este cupom.', desconto: 0 }
       const desconto =
-        c.tipo === 'percent'
-          ? (subtotal * Number(c.valor)) / 100
-          : Math.min(Number(c.valor), subtotal)
+        c.tipo === 'percent' ? (subtotal * Number(c.valor)) / 100 : Math.min(Number(c.valor), subtotal)
       return { ok: true, desconto, cupom: c }
     },
     [cupons]
   )
 
-  // ----- Favoritos -----
+  // ----- Favoritos / recentes (sempre local) -----
   const toggleFavorito = useCallback(
     (id) => setFavoritos((l) => (l.includes(id) ? l.filter((x) => x !== id) : [...l, id])),
     [setFavoritos]
   )
   const isFavorito = useCallback((id) => favoritos.includes(id), [favoritos])
-
-  // ----- Mensagens de contato -----
-  const addMensagem = useCallback(
-    (m) =>
-      setMensagens((l) => [
-        { ...m, id: novoId('msg'), data: new Date().toISOString(), lida: false },
-        ...l,
-      ]),
-    [setMensagens]
-  )
-  const markMensagem = useCallback(
-    (id, lida) => setMensagens((l) => l.map((m) => (m.id === id ? { ...m, lida } : m))),
-    [setMensagens]
-  )
-  const deleteMensagem = useCallback((id) => setMensagens((l) => l.filter((m) => m.id !== id)), [setMensagens])
-
-  // ----- Vistos recentemente -----
   const addRecente = useCallback(
     (id) => setRecentes((l) => [id, ...l.filter((x) => x !== id)].slice(0, 8)),
     [setRecentes]
+  )
+
+  // ----- Novidades / Stories -----
+  const saveNovidade = useCallback(
+    (n) => {
+      setNovidades((l) => upsert(l, n))
+      sb.sbUpsert('novidades', n)
+    },
+    [setNovidades]
+  )
+  const deleteNovidade = useCallback(
+    (id) => {
+      setNovidades((l) => l.filter((x) => x.id !== id))
+      sb.sbDelete('novidades', id)
+    },
+    [setNovidades]
+  )
+  const saveStory = useCallback(
+    (s) => {
+      setStories((l) => upsert(l, s))
+      sb.sbUpsert('stories', s)
+    },
+    [setStories]
+  )
+  const deleteStory = useCallback(
+    (id) => {
+      setStories((l) => l.filter((x) => x.id !== id))
+      sb.sbDelete('stories', id)
+    },
+    [setStories]
+  )
+
+  // ----- Pedidos -----
+  const addOrder = useCallback(
+    (o) => {
+      setOrders((l) => [o, ...l])
+      sb.sbUpsert('pedidos', o, { numero: o.numero, status: o.status })
+    },
+    [setOrders]
+  )
+  const updateOrder = useCallback(
+    (id, patch) =>
+      setOrders((l) =>
+        l.map((o) => {
+          if (o.id !== id) return o
+          const n = { ...o, ...patch }
+          sb.sbUpsert('pedidos', n, { numero: n.numero, status: n.status })
+          return n
+        })
+      ),
+    [setOrders]
+  )
+  const deleteOrder = useCallback(
+    (id) => {
+      setOrders((l) => l.filter((o) => o.id !== id))
+      sb.sbDelete('pedidos', id)
+    },
+    [setOrders]
+  )
+
+  // ----- Mensagens -----
+  const addMensagem = useCallback(
+    (m) => {
+      const full = { ...m, id: novoId('msg'), data: new Date().toISOString(), lida: false }
+      setMensagens((l) => [full, ...l])
+      sb.sbUpsert('mensagens', full, { lida: false })
+    },
+    [setMensagens]
+  )
+  const markMensagem = useCallback(
+    (id, lida) =>
+      setMensagens((l) =>
+        l.map((m) => {
+          if (m.id !== id) return m
+          const n = { ...m, lida }
+          sb.sbUpsert('mensagens', n, { lida })
+          return n
+        })
+      ),
+    [setMensagens]
+  )
+  const deleteMensagem = useCallback(
+    (id) => {
+      setMensagens((l) => l.filter((m) => m.id !== id))
+      sb.sbDelete('mensagens', id)
+    },
+    [setMensagens]
   )
 
   // ----- Estoque -----
@@ -171,43 +345,39 @@ export function StoreProvider({ children }) {
     (itens) =>
       setProdutos((list) =>
         list.map((p) => {
-          const comprado = itens
-            .filter((i) => i.id === p.id)
-            .reduce((s, i) => s + i.qtd, 0)
-          return comprado ? { ...p, estoque: Math.max(0, Number(p.estoque) - comprado) } : p
+          const comprado = itens.filter((i) => i.id === p.id).reduce((s, i) => s + i.qtd, 0)
+          if (!comprado) return p
+          const np = { ...p, estoque: Math.max(0, Number(p.estoque) - comprado) }
+          sb.sbUpsert('produtos', np)
+          return np
         })
       ),
     [setProdutos]
   )
 
-  // ----- Produtos -----
-  const saveProduto = useCallback((p) => setProdutos((l) => upsert(l, p)), [setProdutos])
-  const deleteProduto = useCallback((id) => setProdutos((l) => l.filter((x) => x.id !== id)), [setProdutos])
-
-  // ----- Categorias -----
-  const saveCategoria = useCallback((c) => setCategorias((l) => upsert(l, c)), [setCategorias])
-  const deleteCategoria = useCallback((id) => setCategorias((l) => l.filter((x) => x.id !== id)), [setCategorias])
-
-  // ----- Novidades / Stories -----
-  const saveNovidade = useCallback((n) => setNovidades((l) => upsert(l, n)), [setNovidades])
-  const deleteNovidade = useCallback((id) => setNovidades((l) => l.filter((x) => x.id !== id)), [setNovidades])
-  const saveStory = useCallback((s) => setStories((l) => upsert(l, s)), [setStories])
-  const deleteStory = useCallback((id) => setStories((l) => l.filter((x) => x.id !== id)), [setStories])
-
-  // ----- Pedidos -----
-  const addOrder = useCallback((o) => setOrders((l) => [o, ...l]), [setOrders])
-  const updateOrder = useCallback(
-    (id, patch) => setOrders((l) => l.map((o) => (o.id === id ? { ...o, ...patch } : o))),
-    [setOrders]
-  )
-  const deleteOrder = useCallback((id) => setOrders((l) => l.filter((o) => o.id !== id)), [setOrders])
-
   // ----- Configurações -----
-  const updateSettings = useCallback((patch) => setSettings((s) => ({ ...s, ...patch })), [setSettings])
+  const updateSettings = useCallback(
+    (patch) =>
+      setSettings((s) => {
+        const n = { ...s, ...patch }
+        sb.sbUpsertSettings(n)
+        return n
+      }),
+    [setSettings]
+  )
 
   // ----- Admin -----
   const login = useCallback(
-    (senha) => {
+    async (arg1, arg2) => {
+      if (isSupabaseEnabled) {
+        try {
+          const { error } = await supabase.auth.signInWithPassword({ email: arg1, password: arg2 })
+          return !error
+        } catch {
+          return false
+        }
+      }
+      const senha = arg1
       if (senha && senha === settings.senhaAdmin) {
         setIsAdmin(true)
         try {
@@ -221,7 +391,15 @@ export function StoreProvider({ children }) {
     },
     [settings.senhaAdmin]
   )
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    if (isSupabaseEnabled) {
+      try {
+        await supabase.auth.signOut()
+      } catch {
+        /* ignore */
+      }
+      return
+    }
     setIsAdmin(false)
     try {
       sessionStorage.removeItem(PREFIX + 'admin')
@@ -229,6 +407,12 @@ export function StoreProvider({ children }) {
       /* ignore */
     }
   }, [])
+
+  // Migração manual para o Supabase (botão nas configurações).
+  const migrarParaSupabase = useCallback(
+    () => sb.sbSeedAll({ produtos, categorias, cupons, novidades, stories, settings }),
+    [produtos, categorias, cupons, novidades, stories, settings]
+  )
 
   // ----- Export / Import / Reset -----
   const exportData = useCallback(
@@ -282,6 +466,7 @@ export function StoreProvider({ children }) {
     cartCount,
     cartTotal,
     isAdmin,
+    supabaseAtivo: isSupabaseEnabled,
     addToCart,
     updateQtd,
     removeFromCart,
@@ -310,6 +495,7 @@ export function StoreProvider({ children }) {
     baixarEstoque,
     login,
     logout,
+    migrarParaSupabase,
     exportData,
     importData,
     resetData,
