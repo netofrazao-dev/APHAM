@@ -10,6 +10,7 @@ import Awards from '../components/Awards'
 import Videos from '../components/Videos'
 import Gallery from '../components/Gallery'
 import Support from '../components/Support'
+import TaxIncentive from '../components/TaxIncentive'
 import StoreTeaser from '../components/StoreTeaser'
 import Contact from '../components/Contact'
 import Footer from '../components/Footer'
@@ -31,6 +32,7 @@ export default function Home() {
         <Videos />
         <Gallery />
         <Support />
+        <TaxIncentive />
         <StoreTeaser />
         <Contact />
       </main>

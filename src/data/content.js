@@ -38,8 +38,7 @@ export const nav = [
 export const hero = {
   tagline: 'Associação de Praticantes de Handebol do Marajó',
   titulo: 'Muito mais que handebol',
-  subtitulo:
-    'Desde 2009, em Breves, no coração da Amazônia Marajoara, promovemos o esporte, a inclusão social e a formação de crianças, adolescentes e jovens.',
+  subtitulo: 'Marajó · Pará · !',
   ctaPrimario: { label: 'Quem somos', href: '#sobre' },
   ctaSecundario: { label: 'Apoie o projeto', href: '#apoie' },
 }
