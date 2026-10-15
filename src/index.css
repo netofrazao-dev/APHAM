@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-cyan-300 text-navy-900;
+  }
+
+  ::-webkit-scrollbar {
+    width: 11px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-navy-100;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-navy-300 rounded-full border-2 border-navy-100;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-navy-400;
+  }
+}
+
+@layer components {
+  .section-pad {
+    @apply px-5 sm:px-8 lg:px-12;
+  }
+
+  .container-x {
+    @apply mx-auto w-full max-w-7xl;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-600;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-cyan-500;
+  }
+
+  /* Botão principal — azul marinho */
+  .btn-primary {
+    @apply btn bg-navy-800 text-white hover:bg-navy-900 shadow-soft hover:shadow-lift hover:-translate-y-0.5;
+  }
+
+  /* Botão de destaque — azul ciano */
+  .btn-accent {
+    @apply btn bg-cyan-500 text-white hover:bg-cyan-600 shadow-soft hover:shadow-lift hover:-translate-y-0.5;
+  }
+
+  .btn-ghost {
+    @apply btn border border-navy-200 bg-white/60 text-navy-800 hover:bg-white hover:border-navy-300;
+  }
+}
+
+/* Compensa o cabeçalho fixo ao navegar pelas âncoras do menu */
+section[id] {
+  scroll-margin-top: 88px;
+}
+
+/* Textura pontilhada para fundos decorativos */
+.dot-grid {
+  background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(16, 29, 57, 0.08) 1px,
+      transparent 0
+    );
+  background-size: 22px 22px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

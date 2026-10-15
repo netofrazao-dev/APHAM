@@ -1,0 +1,56 @@
+import { equipes } from '../data/content'
+import Reveal from './Reveal'
+
+export default function Equipes() {
+  return (
+    <section id="equipes" className="relative overflow-hidden py-24 lg:py-28">
+      <div className="absolute inset-0 bg-navy-950" />
+      <div className="absolute inset-0 dot-grid opacity-20" />
+      <div className="absolute -right-24 top-20 h-80 w-80 rounded-full bg-cyan-500/20 blur-3xl" />
+
+      <div className="section-pad container-x relative">
+        <Reveal className="max-w-2xl">
+          <span className="eyebrow text-cyan-300">
+            <span className="h-px w-6 bg-cyan-400" />
+            Nossas equipes
+          </span>
+          <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+            Quem faz a APHAM acontecer
+          </h2>
+          <p className="mt-4 text-white/70">
+            Atletas, técnicos e voluntários que vestem a camisa do handebol do Marajó com orgulho.
+          </p>
+        </Reveal>
+
+        <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {equipes.map((e, i) => (
+            <Reveal key={i} delay={0.06 * i}>
+              <article className="group relative overflow-hidden rounded-2xl bg-navy-900 shadow-lift">
+                <div className="aspect-[4/5] overflow-hidden">
+                  <img
+                    src={e.img}
+                    alt={e.nome}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/25 to-transparent" />
+                </div>
+                <div className="absolute inset-x-0 bottom-0 p-4">
+                  <h3 className="font-display text-base font-bold text-white">{e.nome}</h3>
+                  <p className="mt-0.5 text-xs font-medium text-cyan-300">{e.papel}</p>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.1}>
+          <p className="mt-8 text-center text-sm text-white/50">
+            Em breve, as fichas completas dos nossos atletas e categorias.
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  )
+}

@@ -1,0 +1,86 @@
+import { Link } from 'react-router-dom'
+import { ShoppingBag } from 'lucide-react'
+import { site, nav, contato } from '../data/content'
+import Logo from './Logo'
+import Icon from './Icon'
+import MarajoaraBand from './MarajoaraBand'
+
+export default function Footer() {
+  return (
+    <footer className="relative bg-navy-950 text-white">
+      <MarajoaraBand className="h-3 w-full" color="#12a0e6" />
+      <div className="section-pad container-x py-14">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-12">
+          <div className="md:col-span-5">
+            <Logo className="h-16" light />
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/60">
+              {site.nomeCompleto}. Desde 2009, promovendo o esporte, a inclusão social e a formação
+              da juventude em {site.cidade}, {site.estado}.
+            </p>
+            <img
+              src="/midia/marca/assinatura-branca-dark.jpg"
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              className="mt-6 h-14 w-auto object-contain opacity-80 mix-blend-screen"
+            />
+            <div className="mt-6 flex gap-3">
+              {contato.redes.map((r) => (
+                <a
+                  key={r.nome}
+                  href={r.url}
+                  target={r.url.startsWith('http') ? '_blank' : undefined}
+                  rel={r.url.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  aria-label={r.nome}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 text-white transition-colors hover:bg-cyan-500"
+                >
+                  <Icon name={r.icone} className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="md:col-span-3">
+            <h4 className="font-display text-sm font-bold uppercase tracking-wide text-white/90">
+              Navegação
+            </h4>
+            <ul className="mt-4 space-y-2.5">
+              {nav.map((item) => (
+                <li key={item.href}>
+                  <a
+                    href={item.href}
+                    className="text-sm text-white/60 transition-colors hover:text-cyan-400"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="md:col-span-4">
+            <h4 className="font-display text-sm font-bold uppercase tracking-wide text-white/90">
+              Contato
+            </h4>
+            <ul className="mt-4 space-y-2.5 text-sm text-white/60">
+              <li>{site.endereco}</li>
+              <li>{site.email}</li>
+              <li>{site.telefone}</li>
+            </ul>
+            <Link to="/loja" className="btn-accent mt-6">
+              <ShoppingBag className="h-4 w-4" />
+              Visitar a loja
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row">
+          <p>
+            © {new Date().getFullYear()} {site.nome} — {site.nomeCompleto}.
+          </p>
+          <p>Entidade de utilidade pública · Lei Estadual nº 10.594/2024</p>
+        </div>
+      </div>
+    </footer>
+  )
+}
