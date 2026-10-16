@@ -48,11 +48,10 @@ export const hero = {
 // href: âncora (#secao), link externo (https...) ou '#' (sem destino ainda).
 // Troque href pelo link do documento de cada um quando tiver.
 export const credenciais = [
-  { titulo: 'Respaldo Governamental', cor: 'amarelo', href: '#contato' },
-  { titulo: 'Prêmios Nacionais e Certificações', cor: 'laranja', href: '#reconhecimentos' },
+  { titulo: 'Respaldo Governamental e Certificações', cor: 'amarelo', href: '#reconhecimentos' },
   { titulo: 'Lei de Incentivo ao Esporte', cor: 'verde', href: '#incentivo' },
   { titulo: 'Cooperativa Social', cor: 'azul', href: '/midia/documentos/cooperativa-social.pdf' },
-  { titulo: 'Documentário', cor: 'cinza', href: '/midia/documentos/documentario.pdf' },
+  { titulo: 'Documentário', cor: 'laranja', href: '/midia/documentos/documentario.pdf' },
 ]
 
 export const sobre = {
