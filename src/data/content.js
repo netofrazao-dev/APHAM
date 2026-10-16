@@ -181,7 +181,7 @@ export const reconhecimentos = [
       'A APHAM foi reconhecida como entidade de utilidade pública pela Lei Estadual nº 10.594/2024 — um reconhecimento oficial do nosso trabalho social e esportivo no Marajó. (Confirmar ano e parlamentar autor.)',
     img: '/midia/logo-apham.png',
     doc: '/midia/documentos/utilidade-publica.pdf',
-    docPronto: false,
+    docPronto: true,
   },
   {
     titulo: 'Prêmio Itaú-Unicef 2018 — Semifinalista',
@@ -202,7 +202,7 @@ export const reconhecimentos = [
     descricao: 'Certificação do trabalho da APHAM no programa Experiências em Rede.',
     img: '/midia/logo-apham.png',
     doc: '/midia/documentos/certificado-experiencias-rede.pdf',
-    docPronto: false,
+    docPronto: true,
   },
   {
     titulo: 'Cooperativa Social',
