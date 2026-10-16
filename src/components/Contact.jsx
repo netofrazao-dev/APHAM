@@ -17,6 +17,7 @@ export default function Contact() {
 
   const onSubmit = (e) => {
     e.preventDefault()
+    if (e.target.website && e.target.website.value) return // honeypot anti-spam
     // Salva a mensagem na caixa de entrada do painel (admin). Quando ligarmos o
     // e-mail automático, também disparamos um e-mail para a associação.
     addMensagem({ nome: form.nome, email: form.email, mensagem: form.mensagem })
@@ -96,6 +97,7 @@ export default function Contact() {
               </div>
             )}
             <div className="space-y-5">
+              <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
               <div>
                 <label htmlFor="nome" className="mb-1.5 block text-sm font-semibold text-navy-800">Nome</label>
                 <input id="nome" name="nome" type="text" required value={form.nome} onChange={onChange} placeholder="Seu nome" className="w-full rounded-xl border border-navy-200 bg-paper px-4 py-3 text-ink outline-none transition-colors focus:border-cyan-500 focus:bg-white focus:ring-2 focus:ring-cyan-100" />

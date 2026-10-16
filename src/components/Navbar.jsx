@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Menu, X, ShoppingBag } from 'lucide-react'
-import { nav } from '../data/content'
+import { nav, hero } from '../data/content'
 import Logo from './Logo'
 
 export default function Navbar() {
@@ -48,8 +48,17 @@ export default function Navbar() {
         solid ? 'bg-paper/95 backdrop-blur-md shadow-[0_1px_0_rgba(16,29,57,0.08)]' : 'bg-transparent'
       }`}
     >
-      <nav className="container-x section-pad flex h-20 items-center justify-between">
-        <Logo className="h-11" light={!solid} />
+      <nav className="container-x section-pad flex h-20 items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+          <Logo className="h-10 sm:h-11" light={!solid} />
+          <span
+            className={`truncate font-script text-base leading-none sm:text-xl lg:text-2xl ${
+              solid ? 'text-navy-700' : 'text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)]'
+            }`}
+          >
+            {hero.assinatura}
+          </span>
+        </div>
 
         {/* Navegação desktop */}
         <div className="hidden items-center gap-1 xl:flex">

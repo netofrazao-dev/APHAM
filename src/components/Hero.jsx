@@ -33,20 +33,20 @@ export default function Hero() {
               <img
                 src={f.src}
                 alt=""
-                className={`h-full w-full object-cover opacity-45 ${i === active ? 'animate-kenburns' : ''}`}
+                className={`h-full w-full object-cover opacity-75 ${i === active ? 'animate-kenburns' : ''}`}
               />
             ) : (
               <div className={`h-full w-full ${f.className}`}>
-                <div className="absolute inset-0 dot-grid opacity-30" />
+                <div className="absolute inset-0 dot-grid opacity-40" />
               </div>
             )}
           </div>
         ))}
       </div>
 
-      {/* Degradês para legibilidade do texto */}
-      <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-900/50" />
-      <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-navy-950/60" />
+      {/* Degradês — escurecem o lado do texto e deixam o fundo mais visível à direita */}
+      <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/70 to-navy-900/25" />
+      <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-transparent to-navy-950/35" />
       <div className="absolute -left-32 top-24 h-96 w-96 rounded-full bg-cyan-500/20 blur-3xl" />
       <div className="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl" />
 
@@ -78,30 +78,24 @@ export default function Hero() {
             </span>
           </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.16 }}
-            className="mt-7 font-display text-2xl font-bold tracking-wide text-cyan-200 sm:text-3xl"
-          >
-            {hero.subtitulo}
-          </motion.p>
-
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.24 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
             className="mt-9 flex flex-wrap items-center gap-4"
           >
-            <a href={hero.ctaPrimario.href} className="btn-accent text-base">
-              {hero.ctaPrimario.label}
-              <ArrowRight className="h-4 w-4" />
+            <a
+              href={hero.ctaApoie.href}
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#2faa3a] px-8 py-4 text-base font-bold text-white shadow-lift transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#268a30] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2faa3a] focus-visible:ring-offset-2"
+            >
+              {hero.ctaApoie.label}
+              <ArrowRight className="h-5 w-5" />
             </a>
             <a
-              href={hero.ctaSecundario.href}
-              className="btn border border-white/30 bg-white/5 text-white backdrop-blur-sm hover:bg-white/10"
+              href={hero.ctaQuemSomos.href}
+              className="inline-flex items-center justify-center gap-1.5 rounded-full border border-white/30 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10"
             >
-              {hero.ctaSecundario.label}
+              {hero.ctaQuemSomos.label}
             </a>
           </motion.div>
         </div>

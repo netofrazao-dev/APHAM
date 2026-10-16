@@ -36,11 +36,12 @@ export const nav = [
 ]
 
 export const hero = {
-  tagline: 'Associação de Praticantes de Handebol do Marajó',
+  tagline: 'Mais que uma Associação...',
   titulo: 'Muito mais que handebol',
-  subtitulo: 'Marajó · Pará · !',
-  ctaPrimario: { label: 'Quem somos', href: '#sobre' },
-  ctaSecundario: { label: 'Apoie o projeto', href: '#apoie' },
+  // Assinatura script que aparece ao lado da logo no topo.
+  assinatura: 'Handebol · Marajó · Pará!',
+  ctaApoie: { label: 'Apoie o nosso projeto', href: '#apoie' },
+  ctaQuemSomos: { label: 'Quem somos', href: '#sobre' },
 }
 
 export const stats = [

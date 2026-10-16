@@ -82,6 +82,7 @@ export default function Checkout() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    if (e.target.website && e.target.website.value) return // honeypot anti-spam
     if (!cart.length) return
     const order = {
       id: novoId('order'),
@@ -178,6 +179,7 @@ export default function Checkout() {
         <h1 className="font-display text-2xl font-extrabold text-navy-900 sm:text-3xl">Finalizar pedido</h1>
 
         <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
           <div className="space-y-5 lg:col-span-2">
             <div className="rounded-2xl border border-navy-100 bg-white p-6">
               <h2 className="font-display font-bold text-navy-900">Seus dados</h2>
