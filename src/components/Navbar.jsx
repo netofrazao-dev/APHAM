@@ -49,10 +49,10 @@ export default function Navbar() {
       }`}
     >
       <nav className="container-x section-pad flex h-20 items-center justify-between gap-2">
-        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <Logo className="h-10 sm:h-11" light={!solid} />
           <span
-            className={`truncate font-script text-base leading-none sm:text-xl lg:text-2xl ${
+            className={`shrink-0 whitespace-nowrap font-script text-base leading-none sm:text-xl lg:text-2xl ${
               solid ? 'text-navy-700' : 'text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)]'
             }`}
           >
@@ -61,7 +61,7 @@ export default function Navbar() {
         </div>
 
         {/* Navegação desktop */}
-        <div className="hidden items-center gap-1 xl:flex">
+        <div className="hidden items-center gap-0.5 xl:flex">
           {nav.map((item) => {
             const isActive = item.href === active
             return (
@@ -69,7 +69,7 @@ export default function Navbar() {
                 key={item.href}
                 href={item.href}
                 aria-current={isActive ? 'true' : undefined}
-                className={`rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
+                className={`rounded-full px-2.5 py-2 text-sm font-medium transition-colors ${
                   solid
                     ? isActive
                       ? 'bg-navy-100 text-navy-900'

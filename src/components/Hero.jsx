@@ -37,8 +37,8 @@ export default function Hero() {
                 className={`h-full w-full object-cover ${i === active ? 'animate-kenburns' : ''}`}
                 style={{
                   mixBlendMode: 'screen',
-                  filter: 'brightness(0.95) sepia(1) saturate(6) hue-rotate(5deg)',
-                  opacity: 0.9,
+                  filter: 'brightness(0.8) sepia(1) saturate(14) hue-rotate(2deg)',
+                  opacity: 1,
                 }}
               />
             ) : f.type === 'img' ? (
@@ -69,7 +69,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="font-display text-3xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-4xl lg:text-5xl"
+            className="whitespace-nowrap font-display text-lg font-bold tracking-tight text-white sm:text-xl lg:text-2xl"
           >
             Mais que uma Associação...
           </motion.h2>

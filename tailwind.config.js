@@ -39,7 +39,7 @@ export default {
       fontFamily: {
         display: ['Sora', 'system-ui', 'sans-serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        script: ['Yellowtail', 'cursive'],
+        script: ['Caveat', 'cursive'],
       },
       boxShadow: {
         soft: '0 10px 40px -12px rgba(16, 29, 57, 0.25)',

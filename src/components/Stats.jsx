@@ -1,4 +1,3 @@
-import { ArrowUpRight } from 'lucide-react'
 import { credenciais } from '../data/content'
 
 const CORES = {
@@ -13,7 +12,7 @@ export default function Stats() {
   return (
     <section className="section-pad relative z-20 -mt-14">
       <div className="container-x">
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-navy-100 shadow-lift lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-1.5 overflow-hidden rounded-3xl bg-white p-1.5 shadow-lift lg:grid-cols-4">
           {credenciais.map((c) => {
             const externo = /^https?:\/\//.test(c.href || '')
             return (
@@ -22,17 +21,11 @@ export default function Stats() {
                 href={c.href || '#'}
                 target={externo ? '_blank' : undefined}
                 rel={externo ? 'noopener noreferrer' : undefined}
-                className="group flex flex-col items-center justify-center gap-2 bg-white px-5 py-8 text-center transition-colors hover:bg-navy-50"
+                className="flex items-center justify-center rounded-2xl px-5 py-10 text-center transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110"
+                style={{ backgroundColor: CORES[c.cor] || '#101d39' }}
               >
-                <span
-                  className="font-display text-lg font-extrabold leading-tight sm:text-xl"
-                  style={{ color: CORES[c.cor] || '#101d39' }}
-                >
+                <span className="font-display text-base font-extrabold leading-tight text-white sm:text-lg">
                   {c.titulo}
-                </span>
-                <span className="inline-flex items-center gap-1 text-xs font-medium text-navy-500 transition-colors group-hover:text-navy-800">
-                  ver documento
-                  <ArrowUpRight className="h-3.5 w-3.5" />
                 </span>
               </a>
             )
