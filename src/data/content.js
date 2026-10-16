@@ -29,8 +29,8 @@ export const nav = [
   { label: 'Novidades', href: '#novidades' },
   { label: 'Eventos', href: '#eventos' },
   { label: 'Equipes', href: '#equipes' },
-  { label: 'Vídeos', href: '#videos' },
   { label: 'Galeria', href: '#galeria' },
+  { label: 'Participar', href: '#participar' },
   { label: 'Apoie', href: '#apoie' },
   { label: 'Contato', href: '#contato' },
 ]
@@ -287,5 +287,148 @@ export const contato = {
     { nome: 'Instagram', icone: 'Instagram', url: site.instagram },
     { nome: 'Facebook', icone: 'Facebook', url: site.facebook },
     { nome: 'WhatsApp', icone: 'MessageCircle', url: site.whatsapp },
+  ],
+}
+
+// MAPA — iframe do Google Maps (sem chave de API). Troque o "q=" pelo endereço
+// exato ou pelas coordenadas quando o cliente confirmar o local do ginásio.
+export const mapaEmbed =
+  'https://www.google.com/maps?q=Rua%20Justo%20Chermont%2C%20Centro%2C%20Breves%20-%20PA&z=15&output=embed'
+
+// ============================================================================
+//  TREINOS E COMO PARTICIPAR  (#participar)
+//  Horários PROVISÓRIOS — ajuste turmas, dias, horários e local com a associação.
+// ============================================================================
+export const participar = {
+  eyebrow: 'Treinos e inscrições',
+  titulo: 'Venha fazer parte da APHAM',
+  descricao:
+    'As portas da APHAM estão abertas para crianças, adolescentes e jovens que queiram praticar handebol. Não é preciso experiência — só vontade de aprender e fazer parte da nossa família marajoara.',
+  // Mostra um aviso de que os horários ainda serão confirmados.
+  provisorio: true,
+  horarios: [
+    { turma: 'Categorias de Base (mirim/infantil)', dias: 'Seg · Qua · Sex', horario: '08h – 10h', local: 'Ginásio Municipal — Breves/PA' },
+    { turma: 'Categoria Feminina', dias: 'Ter · Qui', horario: '15h – 17h', local: 'Ginásio Municipal — Breves/PA' },
+    { turma: 'Escola de Esportes (iniciação)', dias: 'Sáb', horario: '09h – 11h', local: 'Ginásio Municipal — Breves/PA' },
+    { turma: 'Equipe Adulto / Amador', dias: 'Qua · Sex', horario: '19h – 21h', local: 'Ginásio Municipal — Breves/PA' },
+  ],
+  passos: [
+    { icone: 'MessageCircle', titulo: 'Fale com a gente', texto: 'Chame no WhatsApp ou pelas redes sociais e diga a idade e a turma de interesse.' },
+    { icone: 'ClipboardList', titulo: 'Faça a inscrição', texto: 'A inscrição é gratuita. Levamos um documento do responsável e do atleta no primeiro dia.' },
+    { icone: 'Users', titulo: 'Participe do treino', texto: 'É só chegar no horário da turma com roupa confortável. A APHAM cuida do resto.' },
+  ],
+  requisitos: [
+    'Inscrição gratuita e aberta à comunidade.',
+    'Menores de idade precisam de autorização do responsável.',
+    'Roupa leve, tênis e garrafa de água.',
+  ],
+}
+
+// ============================================================================
+//  PERGUNTAS FREQUENTES  (#faq)
+// ============================================================================
+export const faq = [
+  {
+    pergunta: 'Quanto custa treinar na APHAM?',
+    resposta:
+      'As atividades esportivas da APHAM são gratuitas e abertas à comunidade. Mantemos o projeto com apoios, parcerias, doações e a Lei de Incentivo ao Esporte.',
+  },
+  {
+    pergunta: 'Qual a idade mínima para participar?',
+    resposta:
+      'Atendemos crianças, adolescentes e jovens em diferentes categorias. Fale com a gente informando a idade e indicamos a turma ideal.',
+  },
+  {
+    pergunta: 'Preciso ter experiência com handebol?',
+    resposta:
+      'Não. Temos turmas de iniciação na Escola de Esportes, pensadas para quem está começando do zero.',
+  },
+  {
+    pergunta: 'Como faço uma doação ou viro parceiro?',
+    resposta:
+      'Você pode doar, ser voluntário ou firmar parceria. Veja as formas na seção “Apoie” ou fale conosco pelo formulário de contato e WhatsApp.',
+  },
+  {
+    pergunta: 'A APHAM tem uma loja oficial?',
+    resposta:
+      'Sim! Camisas, shorts, bolas e acessórios da associação estão na nossa loja — e cada compra ajuda a manter os projetos sociais.',
+  },
+  {
+    pergunta: 'Onde ficam os treinos?',
+    resposta:
+      'Em Breves, no Marajó/PA. Confira o endereço e o mapa na seção de contato — e confirme o horário da sua turma com a gente antes de ir.',
+  },
+]
+
+// ============================================================================
+//  PRIVACIDADE E TERMOS (LGPD)  —  página /privacidade
+//  MODELO: revise com apoio jurídico antes de publicar como versão final.
+// ============================================================================
+export const privacidade = {
+  atualizadoEm: 'outubro de 2026',
+  intro:
+    'A APHAM — Associação de Praticantes de Handebol do Marajó respeita a sua privacidade. Esta Política explica como tratamos os dados pessoais coletados neste site, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018 — LGPD).',
+  secoes: [
+    {
+      titulo: '1. Quem é o controlador dos dados',
+      itens: [
+        'A APHAM — Associação de Praticantes de Handebol do Marajó, com sede na Rua Justo Chermont, Centro, Breves/PA, é a responsável (controladora) pelo tratamento dos dados coletados neste site.',
+        'Para qualquer assunto sobre seus dados, fale conosco pelo e-mail apham.cvmf@gmail.com.',
+      ],
+    },
+    {
+      titulo: '2. Quais dados coletamos',
+      itens: [
+        'Dados que você informa no formulário de contato: nome, e-mail e o conteúdo da mensagem.',
+        'Dados de pedidos na loja (quando você faz uma compra): nome, contato, endereço de entrega e itens do pedido.',
+        'Dados técnicos básicos de navegação, usados apenas para o funcionamento e a segurança do site.',
+      ],
+    },
+    {
+      titulo: '3. Para que usamos os dados',
+      itens: [
+        'Responder às suas mensagens e dúvidas.',
+        'Processar, entregar e acompanhar pedidos feitos na loja.',
+        'Melhorar o site e garantir a sua segurança.',
+        'Não vendemos os seus dados pessoais a terceiros.',
+      ],
+    },
+    {
+      titulo: '4. Base legal',
+      itens: [
+        'Tratamos seus dados com base no seu consentimento, na execução de atendimento/pedido solicitado por você e no legítimo interesse da associação, sempre nos limites da LGPD.',
+      ],
+    },
+    {
+      titulo: '5. Compartilhamento',
+      itens: [
+        'Podemos usar serviços de terceiros apenas para operar o site (por exemplo, hospedagem, banco de dados e envio de e-mails de notificação). Esses parceiros tratam os dados somente para prestar o serviço à APHAM.',
+      ],
+    },
+    {
+      titulo: '6. Cookies e armazenamento local',
+      itens: [
+        'Usamos armazenamento local do navegador (localStorage) para funcionalidades essenciais, como o carrinho da loja e preferências. Esses dados ficam no seu dispositivo e não identificam você para terceiros.',
+      ],
+    },
+    {
+      titulo: '7. Seus direitos',
+      itens: [
+        'Você pode solicitar a confirmação, o acesso, a correção, a portabilidade ou a exclusão dos seus dados, além de revogar o consentimento, a qualquer momento.',
+        'Para exercer seus direitos, escreva para apham.cvmf@gmail.com.',
+      ],
+    },
+    {
+      titulo: '8. Segurança e retenção',
+      itens: [
+        'Adotamos medidas técnicas e organizacionais para proteger os seus dados e os mantemos apenas pelo tempo necessário às finalidades descritas ou para cumprir obrigações legais.',
+      ],
+    },
+    {
+      titulo: '9. Alterações nesta política',
+      itens: [
+        'Esta Política pode ser atualizada. A data da última atualização aparece no topo desta página.',
+      ],
+    },
   ],
 }

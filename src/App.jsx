@@ -9,6 +9,7 @@ const Product = lazy(() => import('./pages/Product'))
 const Cart = lazy(() => import('./pages/Cart'))
 const Checkout = lazy(() => import('./pages/Checkout'))
 const OrderTracking = lazy(() => import('./pages/OrderTracking'))
+const Privacidade = lazy(() => import('./pages/Privacidade'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const AdminApp = lazy(() => import('./pages/admin/AdminApp'))
 
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/pedido" element={<OrderTracking />} />
           <Route path="/pedido/:numero" element={<OrderTracking />} />
+          <Route path="/privacidade" element={<Privacidade />} />
           <Route path="/admin/*" element={<AdminApp />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

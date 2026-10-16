@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { MapPin, Mail, Phone, Send, Check } from 'lucide-react'
-import { contato, site } from '../data/content'
+import { contato, site, mapaEmbed } from '../data/content'
 import { useStore } from '../store/StoreContext'
 import { useToast } from './Toast'
 import { notifyEmail } from '../lib/notify'
@@ -85,6 +85,19 @@ export default function Contact() {
                   <Icon name={r.icone} className="h-5 w-5" />
                 </a>
               ))}
+            </div>
+          </Reveal>
+
+          <Reveal>
+            <div className="mt-8 overflow-hidden rounded-2xl border border-navy-100 shadow-soft">
+              <iframe
+                src={mapaEmbed}
+                title={`Localização da APHAM — ${site.endereco}`}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+                className="h-64 w-full border-0"
+              />
             </div>
           </Reveal>
         </div>

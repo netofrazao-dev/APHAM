@@ -10,9 +10,11 @@ import Awards from '../components/Awards'
 import Videos from '../components/Videos'
 import Documentario from '../components/Documentario'
 import Gallery from '../components/Gallery'
+import Participar from '../components/Participar'
 import Support from '../components/Support'
 import TaxIncentive from '../components/TaxIncentive'
 import StoreTeaser from '../components/StoreTeaser'
+import Faq from '../components/Faq'
 import Contact from '../components/Contact'
 import Footer from '../components/Footer'
 import BackToTop from '../components/BackToTop'
@@ -33,9 +35,11 @@ export default function Home() {
         <Videos />
         <Documentario />
         <Gallery />
+        <Participar />
         <Support />
         <TaxIncentive />
         <StoreTeaser />
+        <Faq />
         <Contact />
       </main>
       <Footer />

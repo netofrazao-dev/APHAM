@@ -11,7 +11,7 @@ export default function Footer() {
       <MarajoaraBand className="h-3 w-full" color="#12a0e6" />
       <div className="section-pad container-x py-14">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-12">
-          <div className="md:col-span-5">
+          <div className="md:col-span-4">
             <Logo className="h-16" light />
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/60">
               {site.nomeCompleto}. Desde 2009, promovendo o esporte, a inclusão social e a formação
@@ -58,7 +58,30 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="md:col-span-4">
+          <div className="md:col-span-2">
+            <h4 className="font-display text-sm font-bold uppercase tracking-wide text-white/90">
+              Institucional
+            </h4>
+            <ul className="mt-4 space-y-2.5">
+              <li>
+                <a href="/#participar" className="text-sm text-white/60 transition-colors hover:text-cyan-400">
+                  Como participar
+                </a>
+              </li>
+              <li>
+                <a href="/#faq" className="text-sm text-white/60 transition-colors hover:text-cyan-400">
+                  Perguntas frequentes
+                </a>
+              </li>
+              <li>
+                <Link to="/privacidade" className="text-sm text-white/60 transition-colors hover:text-cyan-400">
+                  Privacidade e Termos
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div className="md:col-span-3">
             <h4 className="font-display text-sm font-bold uppercase tracking-wide text-white/90">
               Contato
             </h4>
