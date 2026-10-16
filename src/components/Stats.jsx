@@ -12,9 +12,9 @@ export default function Stats() {
   return (
     <section className="section-pad relative z-20 -mt-14">
       <div className="container-x">
-        <div className="grid grid-cols-2 gap-1.5 overflow-hidden rounded-3xl bg-white p-1.5 shadow-lift lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-1.5 overflow-hidden rounded-3xl bg-white p-1.5 shadow-lift sm:grid-cols-3 lg:grid-cols-5">
           {credenciais.map((c) => {
-            const externo = /^https?:\/\//.test(c.href || '')
+            const externo = /^https?:\/\//.test(c.href || '') || /\.pdf$/i.test(c.href || '')
             return (
               <a
                 key={c.titulo}
@@ -24,7 +24,7 @@ export default function Stats() {
                 className="flex items-center justify-center rounded-2xl px-5 py-10 text-center transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110"
                 style={{ backgroundColor: CORES[c.cor] || '#101d39' }}
               >
-                <span className="font-display text-base font-extrabold leading-tight text-white sm:text-lg">
+                <span className="font-display text-sm font-extrabold leading-tight text-white sm:text-base">
                   {c.titulo}
                 </span>
               </a>

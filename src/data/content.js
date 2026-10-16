@@ -49,9 +49,10 @@ export const hero = {
 // Troque href pelo link do documento de cada um quando tiver.
 export const credenciais = [
   { titulo: 'Respaldo Governamental', cor: 'amarelo', href: '#contato' },
-  { titulo: 'Prêmios Nacionais', cor: 'laranja', href: '#reconhecimentos' },
+  { titulo: 'Prêmios Nacionais e Certificações', cor: 'laranja', href: '#reconhecimentos' },
   { titulo: 'Lei de Incentivo ao Esporte', cor: 'verde', href: '#incentivo' },
-  { titulo: 'Cooperativa Social', cor: 'azul', href: '#contato' },
+  { titulo: 'Cooperativa Social', cor: 'azul', href: '/midia/documentos/cooperativa-social.pdf' },
+  { titulo: 'Documentário', cor: 'cinza', href: '/midia/documentos/documentario.pdf' },
 ]
 
 export const sobre = {
@@ -177,11 +178,13 @@ export const reconhecimentos = [
     titulo: 'Prêmio Itaú-Unicef 2018 — Semifinalista',
     descricao: 'Categoria 1: OSC em Ação — projeto "Escola de Esportes: No Esporte com Valores".',
     img: '/midia/marca/premio-itau-2018.jpg',
+    doc: '/midia/documentos/selo-2018.pdf',
   },
   {
     titulo: 'Prêmio Itaú-Unicef 2015 — Semifinalista',
     descricao: 'Educação Integral: Aprendizagem que Transforma — projeto "Semear Hand".',
     img: '/midia/marca/premio-itau-2015.jpg',
+    doc: '/midia/documentos/selo-2015.pdf',
   },
 ]
 

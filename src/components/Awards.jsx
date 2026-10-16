@@ -1,4 +1,4 @@
-import { Award } from 'lucide-react'
+import { Award, ArrowUpRight } from 'lucide-react'
 import { reconhecimentos, apoios } from '../data/content'
 import Reveal from './Reveal'
 
@@ -33,7 +33,18 @@ export default function Awards() {
                     <Award className="h-5 w-5" />
                   </span>
                   <h3 className="mt-4 font-display text-base font-bold text-navy-900">{r.titulo}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink/70">{r.descricao}</p>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/70">{r.descricao}</p>
+                  {r.doc && (
+                    <a
+                      href={r.doc}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-cyan-700 transition-colors hover:text-cyan-800"
+                    >
+                      Ver documento
+                      <ArrowUpRight className="h-4 w-4" />
+                    </a>
+                  )}
                 </div>
               </article>
             </Reveal>
