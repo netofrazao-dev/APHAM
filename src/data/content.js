@@ -50,8 +50,8 @@ export const hero = {
 export const credenciais = [
   { titulo: 'Respaldo Governamental e Certificações', cor: 'amarelo', href: '#reconhecimentos' },
   { titulo: 'Lei de Incentivo ao Esporte', cor: 'verde', href: '#incentivo' },
-  { titulo: 'Cooperativa Social', cor: 'azul', href: '/midia/documentos/cooperativa-social.pdf' },
-  { titulo: 'Documentário', cor: 'laranja', href: '/midia/documentos/documentario.pdf' },
+  { titulo: 'Cooperativa Social', cor: 'azul', href: '#reconhecimentos' },
+  { titulo: 'Documentário', cor: 'laranja', href: '#documentario' },
 ]
 
 export const sobre = {
@@ -171,21 +171,63 @@ export const equipes = [
   { nome: 'Nossos Campeões', papel: 'Conquistas em quadra', img: '/midia/eventos/campeoes-trofeu.jpg' },
 ]
 
-// RECONHECIMENTOS — prêmios reais (imagens enviadas).
+// RECONHECIMENTOS E CREDENCIAIS — cada item: imagem + texto curto + documento.
+// docPronto: false = o PDF ainda não foi recebido (mostra "documento em breve").
+// img: troque pela imagem/logo oficial de cada um quando o cliente enviar.
 export const reconhecimentos = [
+  {
+    titulo: 'Utilidade Pública Estadual',
+    descricao:
+      'A APHAM foi reconhecida como entidade de utilidade pública pela Lei Estadual nº 10.594/2024 — um reconhecimento oficial do nosso trabalho social e esportivo no Marajó. (Confirmar ano e parlamentar autor.)',
+    img: '/midia/logo-apham.png',
+    doc: '/midia/documentos/utilidade-publica.pdf',
+    docPronto: false,
+  },
   {
     titulo: 'Prêmio Itaú-Unicef 2018 — Semifinalista',
     descricao: 'Categoria 1: OSC em Ação — projeto "Escola de Esportes: No Esporte com Valores".',
     img: '/midia/marca/premio-itau-2018.jpg',
     doc: '/midia/documentos/selo-2018.pdf',
+    docPronto: true,
   },
   {
     titulo: 'Prêmio Itaú-Unicef 2015 — Semifinalista',
     descricao: 'Educação Integral: Aprendizagem que Transforma — projeto "Semear Hand".',
     img: '/midia/marca/premio-itau-2015.jpg',
     doc: '/midia/documentos/selo-2015.pdf',
+    docPronto: true,
+  },
+  {
+    titulo: 'Certificado Experiências em Rede',
+    descricao: 'Certificação do trabalho da APHAM no programa Experiências em Rede.',
+    img: '/midia/logo-apham.png',
+    doc: '/midia/documentos/certificado-experiencias-rede.pdf',
+    docPronto: false,
+  },
+  {
+    titulo: 'Cooperativa Social',
+    descricao:
+      'Além do esporte, a APHAM atua como cooperativa social, promovendo trabalho, renda e inclusão na comunidade marajoara.',
+    img: '/midia/logo-apham.png',
+    doc: '/midia/documentos/cooperativa-social.pdf',
+    docPronto: true,
   },
 ]
+
+// DOCUMENTÁRIO — capítulos no YouTube + folder. Cole as URLs do YouTube em cada
+// capítulo (quando vazio, mostra "em breve").
+export const documentario = {
+  descricao:
+    'A história da APHAM contada em capítulos. Assista no nosso canal e conheça também o folder do documentário.',
+  folder: '/midia/documentos/documentario.pdf',
+  folderPronto: true,
+  capitulos: [
+    { titulo: 'Capítulo 1', url: '' },
+    { titulo: 'Capítulo 2', url: '' },
+    { titulo: 'Capítulo 3', url: '' },
+    { titulo: 'Capítulo 4', url: '' },
+  ],
+}
 
 // Apoio institucional (logos).
 export const apoios = [

@@ -8,6 +8,7 @@ import Events from '../components/Events'
 import Equipes from '../components/Equipes'
 import Awards from '../components/Awards'
 import Videos from '../components/Videos'
+import Documentario from '../components/Documentario'
 import Gallery from '../components/Gallery'
 import Support from '../components/Support'
 import TaxIncentive from '../components/TaxIncentive'
@@ -30,6 +31,7 @@ export default function Home() {
         <Equipes />
         <Awards />
         <Videos />
+        <Documentario />
         <Gallery />
         <Support />
         <TaxIncentive />

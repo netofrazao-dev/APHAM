@@ -1,4 +1,4 @@
-import { Award, ArrowUpRight } from 'lucide-react'
+import { Award, ArrowUpRight, FileText } from 'lucide-react'
 import { reconhecimentos, apoios } from '../data/content'
 import Reveal from './Reveal'
 
@@ -9,24 +9,30 @@ export default function Awards() {
         <Reveal className="mx-auto max-w-2xl text-center">
           <span className="eyebrow justify-center">
             <span className="h-px w-6 bg-cyan-400" />
-            Reconhecimentos
+            Reconhecimentos e credenciais
             <span className="h-px w-6 bg-cyan-400" />
           </span>
           <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-navy-900 sm:text-4xl">
-            Nosso trabalho reconhecido
+            O trabalho da APHAM reconhecido
           </h2>
           <p className="mt-4 text-ink/70">
-            A APHAM já foi semifinalista do Prêmio Itaú-Unicef, uma das mais importantes premiações
-            de educação e esporte do país.
+            Prêmios, certificações e respaldo oficial que atestam a seriedade e o impacto do nosso
+            projeto no Marajó.
           </p>
         </Reveal>
 
-        <div className="mx-auto mt-14 grid max-w-3xl grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {reconhecimentos.map((r, i) => (
-            <Reveal key={i} delay={0.08 * i}>
+            <Reveal key={i} delay={0.06 * i}>
               <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-soft">
-                <div className="flex items-center justify-center bg-navy-50 p-5">
-                  <img src={r.img} alt={r.titulo} loading="lazy" decoding="async" className="h-56 w-auto rounded-lg object-contain shadow-soft" />
+                <div className="flex h-44 items-center justify-center bg-navy-50 p-5">
+                  <img
+                    src={r.img}
+                    alt={r.titulo}
+                    loading="lazy"
+                    decoding="async"
+                    className="max-h-full w-auto object-contain"
+                  />
                 </div>
                 <div className="flex flex-1 flex-col p-6">
                   <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-100 text-cyan-700">
@@ -34,7 +40,7 @@ export default function Awards() {
                   </span>
                   <h3 className="mt-4 font-display text-base font-bold text-navy-900">{r.titulo}</h3>
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/70">{r.descricao}</p>
-                  {r.doc && (
+                  {r.docPronto ? (
                     <a
                       href={r.doc}
                       target="_blank"
@@ -44,6 +50,11 @@ export default function Awards() {
                       Ver documento
                       <ArrowUpRight className="h-4 w-4" />
                     </a>
+                  ) : (
+                    <span className="mt-4 inline-flex w-fit items-center gap-1.5 text-sm font-medium text-navy-400">
+                      <FileText className="h-4 w-4" />
+                      Documento em breve
+                    </span>
                   )}
                 </div>
               </article>
@@ -63,6 +74,7 @@ export default function Awards() {
                     key={a.nome}
                     src={a.logo}
                     alt={a.nome}
+                    loading="lazy"
                     className="h-14 w-auto object-contain opacity-80 transition-opacity hover:opacity-100"
                   />
                 ))}
