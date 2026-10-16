@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight, MapPin, ChevronDown } from 'lucide-react'
+import { ArrowRight, ChevronDown } from 'lucide-react'
 import { hero } from '../data/content'
 
 // Camadas de fundo (sem pessoas) que vão alternando no topo do site.
 const frames = [
   { type: 'img', src: '/midia/marca/marajoara-dark.jpg' },
   { type: 'gradient', className: 'bg-gradient-to-br from-navy-800 via-navy-950 to-cyan-900' },
-  { type: 'img', src: '/midia/marca/assinatura-branca-dark.jpg' },
+  { type: 'img', src: '/midia/marca/assinatura-branca-dark.jpg', gold: true },
 ]
 
 export default function Hero() {
@@ -29,7 +29,19 @@ export default function Hero() {
             style={{ opacity: i === active ? 1 : 0 }}
             aria-hidden="true"
           >
-            {f.type === 'img' ? (
+            {f.gold ? (
+              // Assinatura recolorida em dourado sobre o fundo escuro.
+              <img
+                src={f.src}
+                alt=""
+                className={`h-full w-full object-cover ${i === active ? 'animate-kenburns' : ''}`}
+                style={{
+                  mixBlendMode: 'screen',
+                  filter: 'brightness(0.95) sepia(1) saturate(6) hue-rotate(5deg)',
+                  opacity: 0.9,
+                }}
+              />
+            ) : f.type === 'img' ? (
               <img
                 src={f.src}
                 alt=""
@@ -51,23 +63,22 @@ export default function Hero() {
       <div className="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl" />
 
       {/* Conteúdo */}
-      <div className="container-x section-pad relative grid min-h-[100svh] grid-cols-1 items-center gap-10 pb-24 pt-28 lg:grid-cols-12">
+      <div className="container-x section-pad relative grid min-h-[100svh] grid-cols-1 items-center gap-10 pb-24 pt-24 lg:grid-cols-12">
         <div className="lg:col-span-7">
-          <motion.span
-            initial={{ opacity: 0, y: 16 }}
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-navy-950/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100 backdrop-blur-sm"
+            className="font-display text-3xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-4xl lg:text-5xl"
           >
-            <MapPin className="h-3.5 w-3.5 text-cyan-400" />
-            {hero.tagline}
-          </motion.span>
+            Mais que uma Associação...
+          </motion.h2>
 
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.08 }}
-            className="mt-6 font-display text-5xl font-extrabold leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-7xl"
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="mt-3 font-display text-5xl font-extrabold leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-7xl"
           >
             Muito mais que{' '}
             <span className="relative whitespace-nowrap text-cyan-400">
@@ -85,17 +96,17 @@ export default function Hero() {
             className="mt-9 flex flex-wrap items-center gap-4"
           >
             <a
+              href={hero.ctaQuemSomos.href}
+              className="inline-flex items-center justify-center gap-1.5 rounded-full bg-cyan-500 px-6 py-3 text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-cyan-600"
+            >
+              {hero.ctaQuemSomos.label}
+            </a>
+            <a
               href={hero.ctaApoie.href}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#2faa3a] px-8 py-4 text-base font-bold text-white shadow-lift transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#268a30] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2faa3a] focus-visible:ring-offset-2"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#2faa3a] px-8 py-4 text-base font-bold text-white shadow-lift transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#268a30]"
             >
               {hero.ctaApoie.label}
               <ArrowRight className="h-5 w-5" />
-            </a>
-            <a
-              href={hero.ctaQuemSomos.href}
-              className="inline-flex items-center justify-center gap-1.5 rounded-full border border-white/30 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10"
-            >
-              {hero.ctaQuemSomos.label}
             </a>
           </motion.div>
         </div>

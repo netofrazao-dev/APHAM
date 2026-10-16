@@ -44,11 +44,14 @@ export const hero = {
   ctaQuemSomos: { label: 'Quem somos', href: '#sobre' },
 }
 
-export const stats = [
-  { valor: '2009', sufixo: '', label: 'fundada em Breves', raw: true },
-  { valor: '15', sufixo: '+', label: 'anos de história' },
-  { valor: '100', sufixo: '+', label: 'jovens atendidos' },
-  { valor: '2', sufixo: '', label: 'prêmios Itaú-Unicef' },
+// Selos/credenciais (quadro clicável, no lugar do antigo quadro de números).
+// href: âncora (#secao), link externo (https...) ou '#' (sem destino ainda).
+// Troque href pelo link do documento de cada um quando tiver.
+export const credenciais = [
+  { titulo: 'Respaldo Governamental', cor: 'amarelo', href: '#contato' },
+  { titulo: 'Prêmios Nacionais', cor: 'laranja', href: '#reconhecimentos' },
+  { titulo: 'Lei de Incentivo ao Esporte', cor: 'verde', href: '#incentivo' },
+  { titulo: 'Cooperativa Social', cor: 'azul', href: '#contato' },
 ]
 
 export const sobre = {
