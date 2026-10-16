@@ -48,6 +48,35 @@ function StoryViewer({ index, stories, onClose, onNav }) {
 export default function News() {
   const { novidades, stories } = useStore()
   const [storyIdx, setStoryIdx] = useState(null)
+  const [igPosts, setIgPosts] = useState([])
+
+  // Tenta buscar os posts do Instagram (via /api/instagram). Se não houver
+  // (ainda sem token ou em desenvolvimento), usa as novidades do painel.
+  useEffect(() => {
+    let alive = true
+    fetch('/api/instagram')
+      .then((r) => r.json())
+      .then((d) => {
+        if (alive && d?.ok && Array.isArray(d.posts) && d.posts.length) setIgPosts(d.posts)
+      })
+      .catch(() => {})
+    return () => {
+      alive = false
+    }
+  }, [])
+
+  // Feed unificado: Instagram quando disponível, senão novidades do painel.
+  const feed = igPosts.length
+    ? igPosts.map((p) => ({
+        id: p.id,
+        img: p.media_type === 'VIDEO' ? p.thumbnail_url : p.media_url,
+        tag: 'Instagram',
+        data: p.timestamp ? new Date(p.timestamp).toLocaleDateString('pt-BR') : '',
+        titulo: (p.caption || 'Post no Instagram').split('\n')[0].slice(0, 80),
+        texto: (p.caption || '').slice(0, 160),
+        link: p.permalink,
+      }))
+    : novidades.map((n) => ({ ...n, link: null }))
   const nav = (dir) =>
     setStoryIdx((i) => (i === null ? i : (i + dir + stories.length) % stories.length))
 
@@ -96,23 +125,36 @@ export default function News() {
           </div>
         </Reveal>
 
-        {/* Feed de novidades */}
+        {/* Feed de novidades (Instagram quando disponível) */}
         <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {novidades.map((n, i) => (
-            <Reveal key={i} delay={0.06 * i}>
-              <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift">
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <img src={n.img} alt={n.titulo} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                  <span className="absolute left-3 top-3 rounded-full bg-cyan-500 px-3 py-1 text-xs font-semibold text-white">{n.tag}</span>
-                </div>
-                <div className="flex flex-1 flex-col p-6">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-cyan-600">{n.data}</span>
-                  <h3 className="mt-1 font-display text-lg font-bold text-navy-900">{n.titulo}</h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/70">{n.texto}</p>
-                </div>
-              </article>
-            </Reveal>
-          ))}
+          {feed.map((n, i) => {
+            const Card = n.link ? 'a' : 'article'
+            const linkProps = n.link
+              ? { href: n.link, target: '_blank', rel: 'noopener noreferrer' }
+              : {}
+            return (
+              <Reveal key={n.id || i} delay={0.06 * i}>
+                <Card
+                  {...linkProps}
+                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
+                >
+                  <div className="relative aspect-[16/10] overflow-hidden">
+                    {n.img && (
+                      <img src={n.img} alt={n.titulo} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    )}
+                    {n.tag && (
+                      <span className="absolute left-3 top-3 rounded-full bg-cyan-500 px-3 py-1 text-xs font-semibold text-white">{n.tag}</span>
+                    )}
+                  </div>
+                  <div className="flex flex-1 flex-col p-6">
+                    {n.data && <span className="text-xs font-semibold uppercase tracking-wide text-cyan-600">{n.data}</span>}
+                    <h3 className="mt-1 font-display text-lg font-bold text-navy-900">{n.titulo}</h3>
+                    {n.texto && <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/70">{n.texto}</p>}
+                  </div>
+                </Card>
+              </Reveal>
+            )
+          })}
         </div>
       </div>
 
