@@ -37,13 +37,9 @@ function Badge({ time }) {
 
 function PlacarSlide({ r }) {
   return (
-    <div className="relative flex h-full flex-col justify-between overflow-hidden bg-gradient-to-br from-navy-800 to-navy-950 p-5">
+    <div className="relative flex h-full flex-col justify-between overflow-hidden bg-gradient-to-br from-navy-800 to-navy-950 p-5 pt-12">
       <div className="absolute inset-0 dot-grid opacity-20" />
-      <div className="relative flex items-center justify-between">
-        <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-cyan-200/90">
-          <Trophy className="h-3.5 w-3.5" />
-          <span className="max-w-[150px] truncate">{r.competicao}</span>
-        </span>
+      <div className="relative flex justify-end">
         <span className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-semibold text-white/80">
           {r.data}
         </span>
@@ -59,9 +55,13 @@ function PlacarSlide({ r }) {
         <Badge time={r.fora} />
       </div>
 
-      <div className="relative flex justify-center">
+      <div className="relative flex flex-col items-center gap-1.5">
         <span className="rounded-full bg-[#2faa3a] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow-soft">
           {r.status}
+        </span>
+        <span className="inline-flex max-w-[90%] items-center gap-1 truncate text-[11px] text-white/55">
+          <Trophy className="h-3 w-3 shrink-0" />
+          {r.competicao}
         </span>
       </div>
     </div>
@@ -73,11 +73,11 @@ function FotoSlide({ n }) {
     <div className="relative h-full overflow-hidden">
       <img src={n.img} alt="" className="h-full w-full object-cover" loading="lazy" />
       <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/25 to-navy-950/10" />
-      <span className="absolute left-4 top-4 rounded-full bg-cyan-500 px-3 py-1 text-[11px] font-bold text-white shadow-soft">
-        {n.tag}
-      </span>
       <div className="absolute inset-x-0 bottom-0 p-5 pr-20">
-        <p className="text-xs font-semibold text-cyan-200">{n.data}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-cyan-200">
+          {n.tag}
+          {n.data ? ` · ${n.data}` : ''}
+        </p>
         <p className="mt-1 line-clamp-2 text-base font-bold leading-snug text-white">{n.titulo}</p>
       </div>
     </div>
@@ -88,7 +88,7 @@ function LiveSlide({ titulo }) {
   return (
     <a
       href="#ao-vivo"
-      className="group relative flex h-full flex-col items-center justify-center gap-3 overflow-hidden bg-gradient-to-br from-red-700 via-red-800 to-navy-950 p-6 text-center"
+      className="group relative flex h-full flex-col items-center justify-center gap-3 overflow-hidden bg-gradient-to-br from-red-700 via-red-800 to-navy-950 p-6 pt-12 text-center"
     >
       <div className="absolute inset-0 dot-grid opacity-20" />
       <span className="relative inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white ring-1 ring-white/25">
@@ -120,7 +120,7 @@ export default function HeroFeed({ compact = false }) {
   const slides = useMemo(() => buildSlides(aoVivo), [aoVivo])
   const [i, setI] = useState(0)
 
-  // Garante que o índice continua válido se a lista mudar (ex.: ligar o ao vivo).
+  // Mantém o índice válido se a lista mudar (ex.: ligar/desligar o ao vivo).
   useEffect(() => {
     setI((p) => (p >= slides.length ? 0 : p))
   }, [slides.length])
@@ -149,6 +149,12 @@ export default function HeroFeed({ compact = false }) {
           )}
         </div>
       ))}
+
+      {/* Rótulo fixo do card + leve escurecimento no topo para leitura */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-16 bg-gradient-to-b from-black/45 to-transparent" />
+      <span className="absolute left-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full bg-cyan-500 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-soft">
+        Novidades
+      </span>
 
       {/* Indicadores sobre a imagem (sem moldura) */}
       {slides.length > 1 && (

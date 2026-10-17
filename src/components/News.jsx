@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { X, ChevronLeft, ChevronRight, Instagram } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, Instagram, Radio, PlayCircle } from 'lucide-react'
 import { site } from '../data/content'
 import { useStore } from '../store/StoreContext'
 import Reveal from './Reveal'
@@ -46,7 +46,8 @@ function StoryViewer({ index, stories, onClose, onNav }) {
 }
 
 export default function News() {
-  const { novidades, stories } = useStore()
+  const { novidades, stories, settings } = useStore()
+  const aoVivo = settings?.aoVivoAtivo && settings?.aoVivoUrl
   const [storyIdx, setStoryIdx] = useState(null)
   const [igPosts, setIgPosts] = useState([])
 
@@ -103,6 +104,38 @@ export default function News() {
             </a>
           </Reveal>
         </div>
+
+        {/* Destaque de transmissão ao vivo (quando o admin ativa) */}
+        {aoVivo && (
+          <Reveal>
+            <a
+              href="#ao-vivo"
+              className="group mt-8 flex flex-col items-start gap-4 overflow-hidden rounded-2xl bg-gradient-to-r from-red-700 to-red-600 p-5 shadow-lift sm:flex-row sm:items-center sm:justify-between sm:p-6"
+            >
+              <div className="flex items-center gap-4">
+                <span className="relative inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white ring-1 ring-white/25">
+                  <Radio className="h-6 w-6" />
+                </span>
+                <div>
+                  <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-[0.18em] text-white">
+                    <span className="relative flex h-2 w-2">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
+                    </span>
+                    Ao vivo agora
+                  </span>
+                  <p className="mt-1.5 font-display text-lg font-bold text-white">
+                    {settings.aoVivoTitulo || 'APHAM ao vivo'}
+                  </p>
+                </div>
+              </div>
+              <span className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-bold text-red-700 transition-transform duration-300 group-hover:scale-105">
+                <PlayCircle className="h-4 w-4" />
+                Assistir agora
+              </span>
+            </a>
+          </Reveal>
+        )}
 
         {/* Stories */}
         <Reveal>

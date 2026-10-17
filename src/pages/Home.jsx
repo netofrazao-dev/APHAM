@@ -28,7 +28,6 @@ export default function Home() {
       <main>
         <Hero />
         <Stats />
-        <AoVivo />
         <About />
         <Values />
         <News />
@@ -38,6 +37,7 @@ export default function Home() {
         <Cooperativa />
         <Videos />
         <Documentario />
+        <AoVivo />
         <Gallery />
         <Participar />
         <Support />
