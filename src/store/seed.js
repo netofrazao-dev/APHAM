@@ -189,7 +189,7 @@ export const produtosSeed = [
 export const settingsSeed = {
   nomeLoja: 'Loja APHAM',
   descricao: 'Produtos oficiais do handebol do Marajó. Vista a camisa e ajude o projeto.',
-  whatsapp: '5591992446806',
+  whatsapp: '5591991789031',
   email: 'apham.cvmf@gmail.com',
   pixChave: '',
   pixNome: 'APHAM Handebol do Marajo',

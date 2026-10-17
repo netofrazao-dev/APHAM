@@ -15,8 +15,8 @@ export const site = {
   fundacao: '27 de fevereiro de 2009',
   endereco: 'Rua Justo Chermont, Centro — Breves/PA',
   email: 'apham.cvmf@gmail.com',
-  telefone: '(91) 99244-6806',
-  whatsapp: 'https://wa.me/5591992446806',
+  telefone: '(91) 99178-9031',
+  whatsapp: 'https://wa.me/5591991789031',
   instagram: 'https://www.instagram.com/handebolmarajo/',
   facebook: 'https://www.facebook.com/Apham2009',
   // Link da futura loja — por enquanto aponta para o bloco "Loja em breve".

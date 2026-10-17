@@ -77,7 +77,7 @@ export default function SettingsAdmin() {
           <h2 className="mb-4 font-display font-bold text-navy-900">Loja</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Nome da loja"><input value={form.nomeLoja} onChange={(e) => set('nomeLoja', e.target.value)} className={inputCls} /></Field>
-            <Field label="WhatsApp (só números, com DDI)" hint="Ex.: 5591992446806"><input value={form.whatsapp} onChange={(e) => set('whatsapp', e.target.value)} className={inputCls} /></Field>
+            <Field label="WhatsApp (só números, com DDI)" hint="Ex.: 5591991789031"><input value={form.whatsapp} onChange={(e) => set('whatsapp', e.target.value)} className={inputCls} /></Field>
             <div className="sm:col-span-2">
               <Field label="Descrição da loja"><textarea rows={2} value={form.descricao} onChange={(e) => set('descricao', e.target.value)} className={`${inputCls} resize-none`} /></Field>
             </div>
