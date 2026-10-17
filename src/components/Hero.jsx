@@ -1,58 +1,14 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight, ChevronDown, Newspaper, ArrowUpRight } from 'lucide-react'
-import { hero, novidades, assinaturaSocialPlay } from '../data/content'
+import { ArrowRight, ChevronDown } from 'lucide-react'
+import { hero, assinaturaSocialPlay } from '../data/content'
+import HeroFeed from './HeroFeed'
 
 // Camadas de fundo (sem pessoas) que vão alternando no topo do site.
 const frames = [
   { type: 'img', src: '/midia/marca/marajoara-dark.jpg' },
   { type: 'gradient', className: 'bg-gradient-to-br from-navy-800 via-navy-950 to-cyan-900' },
 ]
-
-// Painel de notícias / resultados (substitui a antiga "bola" do lado direito).
-function NewsPanel({ compact = false }) {
-  const itens = novidades.slice(0, compact ? 2 : 3)
-  return (
-    <div className="rounded-3xl border border-white/15 bg-white/10 p-5 shadow-lift backdrop-blur-md sm:p-6">
-      <div className="flex items-center justify-between">
-        <span className="inline-flex items-center gap-2 text-sm font-bold text-white">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-75" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-cyan-400" />
-          </span>
-          Novidades & Resultados
-        </span>
-        <Newspaper className="h-4 w-4 text-cyan-200/80" />
-      </div>
-
-      <ul className="mt-4 divide-y divide-white/10">
-        {itens.map((n, i) => (
-          <li key={i} className="py-3 first:pt-0 last:pb-0">
-            <div className="flex items-center gap-2">
-              <span className="rounded-full bg-cyan-500/25 px-2 py-0.5 text-[11px] font-semibold text-cyan-100">
-                {n.data}
-              </span>
-              <span className="text-[11px] font-medium uppercase tracking-wide text-white/50">
-                {n.tag}
-              </span>
-            </div>
-            <p className="mt-1.5 line-clamp-2 text-sm font-semibold leading-snug text-white/90">
-              {n.titulo}
-            </p>
-          </li>
-        ))}
-      </ul>
-
-      <a
-        href="#novidades"
-        className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-300 transition-colors hover:text-cyan-200"
-      >
-        Ver todas as novidades
-        <ArrowUpRight className="h-4 w-4" />
-      </a>
-    </div>
-  )
-}
 
 export default function Hero() {
   const [active, setActive] = useState(0)
@@ -112,7 +68,7 @@ export default function Hero() {
             transition={{ duration: 0.5 }}
             className="mb-8 mt-2 lg:hidden"
           >
-            <NewsPanel compact />
+            <HeroFeed compact />
           </motion.div>
 
           <motion.h2
@@ -169,7 +125,7 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="mx-auto w-full max-w-md"
           >
-            <NewsPanel />
+            <HeroFeed />
           </motion.div>
         </div>
       </div>

@@ -100,6 +100,25 @@ export const stories = [
   { img: '/midia/eventos/colonia-aquatica.jpg', titulo: 'Confraternização' },
 ]
 
+// RESULTADOS — placares de jogos para o painel do topo (PROVISÓRIO).
+// Edite com os resultados reais; a sigla aparece quando não há logo do time.
+export const resultados = [
+  {
+    data: '2024',
+    competicao: 'Centro Com. Elcione Barbalho',
+    casa: { nome: 'APHAM', sigla: 'APH', logo: '/midia/logo-apham.png', placar: 28 },
+    fora: { nome: 'Adversário', sigla: 'ADV', placar: 22 },
+    status: 'Vitória',
+  },
+  {
+    data: '2015',
+    competicao: "JEP's — Melgaço",
+    casa: { nome: 'APHAM', sigla: 'APH', logo: '/midia/logo-apham.png', placar: 19 },
+    fora: { nome: 'Adversário', sigla: 'ADV', placar: 17 },
+    status: 'Vitória',
+  },
+]
+
 // Feed de novidades/posts.
 export const novidades = [
   {
