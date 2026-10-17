@@ -71,7 +71,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-8 mt-2 lg:hidden"
+            className="-mx-5 mb-8 mt-2 sm:-mx-8 lg:hidden"
           >
             <HeroFeed compact />
           </motion.div>
