@@ -48,9 +48,9 @@ export const hero = {
 // href: âncora (#secao), link externo (https...) ou '#' (sem destino ainda).
 // Troque href pelo link do documento de cada um quando tiver.
 export const credenciais = [
-  { titulo: 'Respaldo Governamental e Certificações', cor: 'amarelo', href: '#reconhecimentos' },
+  { titulo: 'Prêmios Nacionais e Certificações', cor: 'amarelo', href: '#reconhecimentos' },
   { titulo: 'Lei de Incentivo ao Esporte', cor: 'verde', href: '#incentivo' },
-  { titulo: 'Cooperativa Social', cor: 'azul', href: '#reconhecimentos' },
+  { titulo: 'Cooperativa Social', cor: 'azul', href: '#cooperativa' },
   { titulo: 'Documentário', cor: 'laranja', href: '#documentario' },
 ]
 
@@ -204,15 +204,23 @@ export const reconhecimentos = [
     doc: '/midia/documentos/certificado-experiencias-rede.pdf',
     docPronto: true,
   },
-  {
-    titulo: 'Cooperativa Social',
-    descricao:
-      'Além do esporte, a APHAM atua como cooperativa social, promovendo trabalho, renda e inclusão na comunidade marajoara.',
-    img: '/midia/logo-apham.png',
-    doc: '/midia/documentos/cooperativa-social.pdf',
-    docPronto: true,
-  },
 ]
+
+// COOPERATIVA SOCIAL — área dedicada (abre pelo selo azul do topo, #cooperativa).
+export const cooperativa = {
+  eyebrow: 'Cooperativa Social',
+  titulo: 'Esporte que gera trabalho, renda e inclusão',
+  descricao:
+    'Além da formação esportiva, a APHAM atua como cooperativa social — unindo pessoas em torno de atividades que geram trabalho, renda e oportunidades para a comunidade marajoara. É o esporte como ferramenta de desenvolvimento humano e econômico, dentro e fora da quadra.',
+  destaques: [
+    { titulo: 'Trabalho e renda', texto: 'Oportunidades de geração de renda para famílias ligadas ao projeto.' },
+    { titulo: 'Inclusão social', texto: 'Ações que ampliam a participação e a autonomia da comunidade.' },
+    { titulo: 'Desenvolvimento local', texto: 'Fortalecimento da economia e da cultura esportiva no Marajó.' },
+  ],
+  img: '/midia/logo-apham.png',
+  doc: '/midia/documentos/cooperativa-social.pdf',
+  docPronto: true,
+}
 
 // DOCUMENTÁRIO — capítulos no YouTube + folder. Cole as URLs do YouTube em cada
 // capítulo (quando vazio, mostra "em breve").
@@ -289,6 +297,20 @@ export const contato = {
     { nome: 'WhatsApp', icone: 'MessageCircle', url: site.whatsapp },
   ],
 }
+
+// LOJA — identidade "Social Play". O texto inicial usa a fonte Akbar (quando o
+// arquivo da fonte for enviado; por enquanto cai no fallback do display) e a
+// assinatura dourada da Social Play aparece de fundo.
+export const lojaConceito = {
+  marca: 'Social Play',
+  conceito: 'Vestuário conceito',
+  descricao:
+    'Peças com a identidade do handebol marajoara. Cada compra fortalece os projetos sociais da APHAM.',
+  assinatura: '/midia/marca/assinatura-socialplay.png',
+}
+
+// Assinatura da Social Play (dourada, fundo transparente) — usada como marca d'água.
+export const assinaturaSocialPlay = '/midia/marca/assinatura-socialplay.png'
 
 // MAPA — iframe do Google Maps (sem chave de API). Troque o "q=" pelo endereço
 // exato ou pelas coordenadas quando o cliente confirmar o local do ginásio.

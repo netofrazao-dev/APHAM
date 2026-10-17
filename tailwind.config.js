@@ -40,6 +40,9 @@ export default {
         display: ['Sora', 'system-ui', 'sans-serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
         script: ['Caveat', 'cursive'],
+        // Fonte da loja "Vestuário conceito". Enviar o arquivo Akbar (.ttf/.otf)
+        // para auto-hospedar; por enquanto usa o fallback do display.
+        akbar: ['Akbar', 'Sora', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         soft: '0 10px 40px -12px rgba(16, 29, 57, 0.25)',

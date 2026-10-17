@@ -1,14 +1,58 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight, ChevronDown } from 'lucide-react'
-import { hero } from '../data/content'
+import { ArrowRight, ChevronDown, Newspaper, ArrowUpRight } from 'lucide-react'
+import { hero, novidades, assinaturaSocialPlay } from '../data/content'
 
 // Camadas de fundo (sem pessoas) que vão alternando no topo do site.
 const frames = [
   { type: 'img', src: '/midia/marca/marajoara-dark.jpg' },
   { type: 'gradient', className: 'bg-gradient-to-br from-navy-800 via-navy-950 to-cyan-900' },
-  { type: 'img', src: '/midia/marca/assinatura-branca-dark.jpg', gold: true },
 ]
+
+// Painel de notícias / resultados (substitui a antiga "bola" do lado direito).
+function NewsPanel({ compact = false }) {
+  const itens = novidades.slice(0, compact ? 2 : 3)
+  return (
+    <div className="rounded-3xl border border-white/15 bg-white/10 p-5 shadow-lift backdrop-blur-md sm:p-6">
+      <div className="flex items-center justify-between">
+        <span className="inline-flex items-center gap-2 text-sm font-bold text-white">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-75" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-cyan-400" />
+          </span>
+          Novidades & Resultados
+        </span>
+        <Newspaper className="h-4 w-4 text-cyan-200/80" />
+      </div>
+
+      <ul className="mt-4 divide-y divide-white/10">
+        {itens.map((n, i) => (
+          <li key={i} className="py-3 first:pt-0 last:pb-0">
+            <div className="flex items-center gap-2">
+              <span className="rounded-full bg-cyan-500/25 px-2 py-0.5 text-[11px] font-semibold text-cyan-100">
+                {n.data}
+              </span>
+              <span className="text-[11px] font-medium uppercase tracking-wide text-white/50">
+                {n.tag}
+              </span>
+            </div>
+            <p className="mt-1.5 line-clamp-2 text-sm font-semibold leading-snug text-white/90">
+              {n.titulo}
+            </p>
+          </li>
+        ))}
+      </ul>
+
+      <a
+        href="#novidades"
+        className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-300 transition-colors hover:text-cyan-200"
+      >
+        Ver todas as novidades
+        <ArrowUpRight className="h-4 w-4" />
+      </a>
+    </div>
+  )
+}
 
 export default function Hero() {
   const [active, setActive] = useState(0)
@@ -29,19 +73,7 @@ export default function Hero() {
             style={{ opacity: i === active ? 1 : 0 }}
             aria-hidden="true"
           >
-            {f.gold ? (
-              // Assinatura recolorida em dourado sobre o fundo escuro.
-              <img
-                src={f.src}
-                alt=""
-                className={`h-full w-full object-cover ${i === active ? 'animate-kenburns' : ''}`}
-                style={{
-                  mixBlendMode: 'screen',
-                  filter: 'brightness(0.8) sepia(1) saturate(14) hue-rotate(2deg)',
-                  opacity: 1,
-                }}
-              />
-            ) : f.type === 'img' ? (
+            {f.type === 'img' ? (
               <img
                 src={f.src}
                 alt=""
@@ -62,9 +94,27 @@ export default function Hero() {
       <div className="absolute -left-32 top-24 h-96 w-96 rounded-full bg-cyan-500/20 blur-3xl" />
       <div className="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl" />
 
+      {/* Assinatura dourada da Social Play, de fundo */}
+      <img
+        src={assinaturaSocialPlay}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute right-[-6%] top-1/2 w-[60%] max-w-2xl -translate-y-1/2 select-none opacity-[0.13] lg:opacity-[0.16]"
+      />
+
       {/* Conteúdo */}
-      <div className="container-x section-pad relative grid min-h-[100svh] grid-cols-1 items-center gap-10 pb-24 pt-24 lg:grid-cols-12">
+      <div className="container-x section-pad relative z-10 grid min-h-[100svh] grid-cols-1 items-center gap-10 pb-24 pt-28 sm:pt-24 lg:grid-cols-12">
         <div className="lg:col-span-7">
+          {/* Painel de novidades no mobile (ocupa o espaço entre o topo e o título) */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8 mt-2 lg:hidden"
+          >
+            <NewsPanel compact />
+          </motion.div>
+
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -111,42 +161,21 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Motivo branded (sem pessoas): grafismo marajoara + bola de handebol */}
+        {/* Painel de novidades / resultados (lugar da antiga bola), só no desktop */}
         <div className="hidden lg:col-span-5 lg:block">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative mx-auto aspect-square w-full max-w-md"
+            initial={{ opacity: 0, scale: 0.96, y: 16 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="mx-auto w-full max-w-md"
           >
-            <div className="absolute inset-10 rounded-full bg-cyan-500/20 blur-3xl" />
-            <svg viewBox="0 0 200 200" className="absolute inset-0 animate-spin-slow text-cyan-300/70">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <path
-                  key={i}
-                  d="M100 10 L108 26 L92 26 Z"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  transform={`rotate(${i * 30} 100 100)`}
-                />
-              ))}
-            </svg>
-            <svg viewBox="0 0 200 200" className="absolute inset-0 animate-float">
-              <circle cx="100" cy="100" r="58" fill="#0a1326" stroke="#33b6f5" strokeWidth="2.5" />
-              <g stroke="#33b6f5" strokeWidth="2" strokeLinecap="round" opacity="0.85">
-                <path d="M100 44 L100 156" />
-                <path d="M50 72 L150 128" />
-                <path d="M150 72 L50 128" />
-              </g>
-              <circle cx="100" cy="100" r="9" fill="#33b6f5" />
-            </svg>
+            <NewsPanel />
           </motion.div>
         </div>
       </div>
 
       {/* Indicadores dos fundos */}
-      <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 items-center gap-2.5">
+      <div className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2.5">
         {frames.map((_, i) => (
           <button
             key={i}
@@ -163,7 +192,7 @@ export default function Hero() {
       <a
         href="#sobre"
         aria-label="Rolar para baixo"
-        className="absolute bottom-6 right-6 hidden text-white/60 transition-colors hover:text-white sm:block"
+        className="absolute bottom-6 right-6 z-10 hidden text-white/60 transition-colors hover:text-white sm:block"
       >
         <ChevronDown className="h-6 w-6 animate-bounce" />
       </a>

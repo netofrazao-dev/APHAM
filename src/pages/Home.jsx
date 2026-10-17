@@ -7,6 +7,7 @@ import News from '../components/News'
 import Events from '../components/Events'
 import Equipes from '../components/Equipes'
 import Awards from '../components/Awards'
+import Cooperativa from '../components/Cooperativa'
 import Videos from '../components/Videos'
 import Documentario from '../components/Documentario'
 import Gallery from '../components/Gallery'
@@ -32,6 +33,7 @@ export default function Home() {
         <Events />
         <Equipes />
         <Awards />
+        <Cooperativa />
         <Videos />
         <Documentario />
         <Gallery />
