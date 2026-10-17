@@ -1,6 +1,7 @@
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import Stats from '../components/Stats'
+import AoVivo from '../components/AoVivo'
 import About from '../components/About'
 import Values from '../components/Values'
 import News from '../components/News'
@@ -27,6 +28,7 @@ export default function Home() {
       <main>
         <Hero />
         <Stats />
+        <AoVivo />
         <About />
         <Values />
         <News />

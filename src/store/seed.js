@@ -199,6 +199,10 @@ export const settingsSeed = {
   entregaGratisAcima: null,
   lojaAtiva: true,
   senhaAdmin: 'apham2009',
+  // Transmissão ao vivo (o admin cola o link do YouTube da transmissão)
+  aoVivoAtivo: false,
+  aoVivoTitulo: 'APHAM ao vivo',
+  aoVivoUrl: '',
 }
 
 export const cuponsSeed = [

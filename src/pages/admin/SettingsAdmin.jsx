@@ -97,6 +97,28 @@ export default function SettingsAdmin() {
         </Card>
 
         <Card>
+          <h2 className="mb-1 font-display font-bold text-navy-900">Transmissão ao vivo</h2>
+          <p className="mb-4 text-sm text-navy-500">
+            Vai transmitir um jogo? Cole o link do YouTube da transmissão e marque a opção abaixo —
+            o site mostra o jogo ao vivo na página inicial. Quando acabar, é só desmarcar.
+          </p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="sm:col-span-2">
+              <Field label="Link do YouTube da transmissão" hint="Cole o link do vídeo/live (ex.: https://youtu.be/XXXXXXXXXXX ou youtube.com/live/XXXXXXXXXXX)">
+                <input value={form.aoVivoUrl || ''} onChange={(e) => set('aoVivoUrl', e.target.value)} placeholder="https://..." className={inputCls} />
+              </Field>
+            </div>
+            <Field label="Título da transmissão" hint="Ex.: APHAM x Adversário — final do campeonato">
+              <input value={form.aoVivoTitulo || ''} onChange={(e) => set('aoVivoTitulo', e.target.value)} className={inputCls} />
+            </Field>
+          </div>
+          <label className="mt-4 flex items-center gap-2 text-sm font-medium text-navy-800">
+            <input type="checkbox" checked={form.aoVivoAtivo === true} onChange={(e) => set('aoVivoAtivo', e.target.checked)} className="h-4 w-4 rounded border-navy-300 text-cyan-500" />
+            Mostrar a transmissão ao vivo no site agora
+          </label>
+        </Card>
+
+        <Card>
           <h2 className="mb-4 font-display font-bold text-navy-900">Pagamento via PIX</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Chave PIX" hint="Deixe em branco para não oferecer PIX."><input value={form.pixChave} onChange={(e) => set('pixChave', e.target.value)} className={inputCls} /></Field>
