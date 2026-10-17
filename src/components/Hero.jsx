@@ -128,7 +128,7 @@ export default function Hero() {
             initial={{ opacity: 0, scale: 0.96, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="mx-auto w-full max-w-md"
+            className="mx-auto w-full max-w-lg"
           >
             <HeroFeed />
           </motion.div>

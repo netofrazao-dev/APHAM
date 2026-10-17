@@ -132,7 +132,7 @@ export default function HeroFeed({ compact = false }) {
   }, [slides.length])
 
   return (
-    <div className={`relative overflow-hidden shadow-lift ${compact ? 'h-56 rounded-none sm:h-60' : 'h-72 rounded-3xl ring-1 ring-white/10'}`}>
+    <div className={`relative overflow-hidden shadow-lift ${compact ? 'h-56 rounded-none sm:h-60' : 'h-[22rem] rounded-3xl ring-1 ring-white/10'}`}>
       {slides.map((s, idx) => (
         <div
           key={idx}
