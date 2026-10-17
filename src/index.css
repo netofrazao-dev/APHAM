@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Fontes próprias enviadas pelo cliente (auto-hospedadas) */
+@font-face {
+  font-family: 'Akbar';
+  src: url('/fonts/akbar.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Mistral';
+  src: url('/fonts/mistral.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     scroll-behavior: smooth;

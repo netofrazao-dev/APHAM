@@ -39,9 +39,9 @@ export default {
       fontFamily: {
         display: ['Sora', 'system-ui', 'sans-serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        script: ['Caveat', 'cursive'],
-        // Fonte da loja "Vestuário conceito". Enviar o arquivo Akbar (.ttf/.otf)
-        // para auto-hospedar; por enquanto usa o fallback do display.
+        // Assinatura script (ao lado da logo): fonte Mistral do cliente, auto-hospedada.
+        script: ['Mistral', 'Caveat', 'cursive'],
+        // Fonte da loja "Vestuário conceito": Akbar do cliente, auto-hospedada.
         akbar: ['Akbar', 'Sora', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
