@@ -11,13 +11,12 @@ export default function StoreTeaser() {
         <Reveal>
           <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-navy-800 to-navy-950 px-8 py-14 text-center shadow-lift sm:px-12">
             <div className="absolute inset-0 dot-grid opacity-20" />
-            <img src="/midia/marca/marajoara-dark.jpg" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover opacity-20" />
-            {/* Assinatura dourada da Social Play, de fundo */}
+            {/* Só a assinatura da Social Play no fundo */}
             <img
               src={assinaturaSocialPlay}
               alt=""
               aria-hidden="true"
-              className="pointer-events-none absolute left-1/2 top-1/2 w-[80%] max-w-xl -translate-x-1/2 -translate-y-1/2 select-none opacity-[0.12]"
+              className="pointer-events-none absolute left-1/2 top-1/2 w-[82%] max-w-xl -translate-x-1/2 -translate-y-1/2 select-none opacity-[0.16]"
             />
             <div className="relative mx-auto max-w-xl">
               <span className="inline-flex items-center gap-2 rounded-full bg-cyan-500/20 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-cyan-200">

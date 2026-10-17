@@ -34,17 +34,16 @@ export default function Store() {
     <div className="flex min-h-screen flex-col bg-paper">
       <StoreHeader />
 
-      {/* Banner */}
+      {/* Banner — só a assinatura da Social Play no fundo */}
       <section className="relative overflow-hidden bg-navy-950">
-        <img src="/midia/marca/marajoara-dark.jpg" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover opacity-35" />
-        <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/80 to-navy-900/50" />
-        {/* Assinatura dourada da Social Play, de fundo */}
         <img
           src={assinaturaSocialPlay}
           alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute right-[-4%] top-1/2 w-[52%] max-w-xl -translate-y-1/2 select-none opacity-20"
+          className="pointer-events-none absolute right-[-3%] top-1/2 w-[56%] max-w-xl -translate-y-1/2 select-none opacity-25"
         />
+        {/* Degradê leve só para a leitura do texto à esquerda */}
+        <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/70 to-transparent" />
         <div className="container-x section-pad relative py-14 lg:py-20">
           <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-navy-950/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100">
             <ShoppingBag className="h-3.5 w-3.5 text-cyan-400" />
