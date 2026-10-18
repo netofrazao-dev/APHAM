@@ -45,7 +45,6 @@ export const sumario = [
   { label: 'Participar', to: '/participar' },
   { label: 'Equipes', to: '/equipes' },
   { label: 'Competições', to: '/competicoes' },
-  { label: 'Apoie nosso Projeto', to: '/#apoie' },
   { label: 'Galeria', to: '/galeria' },
   { label: 'Fale Conosco', to: '/contato' },
 ]
