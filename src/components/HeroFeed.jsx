@@ -156,9 +156,9 @@ export default function HeroFeed({ compact = false }) {
         Novidades
       </span>
 
-      {/* Indicadores sobre a imagem (sem moldura) */}
+      {/* Indicadores sobre a imagem, dentro de uma caixinha retangular */}
       {slides.length > 1 && (
-        <div className="absolute bottom-4 right-4 z-10 flex items-center gap-1.5">
+        <div className="absolute bottom-4 right-4 z-10 flex items-center gap-1.5 rounded-lg bg-navy-950/45 px-2.5 py-1.5 ring-1 ring-white/25 backdrop-blur-sm">
           {slides.map((_, idx) => (
             <button
               key={idx}
