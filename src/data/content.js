@@ -299,10 +299,10 @@ export const documentario = {
   folder: '/midia/documentos/documentario.pdf',
   folderPronto: true,
   capitulos: [
-    { titulo: 'Capítulo 1', url: '' },
-    { titulo: 'Capítulo 2', url: '' },
-    { titulo: 'Capítulo 3', url: '' },
-    { titulo: 'Capítulo 4', url: '' },
+    { titulo: 'Capítulo 1', url: 'https://youtu.be/qejbS-Kh-zc' },
+    { titulo: 'Capítulo 2', url: 'https://youtu.be/lg2tCbv9fNs' },
+    { titulo: 'Capítulo 3', url: 'https://youtu.be/ST4D65TsmZI' },
+    { titulo: 'Capítulo 4', url: 'https://youtu.be/wFDXIXR6UpE' },
   ],
 }
 
