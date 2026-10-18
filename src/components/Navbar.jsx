@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu, X, ShoppingBag, Youtube, Facebook, Instagram } from 'lucide-react'
-import { nav, hero, site, redesHeader } from '../data/content'
+import { nav, sumario, hero, site, redesHeader } from '../data/content'
 import Logo from './Logo'
 
 const SOCIAL_ICONS = { Youtube, Facebook, Instagram }
@@ -38,17 +38,19 @@ export default function Navbar() {
     >
       <nav className="container-x section-pad flex h-20 items-center justify-between gap-2">
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-          <Logo className="h-10 sm:h-11" light={!solid} />
-          <span
-            className={`shrink-0 whitespace-nowrap font-script text-base leading-none sm:text-lg lg:text-lg xl:text-2xl ${
-              solid ? 'text-navy-700' : 'text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)]'
-            }`}
-          >
-            {hero.assinatura}
-          </span>
+          <Link to="/" aria-label="Ir para o início" className="flex items-center gap-2 sm:gap-3">
+            <Logo className="h-10 sm:h-11" light={!solid} />
+            <span
+              className={`shrink-0 whitespace-nowrap font-script text-base leading-none sm:text-lg lg:text-lg xl:text-xl ${
+                solid ? 'text-navy-700' : 'text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)]'
+              }`}
+            >
+              {hero.assinatura}
+            </span>
+          </Link>
 
           {/* Redes sociais no header */}
-          <div className="hidden items-center gap-1.5 lg:flex">
+          <div className="hidden items-center gap-1.5 xl:flex">
             {redes.map((r) => {
               const Ic = SOCIAL_ICONS[r.icone]
               return (
@@ -72,7 +74,7 @@ export default function Navbar() {
         </div>
 
         {/* Navegação desktop */}
-        <div className="hidden items-center gap-0.5 lg:flex">
+        <div className="hidden items-center gap-0.5 xl:flex">
           {nav.map((item) => {
             const isActive = pathname === item.to
             return (
@@ -80,7 +82,7 @@ export default function Navbar() {
                 key={item.to}
                 to={item.to}
                 aria-current={isActive ? 'page' : undefined}
-                className={`rounded-full px-2.5 py-2 text-sm font-medium transition-colors ${
+                className={`whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-medium transition-colors ${
                   solid
                     ? isActive
                       ? 'bg-navy-100 text-navy-900'
@@ -96,10 +98,10 @@ export default function Navbar() {
           })}
         </div>
 
-        <div className="hidden items-center gap-3 lg:flex">
-          <Link to="/loja" className="btn-accent">
+        <div className="hidden shrink-0 items-center gap-3 xl:flex">
+          <Link to="/loja" className="btn-accent whitespace-nowrap">
             <ShoppingBag className="h-4 w-4" />
-            Loja
+            Loja SocialPlay
           </Link>
         </div>
 
@@ -107,7 +109,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className={`inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-colors lg:hidden ${
+          className={`inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-colors xl:hidden ${
             solid
               ? 'border-navy-200 bg-white/70 text-navy-800'
               : 'border-white/30 bg-white/10 text-white'
@@ -120,29 +122,38 @@ export default function Navbar() {
       </nav>
 
       {/* Painel mobile */}
-      <div className={open ? 'pointer-events-auto lg:hidden' : 'pointer-events-none lg:hidden'}>
+      <div className={open ? 'pointer-events-auto xl:hidden' : 'pointer-events-none xl:hidden'}>
         <div
           className={`origin-top overflow-hidden border-t border-navy-100 bg-paper shadow-lift transition-all duration-300 ${
             open ? 'max-h-[85vh] opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
           <div className="container-x section-pad flex flex-col gap-1 py-4">
-            {nav.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={() => setOpen(false)}
-                aria-current={pathname === item.to ? 'page' : undefined}
-                className={`rounded-xl px-4 py-3 text-base font-medium transition-colors ${
-                  pathname === item.to ? 'bg-navy-100 text-navy-900' : 'text-navy-800 hover:bg-navy-100'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {sumario.map((item) => {
+              const isAnchor = item.to.includes('#')
+              const isActive = !isAnchor && pathname === item.to
+              const cls = `rounded-xl px-4 py-3 text-base font-medium transition-colors ${
+                isActive ? 'bg-navy-100 text-navy-900' : 'text-navy-800 hover:bg-navy-100'
+              }`
+              return isAnchor ? (
+                <a key={item.label} href={item.to} onClick={() => setOpen(false)} className={cls}>
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.label}
+                  to={item.to}
+                  onClick={() => setOpen(false)}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={cls}
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
             <Link to="/loja" onClick={() => setOpen(false)} className="btn-accent mt-2 w-full">
               <ShoppingBag className="h-4 w-4" />
-              Loja
+              Loja SocialPlay
             </Link>
 
             {/* Redes sociais no menu mobile */}

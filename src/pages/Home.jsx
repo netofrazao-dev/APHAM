@@ -1,8 +1,8 @@
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import Stats from '../components/Stats'
+import Handebol from '../components/Handebol'
 import News from '../components/News'
-import Events from '../components/Events'
 import AoVivo from '../components/AoVivo'
 import Support from '../components/Support'
 import StoreTeaser from '../components/StoreTeaser'
@@ -21,8 +21,8 @@ export default function Home() {
         <Hero />
         <Stats />
         <AoVivo />
+        <Handebol />
         <News />
-        <Events />
         <Support />
         <StoreTeaser />
       </main>

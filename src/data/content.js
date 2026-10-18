@@ -31,6 +31,21 @@ export const nav = [
   { label: 'Projetos', to: '/projetos' },
   { label: 'Participar', to: '/participar' },
   { label: 'Equipes', to: '/equipes' },
+  { label: 'Competições', to: '/competicoes' },
+  { label: 'Galeria', to: '/galeria' },
+  { label: 'Fale Conosco', to: '/contato' },
+]
+
+// Sumário do MENU MOBILE (hambúrguer) — lista mais completa que a barra do desktop.
+// Itens com '#' levam a uma âncora na home; os demais abrem subpáginas.
+export const sumario = [
+  { label: 'Início', to: '/' },
+  { label: 'Quem Somos', to: '/projetos' },
+  { label: 'Projetos', to: '/projetos' },
+  { label: 'Participar', to: '/participar' },
+  { label: 'Equipes', to: '/equipes' },
+  { label: 'Competições', to: '/competicoes' },
+  { label: 'Apoie nosso Projeto', to: '/#apoie' },
   { label: 'Galeria', to: '/galeria' },
   { label: 'Fale Conosco', to: '/contato' },
 ]
@@ -82,6 +97,36 @@ export const sobre = {
     { nome: 'Escola de Esportes', logo: '/midia/marca/logo-escola-esportes.jpg' },
     { nome: 'Semear Hand', logo: '/midia/marca/logo-semear-hand.jpg' },
   ],
+}
+
+// INFORMAÇÕES GERAIS sobre a associação e o handebol (conteúdo PROVISÓRIO —
+// o cliente vai enviar o texto oficial). Aparece na home, no corpo que rola.
+export const handebol = {
+  eyebrow: 'O esporte',
+  titulo: 'Conheça o handebol',
+  intro:
+    'O handebol é um esporte coletivo, rápido e inclusivo: duas equipes se enfrentam buscando marcar gols com as mãos. Mais do que competição, ele ensina cooperação, disciplina e respeito — valores que a APHAM leva a crianças, adolescentes e jovens de todo o Marajó.',
+  topicos: [
+    {
+      icone: 'Trophy',
+      titulo: 'O que é o handebol',
+      texto:
+        'Jogado por duas equipes de sete atletas, é um dos esportes coletivos mais praticados nas escolas do Brasil — dinâmico, de fácil acesso e que desenvolve corpo e mente.',
+    },
+    {
+      icone: 'MapPin',
+      titulo: 'O handebol no Marajó',
+      texto:
+        'Na região marajoara, a APHAM é referência na formação de atletas e na difusão do handebol escolar e amador, levando o esporte a comunidades que antes tinham pouco acesso.',
+    },
+    {
+      icone: 'Users',
+      titulo: 'O dia a dia da APHAM',
+      texto:
+        'Treinos, oficinas, competições e ações sociais fazem parte da rotina da associação, sempre com foco na inclusão e na formação de valores dentro e fora da quadra.',
+    },
+  ],
+  nota: 'Conteúdo provisório — o texto oficial será enviado pela associação.',
 }
 
 export const valores = [

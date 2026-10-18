@@ -13,6 +13,7 @@ const Privacidade = lazy(() => import('./pages/Privacidade'))
 const Projetos = lazy(() => import('./pages/Projetos'))
 const ParticiparPage = lazy(() => import('./pages/ParticiparPage'))
 const EquipesPage = lazy(() => import('./pages/EquipesPage'))
+const CompeticoesPage = lazy(() => import('./pages/CompeticoesPage'))
 const GaleriaPage = lazy(() => import('./pages/GaleriaPage'))
 const ContatoPage = lazy(() => import('./pages/ContatoPage'))
 const NotFound = lazy(() => import('./pages/NotFound'))
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/projetos" element={<Projetos />} />
           <Route path="/participar" element={<ParticiparPage />} />
           <Route path="/equipes" element={<EquipesPage />} />
+          <Route path="/competicoes" element={<CompeticoesPage />} />
           <Route path="/galeria" element={<GaleriaPage />} />
           <Route path="/contato" element={<ContatoPage />} />
           <Route path="/loja" element={<Store />} />
