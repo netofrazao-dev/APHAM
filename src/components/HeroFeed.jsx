@@ -155,7 +155,7 @@ export default function HeroFeed({ compact = false }) {
 
       {/* Rótulo fixo do card + leve escurecimento no topo para leitura */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-16 bg-gradient-to-b from-black/45 to-transparent" />
-      <span className="absolute left-1/2 top-0 z-10 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-b-lg bg-pink-500 px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-white shadow-soft">
+      <span className="absolute left-1/2 top-0 z-10 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-b-2xl bg-pink-500 px-7 py-2 text-sm font-extrabold uppercase tracking-[0.18em] text-white shadow-lift sm:px-8 sm:text-base">
         Novidades
       </span>
 
