@@ -71,7 +71,7 @@ export const hero = {
 // Troque href pelo link do documento de cada um quando tiver.
 export const credenciais = [
   { titulo: 'Prêmios Nacionais e Certificações', cor: 'amarelo', href: '/projetos' },
-  { titulo: 'Lei de Incentivo ao Esporte', cor: 'verde', href: '/projetos' },
+  { titulo: 'Lei de Incentivo ao Esporte', cor: 'verdeBandeira', href: '/projetos' },
   { titulo: 'Cooperativa Social', cor: 'azul', href: '/projetos' },
   { titulo: 'Documentário', cor: 'laranja', href: '/galeria' },
 ]

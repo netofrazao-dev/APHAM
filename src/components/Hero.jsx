@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowRight, ChevronDown } from 'lucide-react'
+import { Heart, ChevronDown } from 'lucide-react'
 import { hero, assinaturaSocialPlay } from '../data/content'
 import HeroFeed from './HeroFeed'
 
@@ -109,16 +109,16 @@ export default function Hero() {
           >
             <Link
               to={hero.ctaQuemSomos.href}
-              className="inline-flex items-center justify-center gap-1.5 rounded-full bg-cyan-500 px-6 py-3 text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-cyan-600"
+              className="inline-flex items-center justify-center gap-1.5 rounded-full border-2 border-white bg-cyan-500 px-6 py-3 text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-cyan-600"
             >
               {hero.ctaQuemSomos.label}
             </Link>
             <a
               href={hero.ctaApoie.href}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#2faa3a] px-8 py-4 text-base font-bold text-white shadow-lift transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#268a30]"
+              className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white bg-[#7cb342] px-8 py-4 text-base font-bold text-white shadow-lift transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#6ba233]"
             >
               {hero.ctaApoie.label}
-              <ArrowRight className="h-5 w-5" />
+              <Heart className="h-5 w-5 fill-current" />
             </a>
           </motion.div>
         </div>

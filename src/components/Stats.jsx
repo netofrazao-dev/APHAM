@@ -5,6 +5,7 @@ const CORES = {
   amarelo: '#e0a500',
   laranja: '#ea680c',
   verde: '#2faa3a',
+  verdeBandeira: '#009c3b',
   azul: '#0881c2',
   cinza: '#64748b',
 }
