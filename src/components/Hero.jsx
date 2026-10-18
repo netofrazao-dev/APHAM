@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Heart, ChevronDown } from 'lucide-react'
-import { hero, assinaturaSocialPlay } from '../data/content'
+import { Heart, ChevronDown, Youtube, Facebook, Instagram } from 'lucide-react'
+import { hero, assinaturaSocialPlay, site, redesHeader } from '../data/content'
 import HeroFeed from './HeroFeed'
+
+const SOCIAL_ICONS = { Youtube, Facebook, Instagram }
+const redes = redesHeader.map((r) => ({ ...r, href: site[r.url] }))
 
 // Camadas de fundo (sem pessoas) que vão alternando no topo do site.
 const frames = [
@@ -67,6 +70,25 @@ export default function Hero() {
       {/* Conteúdo */}
       <div className="container-x section-pad relative z-10 grid min-h-[100svh] grid-cols-1 items-center gap-10 pb-24 pt-28 sm:pt-24 lg:grid-cols-12">
         <div className="lg:col-span-6">
+          {/* Redes sociais no topo do hero (só no celular) */}
+          <div className="mb-4 flex justify-end gap-2.5 lg:hidden">
+            {redes.map((r) => {
+              const Ic = SOCIAL_ICONS[r.icone]
+              return (
+                <a
+                  key={r.nome}
+                  href={r.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={r.nome}
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/30 text-white transition-colors hover:bg-white/15"
+                >
+                  <Ic className="h-4 w-4" />
+                </a>
+              )
+            })}
+          </div>
+
           {/* Painel de novidades no mobile (ocupa o espaço entre o topo e o título) */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}

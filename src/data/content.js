@@ -40,7 +40,6 @@ export const nav = [
 // Itens com '#' levam a uma âncora na home; os demais abrem subpáginas.
 export const sumario = [
   { label: 'Início', to: '/' },
-  { label: 'Quem Somos', to: '/projetos' },
   { label: 'Projetos', to: '/projetos' },
   { label: 'Participar', to: '/participar' },
   { label: 'Equipes', to: '/equipes' },
