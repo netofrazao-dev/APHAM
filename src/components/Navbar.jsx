@@ -48,29 +48,29 @@ export default function Navbar() {
               {hero.assinatura}
             </span>
           </Link>
+        </div>
 
-          {/* Redes sociais no header */}
-          <div className="hidden items-center gap-1.5 xl:flex">
-            {redes.map((r) => {
-              const Ic = SOCIAL_ICONS[r.icone]
-              return (
-                <a
-                  key={r.nome}
-                  href={r.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={r.nome}
-                  className={`inline-flex h-8 w-8 items-center justify-center rounded-full border transition-colors ${
-                    solid
-                      ? 'border-navy-200 text-navy-700 hover:bg-navy-100'
-                      : 'border-white/30 text-white hover:bg-white/15'
-                  }`}
-                >
-                  <Ic className="h-4 w-4" />
-                </a>
-              )
-            })}
-          </div>
+        {/* Redes sociais no header — entre a assinatura e o menu */}
+        <div className="hidden items-center gap-1.5 xl:flex">
+          {redes.map((r) => {
+            const Ic = SOCIAL_ICONS[r.icone]
+            return (
+              <a
+                key={r.nome}
+                href={r.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={r.nome}
+                className={`inline-flex h-8 w-8 items-center justify-center rounded-full border transition-colors ${
+                  solid
+                    ? 'border-navy-200 text-navy-700 hover:bg-navy-100'
+                    : 'border-white/30 text-white hover:bg-white/15'
+                }`}
+              >
+                <Ic className="h-4 w-4" />
+              </a>
+            )
+          })}
         </div>
 
         {/* Navegação desktop */}
