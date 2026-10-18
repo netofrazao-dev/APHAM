@@ -360,6 +360,8 @@ export function StoreProvider({ children }) {
     (patch) =>
       setSettings((s) => {
         const n = { ...s, ...patch }
+        // Garante que a antiga senha local não fica mais salva (segurança).
+        delete n.senhaAdmin
         sb.sbUpsertSettings(n)
         return n
       }),
@@ -367,30 +369,17 @@ export function StoreProvider({ children }) {
   )
 
   // ----- Admin -----
-  const login = useCallback(
-    async (arg1, arg2) => {
-      if (isSupabaseEnabled) {
-        try {
-          const { error } = await supabase.auth.signInWithPassword({ email: arg1, password: arg2 })
-          return !error
-        } catch {
-          return false
-        }
-      }
-      const senha = arg1
-      if (senha && senha === settings.senhaAdmin) {
-        setIsAdmin(true)
-        try {
-          sessionStorage.setItem(PREFIX + 'admin', '1')
-        } catch {
-          /* ignore */
-        }
-        return true
-      }
+  // Login do painel é sempre pelo Supabase Auth (e-mail + senha do usuário).
+  // Não há mais senha local no site (ela ficava legível e baixava a segurança).
+  const login = useCallback(async (email, password) => {
+    if (!isSupabaseEnabled) return false
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      return !error
+    } catch {
       return false
-    },
-    [settings.senhaAdmin]
-  )
+    }
+  }, [])
   const logout = useCallback(async () => {
     if (isSupabaseEnabled) {
       try {

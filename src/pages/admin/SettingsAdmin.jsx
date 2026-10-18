@@ -127,12 +127,6 @@ export default function SettingsAdmin() {
           </div>
         </Card>
 
-        <Card>
-          <h2 className="mb-4 font-display font-bold text-navy-900">Segurança</h2>
-          <Field label="Senha do painel" hint="Troque a senha padrão. (Proteção simples do lado do navegador — a segurança real virá com o login do servidor na próxima fase.)">
-            <input value={form.senhaAdmin} onChange={(e) => set('senhaAdmin', e.target.value)} className={inputCls} />
-          </Field>
-        </Card>
 
         <div className="flex items-center gap-3">
           <button type="submit" className={btnPrimary}>
