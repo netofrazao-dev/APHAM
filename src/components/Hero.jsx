@@ -66,7 +66,7 @@ export default function Hero() {
 
       {/* Conteúdo */}
       <div className="container-x section-pad relative z-10 grid min-h-[100svh] grid-cols-1 items-center gap-10 pb-24 pt-28 sm:pt-24 lg:grid-cols-12">
-        <div className="lg:col-span-7">
+        <div className="lg:col-span-6">
           {/* Painel de novidades no mobile (ocupa o espaço entre o topo e o título) */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -124,12 +124,12 @@ export default function Hero() {
         </div>
 
         {/* Painel de novidades / resultados (lugar da antiga bola), só no desktop */}
-        <div className="hidden lg:col-span-5 lg:block">
+        <div className="hidden lg:col-span-6 lg:block">
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="mx-auto w-full max-w-lg"
+            className="mx-auto w-full max-w-xl"
           >
             <HeroFeed />
           </motion.div>

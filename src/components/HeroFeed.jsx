@@ -72,6 +72,8 @@ function FotoSlide({ n }) {
   return (
     <div className="relative h-full overflow-hidden">
       <img src={n.img} alt="" className="h-full w-full object-cover" loading="lazy" />
+      {/* Foto esmaecida à esquerda (funde com o fundo) e sólida à direita */}
+      <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/30 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/25 to-navy-950/10" />
       <div className="absolute inset-x-0 bottom-0 p-5 pr-20">
         <p className="text-xs font-semibold uppercase tracking-wide text-cyan-200">
@@ -132,7 +134,7 @@ export default function HeroFeed({ compact = false }) {
   }, [slides.length])
 
   return (
-    <div className={`relative overflow-hidden shadow-lift ${compact ? 'h-56 rounded-none sm:h-60' : 'h-[22rem] rounded-3xl ring-1 ring-white/10'}`}>
+    <div className={`relative overflow-hidden shadow-lift ${compact ? 'h-56 rounded-none sm:h-60' : 'h-[26rem] rounded-xl ring-1 ring-white/10'}`}>
       {slides.map((s, idx) => (
         <div
           key={idx}
@@ -150,12 +152,9 @@ export default function HeroFeed({ compact = false }) {
         </div>
       ))}
 
-      {/* Efeito de transparência: começa transparente à esquerda e aparece mais à direita */}
-      <div className="pointer-events-none absolute inset-0 z-[5] bg-gradient-to-r from-transparent via-white/[0.03] to-white/[0.16]" />
-
       {/* Rótulo fixo do card + leve escurecimento no topo para leitura */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-16 bg-gradient-to-b from-black/45 to-transparent" />
-      <span className="absolute left-1/2 top-0 z-10 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-b-2xl bg-pink-500 px-7 py-2 text-sm font-extrabold uppercase tracking-[0.18em] text-white shadow-lift sm:px-8 sm:text-base">
+      <span className="absolute left-1/2 top-0 z-10 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-b-2xl bg-pink-500 px-10 py-2.5 text-sm font-extrabold uppercase tracking-[0.22em] text-white shadow-lift sm:px-14 sm:text-base">
         Novidades
       </span>
 
