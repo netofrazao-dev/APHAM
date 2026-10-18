@@ -1,26 +1,18 @@
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import Stats from '../components/Stats'
-import AoVivo from '../components/AoVivo'
-import About from '../components/About'
-import Values from '../components/Values'
 import News from '../components/News'
 import Events from '../components/Events'
-import Equipes from '../components/Equipes'
-import Awards from '../components/Awards'
-import Cooperativa from '../components/Cooperativa'
-import Videos from '../components/Videos'
-import Documentario from '../components/Documentario'
-import Gallery from '../components/Gallery'
-import Participar from '../components/Participar'
+import AoVivo from '../components/AoVivo'
 import Support from '../components/Support'
-import TaxIncentive from '../components/TaxIncentive'
 import StoreTeaser from '../components/StoreTeaser'
-import Faq from '../components/Faq'
-import Contact from '../components/Contact'
 import Footer from '../components/Footer'
 import BackToTop from '../components/BackToTop'
 
+// A home é a parte que "rola" — conteúdo atualizado com frequência (novidades,
+// eventos, transmissão ao vivo). As seções mais fixas viraram subpáginas,
+// acessadas pelo sumário (menu): /projetos, /participar, /equipes, /galeria,
+// /contato.
 export default function Home() {
   return (
     <div className="min-h-screen bg-paper">
@@ -28,23 +20,11 @@ export default function Home() {
       <main>
         <Hero />
         <Stats />
-        <About />
-        <Values />
+        <AoVivo />
         <News />
         <Events />
-        <Equipes />
-        <Awards />
-        <Cooperativa />
-        <Videos />
-        <Documentario />
-        <AoVivo />
-        <Gallery />
-        <Participar />
         <Support />
-        <TaxIncentive />
         <StoreTeaser />
-        <Faq />
-        <Contact />
       </main>
       <Footer />
       <BackToTop />

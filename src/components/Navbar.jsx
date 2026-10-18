@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Menu, X, ShoppingBag, Youtube, Facebook, Instagram } from 'lucide-react'
 import { nav, hero, site, redesHeader } from '../data/content'
 import Logo from './Logo'
@@ -10,6 +10,8 @@ const redes = redesHeader.map((r) => ({ ...r, href: site[r.url] }))
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const { pathname } = useLocation()
+  const isHome = pathname === '/'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -25,25 +27,8 @@ export default function Navbar() {
     }
   }, [open])
 
-  const [active, setActive] = useState('')
-  useEffect(() => {
-    const els = nav
-      .map((n) => document.getElementById(n.href.replace('#', '')))
-      .filter(Boolean)
-    if (!els.length || typeof IntersectionObserver === 'undefined') return
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) setActive('#' + e.target.id)
-        })
-      },
-      { rootMargin: '-45% 0px -50% 0px', threshold: 0 }
-    )
-    els.forEach((el) => obs.observe(el))
-    return () => obs.disconnect()
-  }, [])
-
-  const solid = scrolled || open
+  // Fora da home não há "herói" escuro atrás, então a barra fica sempre sólida.
+  const solid = scrolled || open || !isHome
 
   return (
     <header
@@ -89,12 +74,12 @@ export default function Navbar() {
         {/* Navegação desktop */}
         <div className="hidden items-center gap-0.5 lg:flex">
           {nav.map((item) => {
-            const isActive = item.href === active
+            const isActive = pathname === item.to
             return (
-              <a
-                key={item.href}
-                href={item.href}
-                aria-current={isActive ? 'true' : undefined}
+              <Link
+                key={item.to}
+                to={item.to}
+                aria-current={isActive ? 'page' : undefined}
                 className={`rounded-full px-2.5 py-2 text-sm font-medium transition-colors ${
                   solid
                     ? isActive
@@ -106,7 +91,7 @@ export default function Navbar() {
                 }`}
               >
                 {item.label}
-              </a>
+              </Link>
             )
           })}
         </div>
@@ -143,14 +128,17 @@ export default function Navbar() {
         >
           <div className="container-x section-pad flex flex-col gap-1 py-4">
             {nav.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
+              <Link
+                key={item.to}
+                to={item.to}
                 onClick={() => setOpen(false)}
-                className="rounded-xl px-4 py-3 text-base font-medium text-navy-800 transition-colors hover:bg-navy-100"
+                aria-current={pathname === item.to ? 'page' : undefined}
+                className={`rounded-xl px-4 py-3 text-base font-medium transition-colors ${
+                  pathname === item.to ? 'bg-navy-100 text-navy-900' : 'text-navy-800 hover:bg-navy-100'
+                }`}
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
             <Link to="/loja" onClick={() => setOpen(false)} className="btn-accent mt-2 w-full">
               <ShoppingBag className="h-4 w-4" />

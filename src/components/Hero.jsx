@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowRight, ChevronDown } from 'lucide-react'
 import { hero, assinaturaSocialPlay } from '../data/content'
@@ -106,12 +107,12 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="mt-9 flex flex-wrap items-center gap-4"
           >
-            <a
-              href={hero.ctaQuemSomos.href}
+            <Link
+              to={hero.ctaQuemSomos.href}
               className="inline-flex items-center justify-center gap-1.5 rounded-full bg-cyan-500 px-6 py-3 text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-cyan-600"
             >
               {hero.ctaQuemSomos.label}
-            </a>
+            </Link>
             <a
               href={hero.ctaApoie.href}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-[#2faa3a] px-8 py-4 text-base font-bold text-white shadow-lift transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#268a30]"

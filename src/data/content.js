@@ -25,12 +25,14 @@ export const site = {
   lojaUrl: '#loja',
 }
 
+// Sumário do site — cada item abre uma subpágina própria (conteúdo mais fixo).
+// O conteúdo que muda com frequência (novidades, eventos) fica rolando na home.
 export const nav = [
-  { label: 'Projetos', href: '#sobre' },
-  { label: 'Participar', href: '#participar' },
-  { label: 'Equipes', href: '#equipes' },
-  { label: 'Galeria', href: '#galeria' },
-  { label: 'Fale Conosco', href: '#contato' },
+  { label: 'Projetos', to: '/projetos' },
+  { label: 'Participar', to: '/participar' },
+  { label: 'Equipes', to: '/equipes' },
+  { label: 'Galeria', to: '/galeria' },
+  { label: 'Fale Conosco', to: '/contato' },
 ]
 
 // Redes sociais que aparecem no header (ao lado dos links).
@@ -46,17 +48,17 @@ export const hero = {
   // Assinatura script que aparece ao lado da logo no topo.
   assinatura: 'Handebol · Marajó · Pará!',
   ctaApoie: { label: 'Apoie o nosso projeto', href: '#apoie' },
-  ctaQuemSomos: { label: 'Quem somos', href: '#sobre' },
+  ctaQuemSomos: { label: 'Quem somos', href: '/projetos' },
 }
 
 // Selos/credenciais (quadro clicável, no lugar do antigo quadro de números).
 // href: âncora (#secao), link externo (https...) ou '#' (sem destino ainda).
 // Troque href pelo link do documento de cada um quando tiver.
 export const credenciais = [
-  { titulo: 'Prêmios Nacionais e Certificações', cor: 'amarelo', href: '#reconhecimentos' },
-  { titulo: 'Lei de Incentivo ao Esporte', cor: 'verde', href: '#incentivo' },
-  { titulo: 'Cooperativa Social', cor: 'azul', href: '#cooperativa' },
-  { titulo: 'Documentário', cor: 'laranja', href: '#documentario' },
+  { titulo: 'Prêmios Nacionais e Certificações', cor: 'amarelo', href: '/projetos' },
+  { titulo: 'Lei de Incentivo ao Esporte', cor: 'verde', href: '/projetos' },
+  { titulo: 'Cooperativa Social', cor: 'azul', href: '/projetos' },
+  { titulo: 'Documentário', cor: 'laranja', href: '/galeria' },
 ]
 
 export const sobre = {

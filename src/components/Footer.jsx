@@ -46,13 +46,13 @@ export default function Footer() {
             </h4>
             <ul className="mt-4 space-y-2.5">
               {nav.map((item) => (
-                <li key={item.href}>
-                  <a
-                    href={item.href}
+                <li key={item.to}>
+                  <Link
+                    to={item.to}
                     className="text-sm text-white/60 transition-colors hover:text-cyan-400"
                   >
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -64,14 +64,14 @@ export default function Footer() {
             </h4>
             <ul className="mt-4 space-y-2.5">
               <li>
-                <a href="/#participar" className="text-sm text-white/60 transition-colors hover:text-cyan-400">
+                <Link to="/participar" className="text-sm text-white/60 transition-colors hover:text-cyan-400">
                   Como participar
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/#faq" className="text-sm text-white/60 transition-colors hover:text-cyan-400">
+                <Link to="/contato" className="text-sm text-white/60 transition-colors hover:text-cyan-400">
                   Perguntas frequentes
-                </a>
+                </Link>
               </li>
               <li>
                 <Link to="/privacidade" className="text-sm text-white/60 transition-colors hover:text-cyan-400">
