@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Menu, X, ShoppingBag } from 'lucide-react'
-import { nav, hero } from '../data/content'
+import { Menu, X, ShoppingBag, Youtube, Facebook, Instagram } from 'lucide-react'
+import { nav, hero, site, redesHeader } from '../data/content'
 import Logo from './Logo'
+
+const SOCIAL_ICONS = { Youtube, Facebook, Instagram }
+const redes = redesHeader.map((r) => ({ ...r, href: site[r.url] }))
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -52,16 +55,39 @@ export default function Navbar() {
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <Logo className="h-10 sm:h-11" light={!solid} />
           <span
-            className={`shrink-0 whitespace-nowrap font-script text-base leading-none sm:text-xl lg:text-2xl ${
+            className={`shrink-0 whitespace-nowrap font-script text-base leading-none sm:text-lg lg:text-lg xl:text-2xl ${
               solid ? 'text-navy-700' : 'text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)]'
             }`}
           >
             {hero.assinatura}
           </span>
+
+          {/* Redes sociais no header */}
+          <div className="hidden items-center gap-1.5 lg:flex">
+            {redes.map((r) => {
+              const Ic = SOCIAL_ICONS[r.icone]
+              return (
+                <a
+                  key={r.nome}
+                  href={r.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={r.nome}
+                  className={`inline-flex h-8 w-8 items-center justify-center rounded-full border transition-colors ${
+                    solid
+                      ? 'border-navy-200 text-navy-700 hover:bg-navy-100'
+                      : 'border-white/30 text-white hover:bg-white/15'
+                  }`}
+                >
+                  <Ic className="h-4 w-4" />
+                </a>
+              )
+            })}
+          </div>
         </div>
 
         {/* Navegação desktop */}
-        <div className="hidden items-center gap-0.5 xl:flex">
+        <div className="hidden items-center gap-0.5 lg:flex">
           {nav.map((item) => {
             const isActive = item.href === active
             return (
@@ -85,7 +111,7 @@ export default function Navbar() {
           })}
         </div>
 
-        <div className="hidden items-center gap-3 xl:flex">
+        <div className="hidden items-center gap-3 lg:flex">
           <Link to="/loja" className="btn-accent">
             <ShoppingBag className="h-4 w-4" />
             Loja
@@ -96,7 +122,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className={`inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-colors xl:hidden ${
+          className={`inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-colors lg:hidden ${
             solid
               ? 'border-navy-200 bg-white/70 text-navy-800'
               : 'border-white/30 bg-white/10 text-white'
@@ -109,7 +135,7 @@ export default function Navbar() {
       </nav>
 
       {/* Painel mobile */}
-      <div className={open ? 'pointer-events-auto xl:hidden' : 'pointer-events-none xl:hidden'}>
+      <div className={open ? 'pointer-events-auto lg:hidden' : 'pointer-events-none lg:hidden'}>
         <div
           className={`origin-top overflow-hidden border-t border-navy-100 bg-paper shadow-lift transition-all duration-300 ${
             open ? 'max-h-[85vh] opacity-100' : 'max-h-0 opacity-0'
@@ -130,6 +156,25 @@ export default function Navbar() {
               <ShoppingBag className="h-4 w-4" />
               Loja
             </Link>
+
+            {/* Redes sociais no menu mobile */}
+            <div className="mt-3 flex items-center justify-center gap-3 border-t border-navy-100 pt-4">
+              {redes.map((r) => {
+                const Ic = SOCIAL_ICONS[r.icone]
+                return (
+                  <a
+                    key={r.nome}
+                    href={r.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={r.nome}
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-navy-200 text-navy-700 transition-colors hover:bg-navy-100"
+                  >
+                    <Ic className="h-5 w-5" />
+                  </a>
+                )
+              })}
+            </div>
           </div>
         </div>
       </div>

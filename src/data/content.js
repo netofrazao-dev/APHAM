@@ -19,20 +19,25 @@ export const site = {
   whatsapp: 'https://wa.me/5591991789031',
   instagram: 'https://www.instagram.com/handebolmarajo/',
   facebook: 'https://www.facebook.com/Apham2009',
+  // TODO: trocar pelo link do canal oficial do YouTube da APHAM quando o cliente enviar.
+  youtube: 'https://www.youtube.com/results?search_query=APHAM+handebol+do+Maraj%C3%B3',
   // Link da futura loja — por enquanto aponta para o bloco "Loja em breve".
   lojaUrl: '#loja',
 }
 
 export const nav = [
-  { label: 'Início', href: '#inicio' },
-  { label: 'A Associação', href: '#sobre' },
-  { label: 'Novidades', href: '#novidades' },
-  { label: 'Eventos', href: '#eventos' },
+  { label: 'Projetos', href: '#sobre' },
+  { label: 'Participar', href: '#participar' },
   { label: 'Equipes', href: '#equipes' },
   { label: 'Galeria', href: '#galeria' },
-  { label: 'Participar', href: '#participar' },
-  { label: 'Apoie', href: '#apoie' },
-  { label: 'Contato', href: '#contato' },
+  { label: 'Fale Conosco', href: '#contato' },
+]
+
+// Redes sociais que aparecem no header (ao lado dos links).
+export const redesHeader = [
+  { nome: 'YouTube', icone: 'Youtube', url: 'youtube' },
+  { nome: 'Facebook', icone: 'Facebook', url: 'facebook' },
+  { nome: 'Instagram', icone: 'Instagram', url: 'instagram' },
 ]
 
 export const hero = {

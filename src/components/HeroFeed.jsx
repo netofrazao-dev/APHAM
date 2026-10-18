@@ -150,9 +150,12 @@ export default function HeroFeed({ compact = false }) {
         </div>
       ))}
 
+      {/* Efeito de transparência: começa transparente à esquerda e aparece mais à direita */}
+      <div className="pointer-events-none absolute inset-0 z-[5] bg-gradient-to-r from-transparent via-white/[0.03] to-white/[0.16]" />
+
       {/* Rótulo fixo do card + leve escurecimento no topo para leitura */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-16 bg-gradient-to-b from-black/45 to-transparent" />
-      <span className="absolute left-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full bg-cyan-500 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-soft">
+      <span className="absolute left-0 top-0 z-10 inline-flex items-center gap-1.5 rounded-br-lg bg-cyan-500 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-soft">
         Novidades
       </span>
 
