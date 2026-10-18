@@ -1,9 +1,10 @@
 import { site } from '../data/content'
 
 // Logomarca oficial da APHAM (imagem em /public/midia/logo-apham.png).
+// É só o visual — quem usa o Logo decide o link (normalmente um <Link to="/">).
 export default function Logo({ className = 'h-12', withText = false, light = false }) {
   return (
-    <a href="#inicio" className="group inline-flex items-center gap-3" aria-label={`${site.nome} — início`}>
+    <span className="group inline-flex items-center gap-3">
       <img
         src="/midia/logo-apham.png"
         alt={site.nomeCompleto}
@@ -16,6 +17,6 @@ export default function Logo({ className = 'h-12', withText = false, light = fal
           {site.nome}
         </span>
       )}
-    </a>
+    </span>
   )
 }

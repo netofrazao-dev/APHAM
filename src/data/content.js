@@ -17,6 +17,8 @@ export const site = {
   email: 'apham.cvmf@gmail.com',
   telefone: '(91) 99178-9031',
   whatsapp: 'https://wa.me/5591991789031',
+  // Número oficial (só dígitos, com DDI) — usado para os pedidos da loja.
+  whatsappNumero: '5591991789031',
   instagram: 'https://www.instagram.com/handebolmarajo/',
   facebook: 'https://www.facebook.com/Apham2009',
   // TODO: trocar pelo link do canal oficial do YouTube da APHAM quando o cliente enviar.
@@ -68,9 +70,9 @@ export const hero = {
 // href: âncora (#secao), link externo (https...) ou '#' (sem destino ainda).
 // Troque href pelo link do documento de cada um quando tiver.
 export const credenciais = [
-  { titulo: 'Prêmios Nacionais e Certificações', cor: 'amarelo', href: '/projetos' },
-  { titulo: 'Lei de Incentivo ao Esporte', cor: 'verdeBandeira', href: '/projetos' },
-  { titulo: 'Cooperativa Social', cor: 'azul', href: '/projetos' },
+  { titulo: 'Prêmios Nacionais e Certificações', cor: 'amarelo', href: '/projetos#reconhecimentos' },
+  { titulo: 'Lei de Incentivo ao Esporte', cor: 'verdeBandeira', href: '/projetos#incentivo' },
+  { titulo: 'Cooperativa Social', cor: 'azul', href: '/projetos#cooperativa' },
   { titulo: 'Documentário', cor: 'laranja', href: '/galeria#documentario' },
 ]
 

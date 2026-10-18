@@ -12,7 +12,9 @@ export default function Footer() {
       <div className="section-pad container-x py-14">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-12">
           <div className="md:col-span-4">
-            <Logo className="h-16" light />
+            <Link to="/" aria-label="Ir para o início" className="inline-block">
+              <Logo className="h-16" light />
+            </Link>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/60">
               {site.nomeCompleto}. Desde 2009, promovendo o esporte, a inclusão social e a formação
               da juventude em {site.cidade}, {site.estado}.

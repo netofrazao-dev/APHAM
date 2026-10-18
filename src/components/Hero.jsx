@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Heart, ChevronDown, Youtube, Facebook, Instagram } from 'lucide-react'
+import { Heart, Handshake, ChevronDown, Youtube, Facebook, Instagram } from 'lucide-react'
 import { hero, assinaturaSocialPlay, site, redesHeader } from '../data/content'
 import HeroFeed from './HeroFeed'
 
@@ -101,8 +101,13 @@ export default function Hero() {
 
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            animate={{ opacity: 1, y: 0, scale: [1, 1.14, 1] }}
+            transition={{
+              opacity: { duration: 0.6 },
+              y: { duration: 0.6 },
+              scale: { duration: 3.6, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            style={{ transformOrigin: 'left center' }}
             className="whitespace-nowrap font-display text-lg font-bold tracking-tight text-white sm:text-xl lg:text-2xl"
           >
             Mais que uma Associação...
@@ -110,8 +115,13 @@ export default function Hero() {
 
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
+            animate={{ opacity: 1, y: 0, scale: [1, 0.9, 1] }}
+            transition={{
+              opacity: { duration: 0.7, delay: 0.1 },
+              y: { duration: 0.7, delay: 0.1 },
+              scale: { duration: 3.6, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            style={{ transformOrigin: 'left center' }}
             className="mt-3 font-display text-5xl font-extrabold leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-7xl"
           >
             Muito mais que{' '}
@@ -140,6 +150,7 @@ export default function Hero() {
               className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white bg-[#7cb342] px-8 py-4 text-base font-bold text-white shadow-lift transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#6ba233]"
             >
               {hero.ctaApoie.label}
+              <Handshake className="h-5 w-5" />
               <Heart className="h-5 w-5 fill-current" />
             </a>
           </motion.div>

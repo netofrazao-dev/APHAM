@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { MessageCircle, Check, ShoppingBag, Tag, X } from 'lucide-react'
 import { useStore, novoId } from '../store/StoreContext'
+import { site } from '../data/content'
 import { useToast } from '../components/Toast'
 import { notifyEmail } from '../lib/notify'
 import { formatBRL } from '../store/format'
@@ -78,7 +79,9 @@ export default function Checkout() {
       .join('\n')
   }
 
-  const linkWhatsApp = (order) => `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(montarTexto(order))}`
+  // Usa o número oficial da APHAM (fonte única no site); cai no da loja só se faltar.
+  const numeroPedido = (site.whatsappNumero || settings.whatsapp || '').replace(/\D/g, '')
+  const linkWhatsApp = (order) => `https://wa.me/${numeroPedido}?text=${encodeURIComponent(montarTexto(order))}`
 
   const handleSubmit = (e) => {
     e.preventDefault()
