@@ -71,7 +71,7 @@ export const credenciais = [
   { titulo: 'Prêmios Nacionais e Certificações', cor: 'amarelo', href: '/projetos' },
   { titulo: 'Lei de Incentivo ao Esporte', cor: 'verdeBandeira', href: '/projetos' },
   { titulo: 'Cooperativa Social', cor: 'azul', href: '/projetos' },
-  { titulo: 'Documentário', cor: 'laranja', href: '/galeria' },
+  { titulo: 'Documentário', cor: 'laranja', href: '/galeria#documentario' },
 ]
 
 export const sobre = {

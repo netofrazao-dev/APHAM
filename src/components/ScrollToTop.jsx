@@ -21,12 +21,29 @@ function tituloPara(pathname) {
   return BASE
 }
 
-// Rola para o topo e ajusta o título ao trocar de rota.
+// Rola para o topo (ou até a âncora, quando há #) e ajusta o título ao trocar de rota.
 export default function ScrollToTop() {
   const { pathname, hash } = useLocation()
   useEffect(() => {
     document.title = tituloPara(pathname)
-    if (hash) return
+
+    if (hash) {
+      // Rola até a seção da âncora. Como algumas páginas carregam sob demanda,
+      // tenta algumas vezes até o elemento existir na tela.
+      const id = decodeURIComponent(hash.slice(1))
+      let tentativas = 0
+      const rolar = () => {
+        const el = document.getElementById(id)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        } else if (tentativas++ < 25) {
+          setTimeout(rolar, 100)
+        }
+      }
+      rolar()
+      return
+    }
+
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' in window ? 'instant' : 'auto' })
   }, [pathname, hash])
   return null
