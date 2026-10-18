@@ -105,7 +105,7 @@ export default function Hero() {
             transition={{
               opacity: { duration: 0.6 },
               y: { duration: 0.6 },
-              scale: { duration: 10, repeat: Infinity, ease: 'easeInOut' },
+              scale: { duration: 16, repeat: Infinity, ease: 'easeInOut' },
             }}
             style={{ transformOrigin: 'left center' }}
             className="whitespace-nowrap font-display text-lg font-bold tracking-tight text-white sm:text-xl lg:text-2xl"
@@ -119,7 +119,7 @@ export default function Hero() {
             transition={{
               opacity: { duration: 0.7, delay: 0.1 },
               y: { duration: 0.7, delay: 0.1 },
-              scale: { duration: 10, repeat: Infinity, ease: 'easeInOut' },
+              scale: { duration: 16, repeat: Infinity, ease: 'easeInOut' },
             }}
             style={{ transformOrigin: 'left center' }}
             className="mt-3 font-display text-5xl font-extrabold leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-7xl"
@@ -150,7 +150,7 @@ export default function Hero() {
               className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white bg-[#7cb342] px-8 py-4 text-base font-bold text-white shadow-lift transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#6ba233]"
             >
               {hero.ctaApoie.label}
-              <HeartHandshake className="h-5 w-5" />
+              <HeartHandshake className="h-7 w-7" />
             </a>
           </motion.div>
         </div>
