@@ -146,13 +146,13 @@ export default function Hero() {
             >
               {hero.ctaQuemSomos.label}
             </Link>
-            <a
-              href={hero.ctaApoie.href}
+            <Link
+              to={hero.ctaApoie.href}
               className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white bg-[#7cb342] px-8 py-4 text-base font-bold text-white shadow-lift transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#6ba233]"
             >
               {hero.ctaApoie.label}
               <HeartHandshake className="h-9 w-9" />
-            </a>
+            </Link>
           </motion.div>
         </div>
 

@@ -4,7 +4,6 @@ import Stats from '../components/Stats'
 import Handebol from '../components/Handebol'
 import News from '../components/News'
 import AoVivo from '../components/AoVivo'
-import Support from '../components/Support'
 import StoreTeaser from '../components/StoreTeaser'
 import Footer from '../components/Footer'
 import BackToTop from '../components/BackToTop'
@@ -23,7 +22,6 @@ export default function Home() {
         <AoVivo />
         <Handebol />
         <News />
-        <Support />
         <StoreTeaser />
       </main>
       <Footer />

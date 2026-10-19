@@ -62,7 +62,7 @@ export const hero = {
   titulo: 'Muito mais que handebol',
   // Assinatura script que aparece ao lado da logo no topo.
   assinatura: 'Handebol · Marajó · Pará!',
-  ctaApoie: { label: 'Apoie o nosso projeto', href: '#apoie' },
+  ctaApoie: { label: 'Apoie o nosso projeto', href: '/apoie' },
   ctaQuemSomos: { label: 'Quem somos', href: '/projetos' },
 }
 
