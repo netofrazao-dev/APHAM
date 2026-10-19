@@ -105,7 +105,7 @@ export default function Hero() {
             transition={{
               opacity: { duration: 0.6 },
               y: { duration: 0.6 },
-              scale: { duration: 22, repeat: Infinity, ease: 'easeInOut' },
+              scale: { duration: 16, repeat: Infinity, ease: 'linear' },
             }}
             style={{ transformOrigin: 'left center' }}
             className="whitespace-nowrap font-display text-lg font-bold tracking-tight text-white sm:text-xl lg:text-2xl"
@@ -119,7 +119,7 @@ export default function Hero() {
             transition={{
               opacity: { duration: 0.7, delay: 0.1 },
               y: { duration: 0.7, delay: 0.1 },
-              scale: { duration: 22, repeat: Infinity, ease: 'easeInOut' },
+              scale: { duration: 16, repeat: Infinity, ease: 'linear' },
             }}
             style={{ transformOrigin: 'left center' }}
             className="mt-3 font-display text-5xl font-extrabold leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-7xl"
@@ -131,6 +131,7 @@ export default function Hero() {
                 <path d="M2 8 C 50 2, 150 2, 198 8" stroke="#33b6f5" strokeWidth="3" strokeLinecap="round" />
               </svg>
             </span>
+            <span className="text-white">!</span>
           </motion.h1>
 
           <motion.div
