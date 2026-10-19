@@ -17,6 +17,10 @@ function tituloPara(pathname) {
   if (pathname.startsWith('/competicoes')) return 'Competições · APHAM'
   if (pathname.startsWith('/galeria')) return 'Galeria · APHAM'
   if (pathname.startsWith('/contato')) return 'Fale Conosco · APHAM'
+  if (pathname.startsWith('/reconhecimentos')) return 'Prêmios e Certificações · APHAM'
+  if (pathname.startsWith('/incentivo')) return 'Lei de Incentivo ao Esporte · APHAM'
+  if (pathname.startsWith('/cooperativa')) return 'Cooperativa Social · APHAM'
+  if (pathname.startsWith('/documentario')) return 'Documentário · APHAM'
   if (pathname.startsWith('/privacidade')) return 'Privacidade e Termos · APHAM'
   return BASE
 }

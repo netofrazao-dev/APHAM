@@ -69,11 +69,12 @@ export const hero = {
 // Selos/credenciais (quadro clicável, no lugar do antigo quadro de números).
 // href: âncora (#secao), link externo (https...) ou '#' (sem destino ainda).
 // Troque href pelo link do documento de cada um quando tiver.
+// Cada selo abre a SUA própria página (conteúdo fixo), abrindo no topo.
 export const credenciais = [
-  { titulo: 'Prêmios Nacionais e Certificações', cor: 'amarelo', href: '/projetos#reconhecimentos' },
-  { titulo: 'Lei de Incentivo ao Esporte', cor: 'verdeBandeira', href: '/projetos#incentivo' },
-  { titulo: 'Cooperativa Social', cor: 'azul', href: '/projetos#cooperativa' },
-  { titulo: 'Documentário', cor: 'laranja', href: '/galeria#documentario' },
+  { titulo: 'Prêmios Nacionais e Certificações', cor: 'amarelo', href: '/reconhecimentos' },
+  { titulo: 'Lei de Incentivo ao Esporte', cor: 'verdeBandeira', href: '/incentivo' },
+  { titulo: 'Cooperativa Social', cor: 'azul', href: '/cooperativa' },
+  { titulo: 'Documentário', cor: 'laranja', href: '/documentario' },
 ]
 
 export const sobre = {
