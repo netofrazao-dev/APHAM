@@ -94,27 +94,6 @@ export default function About() {
             </div>
           </Reveal>
         </div>
-
-        {/* Nossos projetos */}
-        {sobre.projetos?.length > 0 && (
-          <Reveal>
-            <div className="mt-16 flex flex-col items-center gap-6 rounded-2xl border border-navy-100 bg-white px-6 py-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-navy-500">
-                Nossos projetos
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-10">
-                {sobre.projetos.map((p) => (
-                  <img
-                    key={p.nome}
-                    src={p.logo}
-                    alt={p.nome}
-                    className="h-16 w-auto object-contain sm:h-20"
-                  />
-                ))}
-              </div>
-            </div>
-          </Reveal>
-        )}
       </div>
     </section>
   )

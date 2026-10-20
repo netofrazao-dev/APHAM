@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { X, ChevronLeft, ChevronRight, Instagram, Radio, PlayCircle } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, Instagram, Radio, PlayCircle, ArrowUpRight } from 'lucide-react'
 import { site } from '../data/content'
 import { useStore } from '../store/StoreContext'
 import Reveal from './Reveal'
@@ -45,10 +45,50 @@ function StoryViewer({ index, stories, onClose, onNav }) {
   )
 }
 
+// Modal "Saiba mais" — mostra a matéria completa do card.
+function MateriaModal({ item, onClose }) {
+  useEffect(() => {
+    const onKey = (e) => e.key === 'Escape' && onClose()
+    window.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [onClose])
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-navy-950/90 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div
+        className="max-h-[88vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white shadow-lift"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {item.img && (
+          <div className="relative aspect-[16/9] overflow-hidden rounded-t-2xl">
+            <img src={item.img} alt={item.titulo} className="h-full w-full object-cover" />
+            {item.tag && (
+              <span className="absolute left-4 top-4 rounded-full bg-cyan-500 px-3 py-1 text-xs font-semibold text-white">{item.tag}</span>
+            )}
+            <button type="button" onClick={onClose} aria-label="Fechar" className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-navy-950/60 text-white hover:bg-navy-950/80">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        )}
+        <div className="p-6">
+          {item.data && <span className="text-xs font-semibold uppercase tracking-wide text-cyan-600">{item.data}</span>}
+          <h3 className="mt-1 font-display text-xl font-extrabold text-navy-900">{item.titulo}</h3>
+          <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-ink/75">{item.texto}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function News() {
   const { novidades, stories, settings } = useStore()
   const aoVivo = settings?.aoVivoAtivo && settings?.aoVivoUrl
   const [storyIdx, setStoryIdx] = useState(null)
+  const [materia, setMateria] = useState(null)
   const [igPosts, setIgPosts] = useState([])
 
   // Tenta buscar os posts do Instagram (via /api/instagram). Se não houver
@@ -182,7 +222,20 @@ export default function News() {
                   <div className="flex flex-1 flex-col p-6">
                     {n.data && <span className="text-xs font-semibold uppercase tracking-wide text-cyan-600">{n.data}</span>}
                     <h3 className="mt-1 font-display text-lg font-bold text-navy-900">{n.titulo}</h3>
-                    {n.texto && <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/70">{n.texto}</p>}
+                    {n.texto && <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/70 line-clamp-3">{n.texto}</p>}
+                    {n.link ? (
+                      <span className="mt-4 inline-flex w-fit items-center gap-1 text-sm font-semibold text-cyan-700">
+                        Ver no Instagram <ArrowUpRight className="h-4 w-4" />
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setMateria(n)}
+                        className="mt-4 inline-flex w-fit items-center gap-1 text-sm font-semibold text-cyan-700 transition-colors hover:text-cyan-800"
+                      >
+                        Saiba mais <ArrowUpRight className="h-4 w-4" />
+                      </button>
+                    )}
                   </div>
                 </Card>
               </Reveal>
@@ -194,6 +247,7 @@ export default function News() {
       {storyIdx !== null && (
         <StoryViewer index={storyIdx} stories={stories} onClose={() => setStoryIdx(null)} onNav={nav} />
       )}
+      {materia && <MateriaModal item={materia} onClose={() => setMateria(null)} />}
     </section>
   )
 }

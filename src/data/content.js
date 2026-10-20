@@ -25,6 +25,8 @@ export const site = {
   youtube: 'https://www.youtube.com/results?search_query=APHAM+handebol+do+Maraj%C3%B3',
   // Link da futura loja — por enquanto aponta para o bloco "Loja em breve".
   lojaUrl: '#loja',
+  // Loja pausada até ficar pronta: esconde o botão/bloco da loja e mostra "em breve".
+  lojaPausada: true,
 }
 
 // Sumário do site — cada item abre uma subpágina própria (conteúdo mais fixo).
@@ -33,7 +35,7 @@ export const nav = [
   { label: 'Projetos', to: '/projetos' },
   { label: 'Participar', to: '/participar' },
   { label: 'Equipes', to: '/equipes' },
-  { label: 'Competições', to: '/competicoes' },
+  { label: 'Competições e Eventos', to: '/competicoes' },
   { label: 'Galeria', to: '/galeria' },
   { label: 'Fale Conosco', to: '/contato' },
 ]
@@ -45,7 +47,7 @@ export const sumario = [
   { label: 'Projetos', to: '/projetos' },
   { label: 'Participar', to: '/participar' },
   { label: 'Equipes', to: '/equipes' },
-  { label: 'Competições', to: '/competicoes' },
+  { label: 'Competições e Eventos', to: '/competicoes' },
   { label: 'Galeria', to: '/galeria' },
   { label: 'Fale Conosco', to: '/contato' },
 ]
@@ -63,7 +65,7 @@ export const hero = {
   // Assinatura script que aparece ao lado da logo no topo.
   assinatura: 'Handebol · Marajó · Pará!',
   ctaApoie: { label: 'Apoie o nosso projeto', href: '/apoie' },
-  ctaQuemSomos: { label: 'Quem somos', href: '/projetos' },
+  ctaQuemSomos: { label: 'Quem somos', href: '/quem-somos' },
 }
 
 // Selos/credenciais (quadro clicável, no lugar do antigo quadro de números).
@@ -98,6 +100,35 @@ export const sobre = {
     { nome: 'Escola de Esportes', logo: '/midia/marca/logo-escola-esportes.jpg' },
     { nome: 'Semear Hand', logo: '/midia/marca/logo-semear-hand.jpg' },
   ],
+}
+
+// PROJETOS da APHAM (página própria, aberta pelo menu "Projetos").
+// Ordem pedida pelo cliente: 1º Semear Hand, 2º Escola de Esportes.
+// Textos PROVISÓRIOS — serão substituídos pelo conteúdo oficial.
+export const projetos = {
+  eyebrow: 'Nossos projetos',
+  titulo: 'Projetos que transformam pelo esporte',
+  descricao:
+    'A APHAM desenvolve projetos que usam o handebol como ferramenta de educação, inclusão social e formação de valores para crianças, adolescentes e jovens do Marajó.',
+  lista: [
+    {
+      nome: 'Semear Hand',
+      logo: '/midia/marca/logo-semear-hand.jpg',
+      resumo:
+        'Educação integral pelo handebol — "aprendizagem que transforma". Semifinalista do Prêmio Itaú-Unicef 2015.',
+      texto:
+        'O Semear Hand usa o handebol como semente de aprendizagem e transformação, unindo educação e esporte na formação de crianças e jovens marajoaras. (Texto provisório — ajustar com o conteúdo oficial do projeto.)',
+    },
+    {
+      nome: 'Escola de Esportes',
+      logo: '/midia/marca/logo-escola-esportes.jpg',
+      resumo:
+        '"No Esporte com Valores" — iniciação e formação esportiva. Semifinalista do Prêmio Itaú-Unicef 2018.',
+      texto:
+        'A Escola de Esportes leva a iniciação ao handebol e a formação de valores a comunidades que antes tinham pouco acesso ao esporte. (Texto provisório — ajustar com o conteúdo oficial do projeto.)',
+    },
+  ],
+  nota: 'Conteúdo provisório — os textos oficiais dos projetos serão enviados pela associação.',
 }
 
 // INFORMAÇÕES GERAIS sobre a associação e o handebol (conteúdo PROVISÓRIO —
@@ -375,7 +406,7 @@ export const contato = {
 // assinatura dourada da Social Play aparece de fundo.
 export const lojaConceito = {
   marca: 'Social Play',
-  conceito: 'Vestuário conceito',
+  conceito: 'Vestuário Conceito',
   descricao:
     'Peças com a identidade do handebol marajoara. Cada compra fortalece os projetos sociais da APHAM.',
   assinatura: '/midia/marca/assinatura-socialplay.png',

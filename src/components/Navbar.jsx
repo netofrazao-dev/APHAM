@@ -98,12 +98,14 @@ export default function Navbar() {
           })}
         </div>
 
-        <div className="hidden shrink-0 items-center gap-3 xl:flex">
-          <Link to="/loja" className="btn-primary whitespace-nowrap ring-1 ring-white/25">
-            <ShoppingBag className="h-4 w-4" />
-            Loja SocialPlay
-          </Link>
-        </div>
+        {!site.lojaPausada && (
+          <div className="hidden shrink-0 items-center gap-3 xl:flex">
+            <Link to="/loja" className="btn-primary whitespace-nowrap ring-1 ring-white/25">
+              <ShoppingBag className="h-4 w-4" />
+              Loja SocialPlay
+            </Link>
+          </div>
+        )}
 
         {/* Botão menu mobile */}
         <button
@@ -151,10 +153,12 @@ export default function Navbar() {
                 </Link>
               )
             })}
-            <Link to="/loja" onClick={() => setOpen(false)} className="btn-primary mt-2 w-full">
-              <ShoppingBag className="h-4 w-4" />
-              Loja SocialPlay
-            </Link>
+            {!site.lojaPausada && (
+              <Link to="/loja" onClick={() => setOpen(false)} className="btn-primary mt-2 w-full">
+                <ShoppingBag className="h-4 w-4" />
+                Loja SocialPlay
+              </Link>
+            )}
 
             {/* Redes sociais no menu mobile */}
             <div className="mt-3 flex items-center justify-center gap-3 border-t border-navy-100 pt-4">

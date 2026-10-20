@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Search, SlidersHorizontal, ShoppingBag } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
 import { precoFinal } from '../store/format'
-import { lojaConceito, assinaturaSocialPlay } from '../data/content'
+import { lojaConceito, assinaturaSocialPlay, site } from '../data/content'
 import StoreHeader from '../components/store/StoreHeader'
 import StoreFooter from '../components/store/StoreFooter'
 import ProductCard from '../components/store/ProductCard'
@@ -29,6 +30,33 @@ export default function Store() {
   }, [produtos, cat, busca, ordem])
 
   const lojaFechada = settings.lojaAtiva === false
+
+  // Loja pausada (em preparação) — mostra "em breve" em vez do catálogo.
+  if (site.lojaPausada) {
+    return (
+      <div className="flex min-h-screen flex-col bg-paper">
+        <StoreHeader />
+        <section className="section-pad flex flex-1 items-center justify-center py-24">
+          <div className="container-x max-w-lg text-center">
+            <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-cyan-100 text-cyan-700">
+              <ShoppingBag className="h-8 w-8" />
+            </span>
+            <h1 className="mt-6 font-display text-3xl font-extrabold text-navy-900 sm:text-4xl">
+              Loja em breve
+            </h1>
+            <p className="mt-4 text-ink/70">
+              Estamos preparando a loja oficial da APHAM. Volte logo para vestir a camisa do handebol
+              do Marajó!
+            </p>
+            <Link to="/" className="btn-primary mt-8">
+              Voltar ao início
+            </Link>
+          </div>
+        </section>
+        <StoreFooter />
+      </div>
+    )
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-paper">
