@@ -186,7 +186,7 @@ export default function News() {
         {aoVivo && (
           <Reveal>
             <a
-              href="#ao-vivo"
+              href="#lives"
               className="group mt-8 flex flex-col items-start gap-4 overflow-hidden rounded-2xl bg-gradient-to-r from-red-700 to-red-600 p-5 shadow-lift sm:flex-row sm:items-center sm:justify-between sm:p-6"
             >
               <div className="flex items-center gap-4">

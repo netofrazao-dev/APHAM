@@ -20,6 +20,7 @@ const ReconhecimentosPage = lazy(() => import('./pages/ReconhecimentosPage'))
 const IncentivoPage = lazy(() => import('./pages/IncentivoPage'))
 const CooperativaPage = lazy(() => import('./pages/CooperativaPage'))
 const DocumentarioPage = lazy(() => import('./pages/DocumentarioPage'))
+const LivesPage = lazy(() => import('./pages/LivesPage'))
 const ApoiePage = lazy(() => import('./pages/ApoiePage'))
 const QuemSomosPage = lazy(() => import('./pages/QuemSomosPage'))
 const NotFound = lazy(() => import('./pages/NotFound'))
@@ -50,6 +51,7 @@ export default function App() {
           <Route path="/incentivo" element={<IncentivoPage />} />
           <Route path="/cooperativa" element={<CooperativaPage />} />
           <Route path="/documentario" element={<DocumentarioPage />} />
+          <Route path="/lives" element={<LivesPage />} />
           <Route path="/apoie" element={<ApoiePage />} />
           <Route path="/quem-somos" element={<QuemSomosPage />} />
           <Route path="/loja" element={<Store />} />

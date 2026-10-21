@@ -1,19 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Trophy, Radio, PlayCircle } from 'lucide-react'
-import { resultados } from '../data/content'
+import { resultados, lives } from '../data/content'
 import { useStore } from '../store/StoreContext'
 
-// Monta a lista de slides: (ao vivo) + placar + foto, intercalando placar/foto.
-function buildSlides(aoVivo, novidades = []) {
+// Monta a lista de slides: (ao vivo) + placar + foto + jogo (live), intercalando.
+// Quando não há nada ao vivo, o card gira também as thumbnails dos jogos.
+function buildSlides(aoVivo, novidades = [], jogosLista = []) {
   const slides = []
   if (aoVivo) slides.push({ type: 'live', data: aoVivo })
 
   const placares = resultados.map((r) => ({ type: 'placar', data: r }))
   const fotos = (novidades || []).filter((n) => n.img).map((n) => ({ type: 'foto', data: n }))
-  const max = Math.max(placares.length, fotos.length)
+  const jogos = (jogosLista || []).slice(0, 6).map((j) => ({ type: 'jogo', data: j }))
+  const colunas = [fotos, jogos, placares]
+  const max = Math.max(...colunas.map((c) => c.length), 0)
   for (let i = 0; i < max; i++) {
-    if (placares[i]) slides.push(placares[i])
-    if (fotos[i]) slides.push(fotos[i])
+    for (const c of colunas) if (c[i]) slides.push(c[i])
   }
   return slides
 }
@@ -86,10 +89,31 @@ function FotoSlide({ n }) {
   )
 }
 
+// Slide de um jogo transmitido (Lives APHAM) — thumbnail do YouTube, leva a /lives.
+function JogoSlide({ j }) {
+  return (
+    <Link to="/lives" className="group relative block h-full overflow-hidden" aria-label={j.titulo}>
+      <img src={`https://i.ytimg.com/vi/${j.id}/hqdefault.jpg`} alt="" className="h-full w-full object-cover" loading="lazy" />
+      <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/30 to-navy-950/10" />
+      <span className="absolute inset-0 flex items-center justify-center">
+        <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-cyan-500/90 text-white shadow-lift transition-transform duration-300 group-hover:scale-110">
+          <PlayCircle className="h-7 w-7" />
+        </span>
+      </span>
+      <div className="absolute inset-x-0 bottom-0 p-5 pr-20">
+        <p className="text-xs font-semibold uppercase tracking-wide text-cyan-200">
+          Lives APHAM{j.torneio ? ` · ${j.torneio}` : ''}
+        </p>
+        <p className="mt-1 line-clamp-2 text-base font-bold leading-snug text-white">{j.titulo}</p>
+      </div>
+    </Link>
+  )
+}
+
 function LiveSlide({ titulo }) {
   return (
     <a
-      href="#ao-vivo"
+      href="#lives"
       className="group relative flex h-full flex-col items-center justify-center gap-3 overflow-hidden bg-gradient-to-br from-red-700 via-red-800 to-navy-950 p-6 pt-12 text-center"
     >
       <div className="absolute inset-0 dot-grid opacity-20" />
@@ -119,7 +143,7 @@ export default function HeroFeed({ compact = false }) {
       ? { titulo: settings.aoVivoTitulo || 'APHAM ao vivo' }
       : null
 
-  const slides = useMemo(() => buildSlides(aoVivo, novidades), [aoVivo, novidades])
+  const slides = useMemo(() => buildSlides(aoVivo, novidades, lives), [aoVivo, novidades])
   const [i, setI] = useState(0)
   // Pausa a rotação enquanto o dedo está em cima (ou o mouse sobre o card).
   const [paused, setPaused] = useState(false)
@@ -171,6 +195,8 @@ export default function HeroFeed({ compact = false }) {
             <LiveSlide titulo={s.data.titulo} />
           ) : s.type === 'placar' ? (
             <PlacarSlide r={s.data} />
+          ) : s.type === 'jogo' ? (
+            <JogoSlide j={s.data} />
           ) : (
             <FotoSlide n={s.data} />
           )}

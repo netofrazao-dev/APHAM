@@ -34,6 +34,7 @@ export const nav = [
   { label: 'Projetos', to: '/projetos' },
   { label: 'Participar', to: '/participar' },
   { label: 'Equipes', to: '/equipes' },
+  { label: 'Lives APHAM', to: '/lives' },
   { label: 'Competições e Eventos', to: '/competicoes' },
   { label: 'Galeria', to: '/galeria' },
   { label: 'Fale Conosco', to: '/contato' },
@@ -46,6 +47,7 @@ export const sumario = [
   { label: 'Projetos', to: '/projetos' },
   { label: 'Participar', to: '/participar' },
   { label: 'Equipes', to: '/equipes' },
+  { label: 'Lives APHAM', to: '/lives' },
   { label: 'Competições e Eventos', to: '/competicoes' },
   { label: 'Galeria', to: '/galeria' },
   { label: 'Fale Conosco', to: '/contato' },
@@ -259,9 +261,9 @@ export const novidades = [
     tag: 'TFA',
     titulo: 'TFA — a maior competição de handebol do Marajó',
     texto:
-      'O TFA é a maior competição de handebol da região do Marajó, reunindo as melhores equipes em uma disputa que já virou tradição. Uma edição que já aconteceu e marcou o calendário do esporte na região. (Foto e texto provisórios — aguardando o material oficial.)',
-    img: '/midia/eventos/campeoes-trofeu.jpg',
-    imgs: ['/midia/eventos/campeoes-trofeu.jpg', '/midia/eventos/equipe-medalhas.jpg'],
+      'A Taça das Fronteiras Amazônicas (TFA) é a maior competição de handebol da região do Marajó, reunindo as melhores equipes em uma disputa que já virou tradição. (Texto provisório — aguardando o texto oficial da associação.)',
+    img: '/midia/eventos/tfa-taca.jpg',
+    imgs: ['/midia/eventos/tfa-taca.jpg', '/midia/eventos/tfa-logo.webp'],
   },
   {
     data: '',
@@ -305,6 +307,40 @@ export const novidades = [
       'Atividades lúdicas que unem esporte, educação e valores dentro e fora da quadra. (Foto e texto provisórios — aguardando o material oficial.)',
     img: '/midia/eventos/colonia-aquatica.jpg',
   },
+]
+
+// LIVES APHAM — jogos transmitidos no canal do YouTube (@handebolmarajo).
+// Coletados da aba "Ao vivo" do canal. Para adicionar um novo jogo, é só
+// incluir { id: '<id do vídeo>', torneio: '...', titulo: '...' }.
+export const livesInfo = {
+  eyebrow: 'Transmissões',
+  titulo: 'Lives APHAM',
+  intro:
+    'Reveja os jogos transmitidos pela APHAM no YouTube — a Taça das Fronteiras Amazônicas (TFA) e a Copa Handebol, direto do Marajó.',
+  canal: 'https://www.youtube.com/@handebolmarajo/streams',
+}
+
+export const lives = [
+  { id: 'U_IiwoyRwNI', torneio: 'TFA', titulo: 'Final — Bulls x Canibal' },
+  { id: 'oymU5yU2yiw', torneio: 'TFA', titulo: 'Final Juvenil — Acha x Santos (premiação)' },
+  { id: 'vAWS9NfcNG4', torneio: 'TFA', titulo: 'Final Juvenil — Acha x Santos' },
+  { id: 'c_Bk2yq-52g', torneio: 'TFA', titulo: 'União Handebol x Santos' },
+  { id: 'sm0-s9Ko2qc', torneio: 'TFA', titulo: 'Juvenil — Santos x Acha' },
+  { id: 't3zGIJjF39w', torneio: 'TFA', titulo: 'Amigos x Montabo Athletic' },
+  { id: 'gKI7iqpVjH8', torneio: 'TFA', titulo: 'Bulls x União Handebol' },
+  { id: '5WaHSOA_gT4', torneio: 'TFA', titulo: 'Amigos x Santos' },
+  { id: 'a1ulZAEcQMM', torneio: 'TFA', titulo: 'Montabo x Canibal' },
+  { id: 'VUQ9BmNElcg', torneio: 'TFA', titulo: 'Montabo x Santos' },
+  { id: '96wwzx3r-XQ', torneio: 'TFA', titulo: 'Sub-17 — Acha x Santos' },
+  { id: 'WV9oXlVEpB0', torneio: 'TFA', titulo: 'Canibal x União' },
+  { id: 'ocisQLuG9VA', torneio: 'TFA', titulo: 'Bulls x Amigos' },
+  { id: 'Zjy__v6Ld3o', torneio: 'TFA', titulo: 'Canibal x Amigos' },
+  { id: 'KOMMqxyLDDk', torneio: 'TFA', titulo: 'Montabo x União' },
+  { id: 'VMdkQZ6j7hs', torneio: 'TFA', titulo: 'Santos/PHAE x Canibal' },
+  { id: 'R1CSSVVgdVw', torneio: 'TFA', titulo: 'Santos/PHAE x Canibal' },
+  { id: 'IUSfjyYD9Zw', torneio: 'TFA', titulo: 'Bulls x Montabo' },
+  { id: '__ykzZlGPN8', torneio: 'Copa Handebol', titulo: 'EETEPA Breves x Acará' },
+  { id: 'pMp8sCHjbhY', torneio: 'Copa Handebol', titulo: 'EETEPA Breves x Cametá' },
 ]
 
 // EVENTOS E CAMPEONATOS — cada um com uma breve história.

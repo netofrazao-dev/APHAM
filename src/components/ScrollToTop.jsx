@@ -21,6 +21,7 @@ function tituloPara(pathname) {
   if (pathname.startsWith('/incentivo')) return 'Lei de Incentivo ao Esporte · APHAM'
   if (pathname.startsWith('/cooperativa')) return 'Cooperativa Social · APHAM'
   if (pathname.startsWith('/documentario')) return 'Documentário · APHAM'
+  if (pathname.startsWith('/lives')) return 'Lives APHAM · APHAM'
   if (pathname.startsWith('/apoie')) return 'Apoie o nosso projeto · APHAM'
   if (pathname.startsWith('/quem-somos')) return 'Quem somos · APHAM'
   if (pathname.startsWith('/privacidade')) return 'Privacidade e Termos · APHAM'
