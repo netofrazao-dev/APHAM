@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Trophy, Radio, PlayCircle } from 'lucide-react'
-import { novidades, resultados } from '../data/content'
+import { resultados } from '../data/content'
 import { useStore } from '../store/StoreContext'
 
 // Monta a lista de slides: (ao vivo) + placar + foto, intercalando placar/foto.
-function buildSlides(aoVivo) {
+function buildSlides(aoVivo, novidades = []) {
   const slides = []
   if (aoVivo) slides.push({ type: 'live', data: aoVivo })
 
   const placares = resultados.map((r) => ({ type: 'placar', data: r }))
-  const fotos = novidades.filter((n) => n.img).map((n) => ({ type: 'foto', data: n }))
+  const fotos = (novidades || []).filter((n) => n.img).map((n) => ({ type: 'foto', data: n }))
   const max = Math.max(placares.length, fotos.length)
   for (let i = 0; i < max; i++) {
     if (placares[i]) slides.push(placares[i])
@@ -113,13 +113,13 @@ function LiveSlide({ titulo }) {
 }
 
 export default function HeroFeed({ compact = false }) {
-  const { settings } = useStore()
+  const { settings, novidades } = useStore()
   const aoVivo =
     settings?.aoVivoAtivo && settings?.aoVivoUrl
       ? { titulo: settings.aoVivoTitulo || 'APHAM ao vivo' }
       : null
 
-  const slides = useMemo(() => buildSlides(aoVivo), [aoVivo])
+  const slides = useMemo(() => buildSlides(aoVivo, novidades), [aoVivo, novidades])
   const [i, setI] = useState(0)
   // Pausa a rotação enquanto o dedo está em cima (ou o mouse sobre o card).
   const [paused, setPaused] = useState(false)

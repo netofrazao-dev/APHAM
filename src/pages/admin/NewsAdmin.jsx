@@ -44,13 +44,17 @@ export default function NewsAdmin() {
 
   const salvarPost = (e) => {
     e.preventDefault()
+    const foto1 = post.img || ''
+    const foto2 = post.img2 || ''
     saveNovidade({
       id: post.id || novoId('nov'),
       data: post.data || '',
       tag: post.tag || '',
       titulo: post.titulo || '',
       texto: post.texto || '',
-      img: post.img || '',
+      img: foto1,
+      // Efeito de 2 fotos: se houver segunda foto, guarda as duas em `imgs`.
+      imgs: foto2 ? [foto1, foto2].filter(Boolean) : undefined,
     })
     setPost(null)
   }
@@ -93,7 +97,7 @@ export default function NewsAdmin() {
       {/* Posts */}
       <div className="mb-3 flex items-center justify-between">
         <h2 className="font-display text-lg font-bold text-navy-900">Posts</h2>
-        <button type="button" onClick={() => setPost({ data: '', tag: '', titulo: '', texto: '', img: '' })} className={btnAccent}>
+        <button type="button" onClick={() => setPost({ data: '', tag: '', titulo: '', texto: '', img: '', img2: '' })} className={btnAccent}>
           <Plus className="h-4 w-4" />
           Novo post
         </button>
@@ -109,7 +113,7 @@ export default function NewsAdmin() {
               <h3 className="truncate font-display text-sm font-bold text-navy-900">{n.titulo}</h3>
             </div>
             <div className="flex gap-1.5">
-              <button type="button" onClick={() => setPost(n)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-700 hover:bg-navy-50" aria-label="Editar"><Pencil className="h-4 w-4" /></button>
+              <button type="button" onClick={() => setPost({ ...n, img2: n.imgs?.[1] || '' })} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-700 hover:bg-navy-50" aria-label="Editar"><Pencil className="h-4 w-4" /></button>
               <button type="button" onClick={() => window.confirm('Excluir este post?') && deleteNovidade(n.id)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-red-200 text-red-600 hover:bg-red-50" aria-label="Excluir"><Trash2 className="h-4 w-4" /></button>
             </div>
           </Card>
@@ -133,6 +137,13 @@ export default function NewsAdmin() {
               <Field label="Título *"><input required value={post.titulo} onChange={(e) => setPost((p) => ({ ...p, titulo: e.target.value }))} className={inputCls} /></Field>
               <Field label="Texto"><textarea rows={3} value={post.texto} onChange={(e) => setPost((p) => ({ ...p, texto: e.target.value }))} className={`${inputCls} resize-none`} /></Field>
               <Field label="Imagem"><Upload1 value={post.img} onChange={(v) => setPost((p) => ({ ...p, img: v }))} /></Field>
+              <Field label="Segunda foto (opcional — efeito de 2 fotos)">
+                <Upload1 value={post.img2} onChange={(v) => setPost((p) => ({ ...p, img2: v }))} />
+                <p className="mt-1.5 text-xs text-navy-500">
+                  Se você colocar uma segunda foto, o card alterna entre as duas com um efeito de
+                  transição. Deixe em branco para usar só uma foto.
+                </p>
+              </Field>
             </div>
             <div className="mt-6 flex justify-end gap-3">
               <button type="button" onClick={() => setPost(null)} className={btnGhost}>Cancelar</button>
