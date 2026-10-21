@@ -161,6 +161,37 @@ export const handebol = {
   nota: 'Conteúdo provisório — o texto oficial será enviado pela associação.',
 }
 
+// "Handebol no Brasil e no mundo" — portais oficiais do esporte.
+export const handebolMundo = {
+  eyebrow: 'O esporte',
+  titulo: 'Handebol no Brasil e no mundo',
+  intro:
+    'Acompanhe o handebol em todos os níveis: a confederação brasileira, a federação europeia e a federação internacional — as casas oficiais do esporte que a APHAM leva ao Marajó.',
+  sites: [
+    {
+      nome: 'CBHb',
+      descricao: 'Confederação Brasileira de Handebol',
+      ambito: 'Brasil',
+      img: '/midia/sites/cbhb.jpg',
+      href: 'https://www.cbhb.org.br/',
+    },
+    {
+      nome: 'EHF',
+      descricao: 'European Handball Federation',
+      ambito: 'Europa',
+      img: '/midia/sites/ehf.jpg',
+      href: 'https://www.eurohandball.com/',
+    },
+    {
+      nome: 'IHF',
+      descricao: 'International Handball Federation',
+      ambito: 'Mundo',
+      img: '/midia/sites/ihf.jpg',
+      href: 'https://www.ihf.info/',
+    },
+  ],
+}
+
 export const valores = [
   { icone: 'HeartHandshake', titulo: 'Inclusão Social', texto: 'O esporte como porta de oportunidades e ferramenta de transformação para a juventude.' },
   { icone: 'GraduationCap', titulo: 'Esporte Escolar', texto: 'Fortalecimento do handebol escolar e amador em toda a região do Marajó.' },
@@ -272,6 +303,40 @@ export const equipes = [
   { nome: 'Categorias de Base', papel: 'Jovens atletas', img: '/midia/eventos/equipe-medalhas.jpg' },
   { nome: 'Equipe Adulto', papel: 'Representando o Marajó', img: '/midia/eventos/equipe-masculina.jpg' },
   { nome: 'Nossos Campeões', papel: 'Conquistas em quadra', img: '/midia/eventos/campeoes-trofeu.jpg' },
+]
+
+// CLUBES/EQUIPES DO CAMPEONATO — escudo + história + títulos.
+// escudo: troque pelo escudo oficial quando o cliente enviar (Huniv e Primatas
+// estão com o logo da APHAM como provisório). titulos/historia são provisórios.
+export const clubes = [
+  {
+    nome: 'Canibal',
+    escudo: '/midia/equipes/canibal.jpg',
+    historia: 'Conteúdo provisório — a história do time será enviada pela associação.',
+    titulos: [],
+    foto: '',
+  },
+  {
+    nome: 'Huniv',
+    escudo: '/midia/logo-apham.png',
+    historia: 'Conteúdo provisório — a história do time será enviada pela associação.',
+    titulos: [],
+    foto: '',
+  },
+  {
+    nome: 'Bulls',
+    escudo: '/midia/equipes/bulls.jpg',
+    historia: 'Conteúdo provisório — a história do time será enviada pela associação.',
+    titulos: [],
+    foto: '',
+  },
+  {
+    nome: 'Primatas',
+    escudo: '/midia/logo-apham.png',
+    historia: 'Conteúdo provisório — a história do time será enviada pela associação.',
+    titulos: [],
+    foto: '',
+  },
 ]
 
 // RECONHECIMENTOS E CREDENCIAIS — cada item: imagem + texto curto + documento.
