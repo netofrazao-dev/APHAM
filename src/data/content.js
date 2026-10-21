@@ -235,30 +235,60 @@ export const resultados = [
 ]
 
 // Feed de novidades/posts.
+// Cards do TFA usam `imgs: [foto1, foto2]` para o efeito de 2 fotos (crossfade).
+// FOTOS E TEXTOS PROVISÓRIOS — usando imagens de exemplo até o cliente enviar
+// as fotos e textos reais do TFA e da Escola de Esportes.
 export const novidades = [
   {
-    data: '2024',
-    tag: 'Conquista',
-    titulo: 'APHAM é campeã no Centro Comunitário Elcione Barbalho',
+    data: '',
+    tag: 'TFA',
+    titulo: 'TFA — a maior competição de handebol do Marajó',
     texto:
-      'Nossas equipes subiram ao pódio em mais uma competição regional, levantando o troféu com o apoio de toda a comunidade marajoara. (Conteúdo provisório — ajuste a data e o texto.)',
+      'O TFA reúne as melhores equipes da região em uma disputa que já virou tradição no handebol marajoara. (Foto e texto provisórios — aguardando o material oficial.)',
     img: '/midia/eventos/campeoes-trofeu.jpg',
+    imgs: ['/midia/eventos/campeoes-trofeu.jpg', '/midia/eventos/equipe-medalhas.jpg'],
   },
   {
-    data: '2024',
-    tag: 'Escola de Esportes',
-    titulo: 'Categoria feminina em ação',
+    data: '',
+    tag: 'TFA',
+    titulo: 'TFA: participação da Guiana Francesa',
     texto:
-      'As meninas da Escola de Esportes seguem firmes nos treinos e representando a APHAM com orgulho dentro de quadra. (Conteúdo provisório.)',
+      'O torneio ganhou alcance internacional com a presença de uma delegação da Guiana Francesa. (Foto e texto provisórios — aguardando o material oficial.)',
+    img: '/midia/eventos/equipe-masculina.jpg',
+    imgs: ['/midia/eventos/equipe-masculina.jpg', '/midia/eventos/equipe-feminina.jpg'],
+  },
+  {
+    data: '',
+    tag: 'TFA',
+    titulo: 'TFA: a grande final',
+    texto:
+      'Quadra lotada e muita emoção na decisão do título. (Foto e texto provisórios — aguardando o material oficial.)',
+    img: '/midia/eventos/equipe-medalhas.jpg',
+    imgs: ['/midia/eventos/equipe-medalhas.jpg', '/midia/eventos/campeoes-trofeu.jpg'],
+  },
+  {
+    data: '',
+    tag: 'Escola de Esportes',
+    titulo: 'Lançamento da Escola de Esportes',
+    texto:
+      'O projeto que leva o handebol às escolas e comunidades do Marajó teve seu lançamento oficial. (Foto e texto provisórios — aguardando o material oficial.)',
+    img: '/midia/marca/logo-escola-esportes.jpg',
+  },
+  {
+    data: '',
+    tag: 'Escola de Esportes',
+    titulo: 'O dia a dia dos treinos',
+    texto:
+      'Crianças e jovens aprendendo os fundamentos do handebol com disciplina e alegria. (Foto e texto provisórios — aguardando o material oficial.)',
     img: '/midia/eventos/equipe-feminina.jpg',
   },
   {
-    data: '2015',
-    tag: "JEP's",
-    titulo: 'Pedágio solidário pelo handebol de Melgaço',
+    data: '',
+    tag: 'Escola de Esportes',
+    titulo: 'Gincanas pedagógicas',
     texto:
-      'Atletas e comunidade se uniram em um pedágio solidário para viabilizar a participação nos Jogos Escolares do Pará. (Conteúdo provisório.)',
-    img: '/midia/eventos/jeps-2015.jpg',
+      'Atividades lúdicas que unem esporte, educação e valores dentro e fora da quadra. (Foto e texto provisórios — aguardando o material oficial.)',
+    img: '/midia/eventos/colonia-aquatica.jpg',
   },
 ]
 

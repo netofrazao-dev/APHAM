@@ -121,6 +121,8 @@ export default function HeroFeed({ compact = false }) {
 
   const slides = useMemo(() => buildSlides(aoVivo), [aoVivo])
   const [i, setI] = useState(0)
+  // Pausa a rotação enquanto o dedo está em cima (ou o mouse sobre o card).
+  const [paused, setPaused] = useState(false)
 
   // Mantém o índice válido se a lista mudar (ex.: ligar/desligar o ao vivo).
   useEffect(() => {
@@ -128,17 +130,19 @@ export default function HeroFeed({ compact = false }) {
   }, [slides.length])
 
   useEffect(() => {
-    if (slides.length <= 1) return
+    if (slides.length <= 1 || paused) return
     const id = setInterval(() => setI((p) => (p + 1) % slides.length), 4500)
     return () => clearInterval(id)
-  }, [slides.length])
+  }, [slides.length, paused])
 
   // Arrastar o dedo (swipe) para trocar de slide no celular.
   const touchX = useRef(null)
   const onTouchStart = (e) => {
     touchX.current = e.changedTouches[0].clientX
+    setPaused(true) // segurou o dedo em cima: para de rodar
   }
   const onTouchEnd = (e) => {
+    setPaused(false) // soltou o dedo: volta a rodar
     if (touchX.current == null || slides.length <= 1) return
     const dx = e.changedTouches[0].clientX - touchX.current
     if (Math.abs(dx) > 40) {
@@ -151,6 +155,9 @@ export default function HeroFeed({ compact = false }) {
     <div
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
+      onTouchCancel={() => setPaused(false)}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
       className={`relative touch-pan-y select-none overflow-hidden shadow-lift ${compact ? 'h-56 rounded-none sm:h-60' : 'h-[26rem] rounded-xl ring-1 ring-white/10'}`}
     >
       {slides.map((s, idx) => (

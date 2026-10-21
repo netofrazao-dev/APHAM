@@ -45,6 +45,43 @@ function StoryViewer({ index, stories, onClose, onNav }) {
   )
 }
 
+// Mídia do card: uma foto, ou duas (ou mais) que se alternam com efeito de
+// transição (crossfade). Use `imgs: [a, b]` na novidade para o efeito de 2 fotos.
+function CardMedia({ item }) {
+  const imgs = Array.isArray(item.imgs) && item.imgs.length > 1 ? item.imgs : null
+  const [idx, setIdx] = useState(0)
+
+  useEffect(() => {
+    if (!imgs) return
+    const id = setInterval(() => setIdx((p) => (p + 1) % imgs.length), 3000)
+    return () => clearInterval(id)
+  }, [imgs])
+
+  if (imgs) {
+    return (
+      <>
+        {imgs.map((src, i) => (
+          <img
+            key={i}
+            src={src}
+            alt={item.titulo}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-in-out group-hover:scale-105"
+            style={{ opacity: i === idx ? 1 : 0 }}
+          />
+        ))}
+      </>
+    )
+  }
+
+  return (
+    item.img && (
+      <img src={item.img} alt={item.titulo} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+    )
+  )
+}
+
 // Modal "Saiba mais" — mostra a matéria completa do card.
 function MateriaModal({ item, onClose }) {
   useEffect(() => {
@@ -212,9 +249,7 @@ export default function News() {
                   className="group flex h-full flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
                 >
                   <div className="relative aspect-[16/10] overflow-hidden">
-                    {n.img && (
-                      <img src={n.img} alt={n.titulo} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                    )}
+                    <CardMedia item={n} />
                     {n.tag && (
                       <span className="absolute left-3 top-3 rounded-full bg-cyan-500 px-3 py-1 text-xs font-semibold text-white">{n.tag}</span>
                     )}
