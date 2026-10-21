@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { X, ChevronLeft, ChevronRight, Instagram, Radio, PlayCircle, ArrowUpRight } from 'lucide-react'
 import { site } from '../data/content'
 import { useStore } from '../store/StoreContext'
@@ -82,6 +83,67 @@ function CardMedia({ item }) {
   )
 }
 
+// Card ÚNICO das lives dentro do feed de novidades: fica alternando a capa de
+// um jogo diferente a cada poucos segundos. Leva para a página /lives.
+function LivesFeedCard({ jogos }) {
+  const lista = (jogos || []).slice(0, 8)
+  const [i, setI] = useState(0)
+  const [pausado, setPausado] = useState(false)
+
+  useEffect(() => {
+    if (lista.length <= 1 || pausado) return
+    const id = setInterval(() => setI((p) => (p + 1) % lista.length), 4000)
+    return () => clearInterval(id)
+  }, [lista.length, pausado])
+
+  if (!lista.length) return null
+  const j = lista[i % lista.length]
+
+  return (
+    <Reveal>
+      <Link
+        to="/lives"
+        onMouseEnter={() => setPausado(true)}
+        onMouseLeave={() => setPausado(false)}
+        className="group flex h-full flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
+      >
+        <div className="relative aspect-[16/10] overflow-hidden bg-navy-900">
+          {lista.map((g, idx) => (
+            <img
+              key={g.id}
+              src={`https://i.ytimg.com/vi/${g.id}/hqdefault.jpg`}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
+              style={{ opacity: idx === i ? 1 : 0 }}
+            />
+          ))}
+          <div className="absolute inset-0 bg-navy-950/25" />
+          <span className="absolute left-3 top-3 rounded-full bg-red-600 px-3 py-1 text-xs font-semibold text-white">Lives APHAM</span>
+          <span className="absolute inset-0 flex items-center justify-center">
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-cyan-500/90 text-white shadow-lift transition-transform duration-300 group-hover:scale-110">
+              <PlayCircle className="h-6 w-6" />
+            </span>
+          </span>
+        </div>
+        <div className="flex flex-1 flex-col p-6">
+          <span className="text-xs font-semibold uppercase tracking-wide text-cyan-600">
+            Jogos transmitidos{j.torneio ? ` · ${j.torneio}` : ''}
+          </span>
+          <h3 className="mt-1 line-clamp-2 font-display text-lg font-bold text-navy-900">{j.titulo}</h3>
+          <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/70">
+            Reveja os jogos da APHAM no YouTube — eles ficam alternando aqui.
+          </p>
+          <span className="mt-4 inline-flex w-fit items-center gap-1 text-sm font-semibold text-cyan-700">
+            Ver as lives <ArrowUpRight className="h-4 w-4" />
+          </span>
+        </div>
+      </Link>
+    </Reveal>
+  )
+}
+
 // Modal "Saiba mais" — mostra a matéria completa do card.
 function MateriaModal({ item, onClose }) {
   useEffect(() => {
@@ -122,7 +184,7 @@ function MateriaModal({ item, onClose }) {
 }
 
 export default function News() {
-  const { novidades, stories, settings } = useStore()
+  const { novidades, stories, settings, lives } = useStore()
   const aoVivo = settings?.aoVivoAtivo && settings?.aoVivoUrl
   const [storyIdx, setStoryIdx] = useState(null)
   const [materia, setMateria] = useState(null)
@@ -235,8 +297,9 @@ export default function News() {
           </div>
         </Reveal>
 
-        {/* Feed de novidades (Instagram quando disponível) */}
+        {/* Feed de novidades — 1 card das Lives (rotativo) + os posts */}
         <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <LivesFeedCard jogos={lives} />
           {feed.map((n, i) => {
             const Card = n.link ? 'a' : 'article'
             const linkProps = n.link

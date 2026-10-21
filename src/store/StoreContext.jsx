@@ -120,9 +120,9 @@ export function StoreProvider({ children }) {
       if (!alive) return
       if (cat && cat.length) setCategorias(cat)
       if (cup) setCupons(cup)
-      if (nov) setNovidades(nov)
-      if (sto) setStories(sto)
-      // Só troca pelas lives do banco se houver alguma lá (senão mantém o seed).
+      // Só troca pelo banco se houver conteúdo lá (senão mantém o seed do site).
+      if (nov && nov.length) setNovidades(nov)
+      if (sto && sto.length) setStories(sto)
       if (liv && liv.length) setLives(liv)
       if (setg) setSettings((s) => ({ ...s, ...setg }))
     })()
