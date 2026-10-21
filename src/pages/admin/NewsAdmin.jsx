@@ -135,7 +135,9 @@ export default function NewsAdmin() {
                 <Field label="Etiqueta"><input value={post.tag} onChange={(e) => setPost((p) => ({ ...p, tag: e.target.value }))} className={inputCls} placeholder="Conquista" /></Field>
               </div>
               <Field label="Título *"><input required value={post.titulo} onChange={(e) => setPost((p) => ({ ...p, titulo: e.target.value }))} className={inputCls} /></Field>
-              <Field label="Texto"><textarea rows={3} value={post.texto} onChange={(e) => setPost((p) => ({ ...p, texto: e.target.value }))} className={`${inputCls} resize-none`} /></Field>
+              <Field label="Matéria (texto completo)" hint="Aparece inteira no 'Saiba mais'. No card, mostramos as primeiras linhas. Pule uma linha para separar parágrafos.">
+                <textarea rows={8} value={post.texto} onChange={(e) => setPost((p) => ({ ...p, texto: e.target.value }))} className={`${inputCls} resize-y`} placeholder="Escreva a matéria completa aqui..." />
+              </Field>
               <Field label="Imagem"><Upload1 value={post.img} onChange={(v) => setPost((p) => ({ ...p, img: v }))} /></Field>
               <Field label="Segunda foto (opcional — efeito de 2 fotos)">
                 <Upload1 value={post.img2} onChange={(v) => setPost((p) => ({ ...p, img2: v }))} />

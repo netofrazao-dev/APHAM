@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Radio, PlayCircle, ArrowRight, Youtube } from 'lucide-react'
 import { livesInfo } from '../data/content'
@@ -5,14 +6,72 @@ import { useStore } from '../store/StoreContext'
 import { youtubeEmbed } from '../lib/youtube'
 import Reveal from './Reveal'
 
+// Um único card que fica alternando o jogo que mostra a cada poucos segundos.
+function CardRotativo({ jogos }) {
+  const [i, setI] = useState(0)
+  const [pausado, setPausado] = useState(false)
+
+  useEffect(() => {
+    if (jogos.length <= 1 || pausado) return
+    const id = setInterval(() => setI((p) => (p + 1) % jogos.length), 4000)
+    return () => clearInterval(id)
+  }, [jogos.length, pausado])
+
+  if (!jogos.length) return null
+  const j = jogos[i % jogos.length]
+
+  return (
+    <Link
+      to="/lives"
+      onMouseEnter={() => setPausado(true)}
+      onMouseLeave={() => setPausado(false)}
+      className="group relative block overflow-hidden rounded-2xl border border-navy-700/60 bg-navy-900 shadow-lift"
+      aria-label={`Ver lives — ${j.titulo}`}
+    >
+      <div className="relative aspect-video">
+        {jogos.map((g, idx) => (
+          <img
+            key={g.id}
+            src={`https://i.ytimg.com/vi/${g.id}/hqdefault.jpg`}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
+            style={{ opacity: idx === i ? 1 : 0 }}
+          />
+        ))}
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/30 to-navy-950/10" />
+        <span className="absolute inset-0 flex items-center justify-center">
+          <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-cyan-500/90 text-white shadow-lift transition-transform duration-300 group-hover:scale-110">
+            <PlayCircle className="h-8 w-8" />
+          </span>
+        </span>
+        <div className="absolute inset-x-0 bottom-0 p-5">
+          <p className="text-xs font-semibold uppercase tracking-wide text-cyan-200">
+            Lives APHAM{j.torneio ? ` · ${j.torneio}` : ''}
+          </p>
+          <p className="mt-1 line-clamp-2 font-display text-lg font-bold leading-snug text-white">{j.titulo}</p>
+        </div>
+        {/* indicadores */}
+        {jogos.length > 1 && (
+          <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-lg bg-navy-950/45 px-2 py-1 ring-1 ring-white/20 backdrop-blur-sm">
+            {jogos.map((_, idx) => (
+              <span key={idx} className={`h-1.5 rounded-full transition-all ${idx === i ? 'w-4 bg-white' : 'w-1.5 bg-white/50'}`} />
+            ))}
+          </div>
+        )}
+      </div>
+    </Link>
+  )
+}
+
 // Seção "Lives APHAM" na home. Quando há transmissão ao vivo, ela vira destaque
-// (embed). Os jogos passados ficam na página /lives — aqui mostramos só uma
-// prévia com o link para a página.
+// (embed). Os jogos passados aparecem num único card rotativo, com link para /lives.
 export default function LivesAPHAM() {
   const { settings, lives } = useStore()
   const aoVivo = settings?.aoVivoAtivo && settings?.aoVivoUrl
   const embed = aoVivo ? youtubeEmbed(settings.aoVivoUrl) : null
-  const previa = (lives || []).slice(0, 4)
+  const jogos = (lives || []).slice(0, 8)
 
   return (
     <section id="lives" className="relative overflow-hidden py-24 lg:py-28">
@@ -69,46 +128,27 @@ export default function LivesAPHAM() {
           </Reveal>
         )}
 
-        {/* Prévia dos jogos transmitidos + link para a página completa */}
-        {previa.length > 0 && (
+        {/* Card rotativo dos jogos + link para a página completa */}
+        {jogos.length > 0 && (
           <Reveal delay={0.15}>
-            <div className="mt-12">
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                {previa.map((j) => (
-                  <Link
-                    key={j.id}
-                    to="/lives"
-                    className="group relative block overflow-hidden rounded-xl border border-navy-700/60 bg-navy-900"
-                    aria-label={j.titulo}
-                  >
-                    <div className="relative aspect-video">
-                      <img
-                        src={`https://i.ytimg.com/vi/${j.id}/hqdefault.jpg`}
-                        alt={j.titulo}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                      <span className="absolute inset-0 bg-navy-950/40 transition-colors group-hover:bg-navy-950/20" />
-                      <span className="absolute inset-0 flex items-center justify-center">
-                        <PlayCircle className="h-9 w-9 text-white/90 drop-shadow" />
-                      </span>
-                    </div>
-                    <p className="truncate px-3 py-2 text-xs font-medium text-white/80">{j.titulo}</p>
+            <div className="mt-12 grid items-center gap-8 lg:grid-cols-2">
+              <CardRotativo jogos={jogos} />
+              <div>
+                <p className="text-white/80">
+                  Já são <strong className="text-white">{lives.length} jogos</strong> transmitidos pela APHAM —
+                  a Taça das Fronteiras Amazônicas e a Copa Handebol, direto do Marajó.
+                </p>
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  <Link to="/lives" className="btn-accent">
+                    <PlayCircle className="h-4 w-4" />
+                    Ver todas as lives
+                    <ArrowRight className="h-4 w-4" />
                   </Link>
-                ))}
-              </div>
-
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link to="/lives" className="btn-accent">
-                  <PlayCircle className="h-4 w-4" />
-                  Ver todas as lives ({lives.length})
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-                <a href={livesInfo.canal} target="_blank" rel="noopener noreferrer" className="btn-ghost text-white ring-1 ring-white/20 hover:bg-white/10">
-                  <Youtube className="h-4 w-4" />
-                  Canal no YouTube
-                </a>
+                  <a href={livesInfo.canal} target="_blank" rel="noopener noreferrer" className="btn-ghost text-white ring-1 ring-white/20 hover:bg-white/10">
+                    <Youtube className="h-4 w-4" />
+                    Canal no YouTube
+                  </a>
+                </div>
               </div>
             </div>
           </Reveal>

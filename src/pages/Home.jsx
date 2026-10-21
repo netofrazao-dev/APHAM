@@ -1,7 +1,6 @@
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import Stats from '../components/Stats'
-import Handebol from '../components/Handebol'
 import Calendario from '../components/Calendario'
 import HandebolMundo from '../components/HandebolMundo'
 import News from '../components/News'
@@ -21,10 +20,9 @@ export default function Home() {
       <main>
         <Hero />
         <Stats />
-        <Handebol />
         <News />
-        <LivesAPHAM />
         <Calendario />
+        <LivesAPHAM />
         <HandebolMundo />
         <StoreTeaser />
       </main>

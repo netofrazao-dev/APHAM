@@ -193,19 +193,19 @@ export const handebolMundo = {
   ],
 }
 
-// CALENDÁRIO DA APHAM — o que já aconteceu e o que está por vir.
-// status: 'passado' | 'futuro'. Datas e eventos são PROVISÓRIOS — o cliente envia os reais.
+// CALENDÁRIO DA APHAM — calendário de 2026 (janeiro a dezembro), navegável.
+// Cada evento tem uma data ISO (AAAA-MM-DD). Datas PROVISÓRIAS — marque as
+// competições nos dias corretos conforme a agenda oficial da associação.
 export const calendario = {
   eyebrow: 'Agenda',
   titulo: 'Calendário da APHAM',
   intro:
-    'Acompanhe os jogos, competições e ações da associação — o que já rolou e o que está chegando.',
-  nota: 'Datas provisórias — a agenda oficial será enviada pela associação.',
+    'As competições e ações da APHAM ao longo de 2026. Use as setas para passar os meses.',
+  nota: 'Datas provisórias — ajuste conforme a agenda oficial da associação.',
+  ano: 2026,
   eventos: [
-    { data: '2024', mes: '', titulo: 'TFA — Torneio da Amizade', local: 'Marajó — PA', status: 'passado' },
-    { data: '2024', mes: '', titulo: 'Final do TFA (APHAM x APHAM)', local: 'Breves — PA', status: 'passado' },
-    { data: '2025', mes: '', titulo: 'Escola de Esportes — nova turma', local: 'Breves — PA', status: 'futuro' },
-    { data: '2025', mes: '', titulo: 'Próxima competição regional', local: 'A definir', status: 'futuro' },
+    { data: '2026-09-19', titulo: 'TFA — Taça das Fronteiras Amazônicas', local: 'Breves — PA' },
+    { data: '2026-09-21', titulo: 'TFA — Grande final (APHAM x APHAM)', local: 'Breves — PA' },
   ],
 }
 
@@ -242,7 +242,7 @@ export const novidades = [
     tag: 'TFA',
     titulo: 'TFA — a maior competição de handebol do Marajó',
     texto:
-      'A Taça das Fronteiras Amazônicas (TFA) é a maior competição de handebol da região do Marajó, reunindo as melhores equipes em uma disputa que já virou tradição. (Texto provisório — aguardando o texto oficial da associação.)',
+      'A Taça das Fronteiras Amazônicas (TFA) é a maior competição de handebol da região do Marajó. Mais do que uma disputa esportiva, é um encontro que valoriza o handebol amador e de base, levando o esporte a atletas de várias cidades da região.\n\nA competição já aconteceu e teve todos os jogos transmitidos ao vivo pela APHAM. Participaram equipes como Bulls, Canibal, União Handebol, Santos, Amigos e Montabo Athletic, entre outras, nas categorias de base e adulto.\n\n(Texto provisório — ajuste com a associação; a foto da taça e o logo já estão no card.)',
     img: '/midia/eventos/tfa-taca.jpg',
     imgs: ['/midia/eventos/tfa-taca.jpg', '/midia/eventos/tfa-logo.webp'],
   },
@@ -251,7 +251,7 @@ export const novidades = [
     tag: 'TFA',
     titulo: 'TFA: a Guiana Francesa no Marajó',
     texto:
-      'A primeira competição internacional de handebol do Marajó: o TFA recebeu uma delegação da Guiana Francesa, levando o esporte da região para além das fronteiras do Brasil. (Foto e texto provisórios — aguardando o material oficial.)',
+      'A primeira competição internacional de handebol do Marajó. A TFA recebeu a participação de uma delegação da Guiana Francesa, colocando o handebol marajoara em contato com o cenário internacional.\n\nUm marco para a região: o esporte formado na base da APHAM cruzando fronteiras e mostrando a força do handebol do Marajó para além do Brasil.\n\n(Texto provisório — aguardando a foto oficial do jogo da Guiana Francesa.)',
     img: '/midia/eventos/tfa-logo.webp',
   },
   {
@@ -259,23 +259,23 @@ export const novidades = [
     tag: 'TFA',
     titulo: 'TFA: a grande final — APHAM x APHAM',
     texto:
-      'A decisão do título foi entre dois times da própria APHAM, com a taça ficando em casa. A prova de que o trabalho de base do handebol marajoara dá resultado. (Foto e texto provisórios — aguardando o material oficial.)',
+      'A grande final da TFA foi decidida entre dois times formados dentro da própria APHAM — a prova viva da força do trabalho de base da associação.\n\nCom a taça ficando em casa, a decisão coroou atletas revelados pelo projeto e mostrou que o handebol do Marajó tem estrutura para formar campeões.\n\n(Texto provisório — aguardando a foto dos times da APHAM com o troféu.)',
     img: '/midia/eventos/tfa-logo.webp',
   },
   {
     data: '',
     tag: 'Escola de Esportes',
-    titulo: 'Lançamento da Escola de Esportes',
+    titulo: 'Lançamento do Projeto Escola de Esportes',
     texto:
-      'O projeto que leva o handebol às escolas e comunidades do Marajó teve seu lançamento oficial. (Foto e texto provisórios — aguardando o material oficial.)',
+      'Lançamento oficial do Projeto Escola de Esportes, que leva o handebol às escolas e comunidades do Marajó.\n\nO projeto abre portas para crianças e adolescentes por meio do esporte, unindo formação esportiva, inclusão social e cidadania — a base do trabalho da APHAM na região.\n\n(Texto provisório — aguardando as fotos e a data do lançamento.)',
     img: '/midia/marca/logo-escola-esportes.jpg',
   },
   {
     data: '',
     tag: 'Escola de Esportes',
-    titulo: 'O dia a dia dos treinos',
+    titulo: 'O dia a dia dos treinamentos',
     texto:
-      'Crianças e jovens aprendendo os fundamentos do handebol com disciplina e alegria. (Foto e texto provisórios — aguardando o material oficial.)',
+      'No dia a dia dos treinamentos, crianças e jovens aprendem os fundamentos do handebol com disciplina, cooperação e alegria.\n\nMais do que técnica, cada treino é um espaço de convivência e formação de valores — onde se formam atletas e cidadãos.\n\n(Texto provisório — aguardando as fotos dos treinos.)',
     img: '/midia/marca/logo-escola-esportes.jpg',
   },
   {
@@ -283,7 +283,7 @@ export const novidades = [
     tag: 'Escola de Esportes',
     titulo: 'Gincanas pedagógicas',
     texto:
-      'Atividades lúdicas que unem esporte, educação e valores dentro e fora da quadra. (Foto e texto provisórios — aguardando o material oficial.)',
+      'As gincanas pedagógicas unem esporte, educação e valores: atividades lúdicas que ensinam dentro e fora da quadra.\n\nBrincando e competindo de forma saudável, os participantes desenvolvem corpo e mente e reforçam o papel social do projeto na comunidade marajoara.\n\n(Texto provisório — aguardando as fotos das gincanas.)',
     img: '/midia/marca/logo-escola-esportes.jpg',
   },
 ]
