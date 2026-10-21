@@ -38,6 +38,13 @@ create table if not exists stories (
   created_at timestamptz not null default now()
 );
 
+-- Lives APHAM (jogos transmitidos no YouTube) -------------------------------
+create table if not exists lives (
+  id text primary key,
+  data jsonb not null,
+  created_at timestamptz not null default now()
+);
+
 -- Pedidos -------------------------------------------------------------------
 create table if not exists pedidos (
   id text primary key,
@@ -74,6 +81,7 @@ alter table categorias enable row level security;
 alter table cupons     enable row level security;
 alter table novidades  enable row level security;
 alter table stories    enable row level security;
+alter table lives      enable row level security;
 alter table pedidos    enable row level security;
 alter table mensagens  enable row level security;
 alter table settings   enable row level security;
@@ -85,6 +93,7 @@ create policy "ler novidades"  on novidades  for select using (true);
 create policy "ler stories"    on stories    for select using (true);
 create policy "ler settings"   on settings   for select using (true);
 create policy "ler cupons"     on cupons     for select using (true);
+create policy "ler lives"      on lives      for select using (true);
 
 -- Visitante pode criar pedido e mensagem
 create policy "criar pedido"   on pedidos   for insert with check (true);
@@ -96,6 +105,7 @@ create policy "admin categorias" on categorias for all using (auth.role() = 'aut
 create policy "admin cupons"     on cupons     for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 create policy "admin novidades"  on novidades  for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 create policy "admin stories"    on stories    for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+create policy "admin lives"      on lives      for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 create policy "admin pedidos"    on pedidos    for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 create policy "admin mensagens"  on mensagens  for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 create policy "admin settings"   on settings   for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');

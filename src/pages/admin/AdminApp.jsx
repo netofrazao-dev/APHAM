@@ -7,6 +7,7 @@ import ProductsAdmin from './ProductsAdmin'
 import CategoriesAdmin from './CategoriesAdmin'
 import OrdersAdmin from './OrdersAdmin'
 import NewsAdmin from './NewsAdmin'
+import LivesAdmin from './LivesAdmin'
 import SettingsAdmin from './SettingsAdmin'
 import CouponsAdmin from './CouponsAdmin'
 import MessagesAdmin from './MessagesAdmin'
@@ -24,6 +25,7 @@ export default function AdminApp() {
         <Route path="pedidos" element={<OrdersAdmin />} />
         <Route path="mensagens" element={<MessagesAdmin />} />
         <Route path="novidades" element={<NewsAdmin />} />
+        <Route path="lives" element={<LivesAdmin />} />
         <Route path="config" element={<SettingsAdmin />} />
         <Route path="*" element={<Dashboard />} />
       </Route>

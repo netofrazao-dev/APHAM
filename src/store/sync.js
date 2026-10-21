@@ -62,7 +62,7 @@ export async function sbUpsertSettings(settings) {
 
 // Envia TODO o conteúdo atual para o Supabase (primeira carga / migração).
 // Só funciona logado como admin (as permissões exigem autenticação).
-export async function sbSeedAll({ produtos, categorias, cupons, novidades, stories, settings }) {
+export async function sbSeedAll({ produtos, categorias, cupons, novidades, stories, lives, settings }) {
   if (!on()) return { ok: false }
   try {
     const up = (table, arr) =>
@@ -72,6 +72,7 @@ export async function sbSeedAll({ produtos, categorias, cupons, novidades, stori
     await up('cupons', cupons)
     await up('novidades', novidades)
     await up('stories', stories)
+    await up('lives', lives)
     if (settings) await supabase.from('settings').upsert({ id: 1, data: settings })
     return { ok: true }
   } catch (e) {

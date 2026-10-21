@@ -5,6 +5,7 @@ import {
   Tags,
   ClipboardList,
   Newspaper,
+  Radio,
   Settings,
   LogOut,
   ExternalLink,
@@ -21,6 +22,7 @@ const links = [
   { to: '/admin/pedidos', label: 'Pedidos', icon: ClipboardList },
   { to: '/admin/mensagens', label: 'Mensagens', icon: Mail },
   { to: '/admin/novidades', label: 'Novidades', icon: Newspaper },
+  { to: '/admin/lives', label: 'Lives APHAM', icon: Radio },
   { to: '/admin/config', label: 'Configurações', icon: Settings },
 ]
 

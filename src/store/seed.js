@@ -210,7 +210,9 @@ export const cuponsSeed = [
 
 // Novidades/stories começam a partir do conteúdo que já existe no site.
 // Adiciona um id estável a cada item (necessário para edição no admin).
-import { stories as _storiesBase, novidades as _novidadesBase } from '../data/content'
+import { stories as _storiesBase, novidades as _novidadesBase, lives as _livesBase } from '../data/content'
 
 export const storiesSeed = _storiesBase.map((s, i) => ({ id: `story-${i + 1}`, ...s }))
 export const novidadesSeed = _novidadesBase.map((n, i) => ({ id: `nov-${i + 1}`, ...n }))
+// Lives já têm id (o id do vídeo do YouTube), então são usadas direto como seed.
+export const livesSeed = _livesBase.map((l) => ({ ...l }))

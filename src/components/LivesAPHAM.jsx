@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Radio, PlayCircle, ArrowRight, Youtube } from 'lucide-react'
-import { lives, livesInfo } from '../data/content'
+import { livesInfo } from '../data/content'
 import { useStore } from '../store/StoreContext'
 import { youtubeEmbed } from '../lib/youtube'
 import Reveal from './Reveal'
@@ -9,10 +9,10 @@ import Reveal from './Reveal'
 // (embed). Os jogos passados ficam na página /lives — aqui mostramos só uma
 // prévia com o link para a página.
 export default function LivesAPHAM() {
-  const { settings } = useStore()
+  const { settings, lives } = useStore()
   const aoVivo = settings?.aoVivoAtivo && settings?.aoVivoUrl
   const embed = aoVivo ? youtubeEmbed(settings.aoVivoUrl) : null
-  const previa = lives.slice(0, 4)
+  const previa = (lives || []).slice(0, 4)
 
   return (
     <section id="lives" className="relative overflow-hidden py-24 lg:py-28">

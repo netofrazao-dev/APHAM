@@ -5,6 +5,7 @@ import {
   settingsSeed,
   storiesSeed,
   novidadesSeed,
+  livesSeed,
   cuponsSeed,
 } from './seed'
 import { isSupabaseEnabled, supabase } from '../lib/supabaseClient'
@@ -83,6 +84,7 @@ export function StoreProvider({ children }) {
   const [settings, setSettings] = usePersistent('settings', settingsSeed)
   const [novidades, setNovidades] = usePersistent('novidades', novidadesSeed)
   const [stories, setStories] = usePersistent('stories', storiesSeed)
+  const [lives, setLives] = usePersistent('lives', livesSeed)
   const [orders, setOrders] = usePersistent('orders', [])
   const [cart, setCart] = usePersistent('cart', [])
   const [cupons, setCupons] = usePersistent('cupons', cuponsSeed)
@@ -107,11 +109,12 @@ export function StoreProvider({ children }) {
       const prod = await sb.sbSelect('produtos')
       if (!alive || !prod || prod.length === 0) return // banco ainda vazio: mantém o seed
       setProdutos(prod)
-      const [cat, cup, nov, sto, setg] = await Promise.all([
+      const [cat, cup, nov, sto, liv, setg] = await Promise.all([
         sb.sbSelect('categorias'),
         sb.sbSelect('cupons'),
         sb.sbSelect('novidades'),
         sb.sbSelect('stories'),
+        sb.sbSelect('lives'),
         sb.sbSelectSettings(),
       ])
       if (!alive) return
@@ -119,12 +122,14 @@ export function StoreProvider({ children }) {
       if (cup) setCupons(cup)
       if (nov) setNovidades(nov)
       if (sto) setStories(sto)
+      // Só troca pelas lives do banco se houver alguma lá (senão mantém o seed).
+      if (liv && liv.length) setLives(liv)
       if (setg) setSettings((s) => ({ ...s, ...setg }))
     })()
     return () => {
       alive = false
     }
-  }, [setProdutos, setCategorias, setCupons, setNovidades, setStories, setSettings])
+  }, [setProdutos, setCategorias, setCupons, setNovidades, setStories, setLives, setSettings])
 
   // ----- Supabase: sessão do admin -----
   useEffect(() => {
@@ -283,6 +288,22 @@ export function StoreProvider({ children }) {
     [setStories]
   )
 
+  // ----- Lives APHAM (jogos transmitidos) -----
+  const saveLive = useCallback(
+    (j) => {
+      setLives((l) => upsert(l, j))
+      sb.sbUpsert('lives', j)
+    },
+    [setLives]
+  )
+  const deleteLive = useCallback(
+    (id) => {
+      setLives((l) => l.filter((x) => x.id !== id))
+      sb.sbDelete('lives', id)
+    },
+    [setLives]
+  )
+
   // ----- Pedidos -----
   const addOrder = useCallback(
     (o) => {
@@ -399,14 +420,14 @@ export function StoreProvider({ children }) {
 
   // Migração manual para o Supabase (botão nas configurações).
   const migrarParaSupabase = useCallback(
-    () => sb.sbSeedAll({ produtos, categorias, cupons, novidades, stories, settings }),
-    [produtos, categorias, cupons, novidades, stories, settings]
+    () => sb.sbSeedAll({ produtos, categorias, cupons, novidades, stories, lives, settings }),
+    [produtos, categorias, cupons, novidades, stories, lives, settings]
   )
 
   // ----- Export / Import / Reset -----
   const exportData = useCallback(
-    () => ({ versao: 2, produtos, categorias, settings, novidades, stories, orders, cupons, mensagens }),
-    [produtos, categorias, settings, novidades, stories, orders, cupons, mensagens]
+    () => ({ versao: 2, produtos, categorias, settings, novidades, stories, lives, orders, cupons, mensagens }),
+    [produtos, categorias, settings, novidades, stories, lives, orders, cupons, mensagens]
   )
   const importData = useCallback(
     (data) => {
@@ -416,12 +437,13 @@ export function StoreProvider({ children }) {
       if (data.settings) setSettings(data.settings)
       if (data.novidades) setNovidades(data.novidades)
       if (data.stories) setStories(data.stories)
+      if (data.lives) setLives(data.lives)
       if (data.orders) setOrders(data.orders)
       if (data.cupons) setCupons(data.cupons)
       if (data.mensagens) setMensagens(data.mensagens)
       return true
     },
-    [setProdutos, setCategorias, setSettings, setNovidades, setStories, setOrders, setCupons, setMensagens]
+    [setProdutos, setCategorias, setSettings, setNovidades, setStories, setLives, setOrders, setCupons, setMensagens]
   )
   const resetData = useCallback(() => {
     setProdutos(produtosSeed)
@@ -429,13 +451,14 @@ export function StoreProvider({ children }) {
     setSettings(settingsSeed)
     setNovidades(novidadesSeed)
     setStories(storiesSeed)
+    setLives(livesSeed)
     setOrders([])
     setCupons(cuponsSeed)
     setMensagens([])
     setFavoritos([])
     setRecentes([])
     setCart([])
-  }, [setProdutos, setCategorias, setSettings, setNovidades, setStories, setOrders, setCupons, setMensagens, setFavoritos, setRecentes, setCart])
+  }, [setProdutos, setCategorias, setSettings, setNovidades, setStories, setLives, setOrders, setCupons, setMensagens, setFavoritos, setRecentes, setCart])
 
   const cartCount = useMemo(() => cart.reduce((s, i) => s + i.qtd, 0), [cart])
   const cartTotal = useMemo(() => cart.reduce((s, i) => s + i.preco * i.qtd, 0), [cart])
@@ -446,6 +469,7 @@ export function StoreProvider({ children }) {
     settings,
     novidades,
     stories,
+    lives,
     orders,
     cart,
     cupons,
@@ -468,6 +492,8 @@ export function StoreProvider({ children }) {
     deleteNovidade,
     saveStory,
     deleteStory,
+    saveLive,
+    deleteLive,
     addOrder,
     updateOrder,
     deleteOrder,

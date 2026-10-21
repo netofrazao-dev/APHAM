@@ -1,9 +1,11 @@
 import { Youtube } from 'lucide-react'
 import PageShell from '../components/PageShell'
 import LiveGameCard from '../components/LiveGameCard'
-import { lives, livesInfo } from '../data/content'
+import { livesInfo } from '../data/content'
+import { useStore } from '../store/StoreContext'
 
 export default function LivesPage() {
+  const { lives } = useStore()
   // Agrupa os jogos por torneio, preservando a ordem.
   const torneios = []
   for (const j of lives) {
