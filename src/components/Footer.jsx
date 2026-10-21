@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ShoppingBag } from 'lucide-react'
+import { ShoppingBag, Clock } from 'lucide-react'
 import { site, nav, contato } from '../data/content'
 import Logo from './Logo'
 import Icon from './Icon'
@@ -92,10 +92,17 @@ export default function Footer() {
               <li>{site.email}</li>
               <li>{site.telefone}</li>
             </ul>
-            <Link to="/loja" className="btn-accent mt-6">
-              <ShoppingBag className="h-4 w-4" />
-              Visitar a loja
-            </Link>
+            {site.lojaPausada ? (
+              <span className="btn-accent pointer-events-none mt-6 opacity-90">
+                <Clock className="h-4 w-4" />
+                Loja em breve
+              </span>
+            ) : (
+              <Link to="/loja" className="btn-accent mt-6">
+                <ShoppingBag className="h-4 w-4" />
+                Visitar a loja
+              </Link>
+            )}
           </div>
         </div>
 
