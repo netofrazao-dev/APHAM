@@ -2,6 +2,7 @@ import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import Stats from '../components/Stats'
 import Handebol from '../components/Handebol'
+import Calendario from '../components/Calendario'
 import HandebolMundo from '../components/HandebolMundo'
 import News from '../components/News'
 import AoVivo from '../components/AoVivo'
@@ -23,6 +24,7 @@ export default function Home() {
         <AoVivo />
         <Handebol />
         <News />
+        <Calendario />
         <HandebolMundo />
         <StoreTeaser />
       </main>

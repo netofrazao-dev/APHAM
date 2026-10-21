@@ -21,8 +21,7 @@ export const site = {
   whatsappNumero: '5591991789031',
   instagram: 'https://www.instagram.com/handebolmarajo/',
   facebook: 'https://www.facebook.com/Apham2009',
-  // TODO: trocar pelo link do canal oficial do YouTube da APHAM quando o cliente enviar.
-  youtube: 'https://www.youtube.com/results?search_query=APHAM+handebol+do+Maraj%C3%B3',
+  youtube: 'https://www.youtube.com/@handebolmarajo',
   // Link da futura loja — por enquanto aponta para o bloco "Loja em breve".
   lojaUrl: '#loja',
   // Loja pausada até ficar pronta: esconde o botão/bloco da loja e mostra "em breve".
@@ -163,7 +162,7 @@ export const handebol = {
 
 // "Handebol no Brasil e no mundo" — portais oficiais do esporte.
 export const handebolMundo = {
-  eyebrow: 'O esporte',
+  eyebrow: 'Para além do Marajó',
   titulo: 'Handebol no Brasil e no mundo',
   intro:
     'Acompanhe o handebol em todos os níveis: a confederação brasileira, a federação europeia e a federação internacional — as casas oficiais do esporte que a APHAM leva ao Marajó.',
@@ -189,6 +188,22 @@ export const handebolMundo = {
       img: '/midia/sites/ihf.jpg',
       href: 'https://www.ihf.info/',
     },
+  ],
+}
+
+// CALENDÁRIO DA APHAM — o que já aconteceu e o que está por vir.
+// status: 'passado' | 'futuro'. Datas e eventos são PROVISÓRIOS — o cliente envia os reais.
+export const calendario = {
+  eyebrow: 'Agenda',
+  titulo: 'Calendário da APHAM',
+  intro:
+    'Acompanhe os jogos, competições e ações da associação — o que já rolou e o que está chegando.',
+  nota: 'Datas provisórias — a agenda oficial será enviada pela associação.',
+  eventos: [
+    { data: '2024', mes: '', titulo: 'TFA — Torneio da Amizade', local: 'Marajó — PA', status: 'passado' },
+    { data: '2024', mes: '', titulo: 'Final do TFA (APHAM x APHAM)', local: 'Breves — PA', status: 'passado' },
+    { data: '2025', mes: '', titulo: 'Escola de Esportes — nova turma', local: 'Breves — PA', status: 'futuro' },
+    { data: '2025', mes: '', titulo: 'Próxima competição regional', local: 'A definir', status: 'futuro' },
   ],
 }
 
@@ -244,25 +259,25 @@ export const novidades = [
     tag: 'TFA',
     titulo: 'TFA — a maior competição de handebol do Marajó',
     texto:
-      'O TFA reúne as melhores equipes da região em uma disputa que já virou tradição no handebol marajoara. (Foto e texto provisórios — aguardando o material oficial.)',
+      'O TFA é a maior competição de handebol da região do Marajó, reunindo as melhores equipes em uma disputa que já virou tradição. Uma edição que já aconteceu e marcou o calendário do esporte na região. (Foto e texto provisórios — aguardando o material oficial.)',
     img: '/midia/eventos/campeoes-trofeu.jpg',
     imgs: ['/midia/eventos/campeoes-trofeu.jpg', '/midia/eventos/equipe-medalhas.jpg'],
   },
   {
     data: '',
     tag: 'TFA',
-    titulo: 'TFA: participação da Guiana Francesa',
+    titulo: 'TFA: a Guiana Francesa no Marajó',
     texto:
-      'O torneio ganhou alcance internacional com a presença de uma delegação da Guiana Francesa. (Foto e texto provisórios — aguardando o material oficial.)',
+      'A primeira competição internacional de handebol do Marajó: o TFA recebeu uma delegação da Guiana Francesa, levando o esporte da região para além das fronteiras do Brasil. (Foto e texto provisórios — aguardando o material oficial.)',
     img: '/midia/eventos/equipe-masculina.jpg',
     imgs: ['/midia/eventos/equipe-masculina.jpg', '/midia/eventos/equipe-feminina.jpg'],
   },
   {
     data: '',
     tag: 'TFA',
-    titulo: 'TFA: a grande final',
+    titulo: 'TFA: a grande final — APHAM x APHAM',
     texto:
-      'Quadra lotada e muita emoção na decisão do título. (Foto e texto provisórios — aguardando o material oficial.)',
+      'A decisão do título foi entre dois times da própria APHAM, com a taça ficando em casa. A prova de que o trabalho de base do handebol marajoara dá resultado. (Foto e texto provisórios — aguardando o material oficial.)',
     img: '/midia/eventos/equipe-medalhas.jpg',
     imgs: ['/midia/eventos/equipe-medalhas.jpg', '/midia/eventos/campeoes-trofeu.jpg'],
   },
