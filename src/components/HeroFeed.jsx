@@ -1,74 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Trophy, Radio, PlayCircle } from 'lucide-react'
-import { resultados } from '../data/content'
+import { Radio, PlayCircle } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
 
-// Monta a lista de slides: (ao vivo) + placar + foto + jogo (live), intercalando.
-// Quando não há nada ao vivo, o card gira também as thumbnails dos jogos.
+// Monta a lista de slides do card do topo: (ao vivo) + fotos das novidades +
+// thumbnails dos jogos (Lives APHAM), intercalando foto/jogo.
 function buildSlides(aoVivo, novidades = [], jogosLista = []) {
   const slides = []
   if (aoVivo) slides.push({ type: 'live', data: aoVivo })
 
-  const placares = resultados.map((r) => ({ type: 'placar', data: r }))
   const fotos = (novidades || []).filter((n) => n.img).map((n) => ({ type: 'foto', data: n }))
   const jogos = (jogosLista || []).slice(0, 6).map((j) => ({ type: 'jogo', data: j }))
-  const colunas = [fotos, jogos, placares]
+  const colunas = [fotos, jogos]
   const max = Math.max(...colunas.map((c) => c.length), 0)
   for (let i = 0; i < max; i++) {
     for (const c of colunas) if (c[i]) slides.push(c[i])
   }
   return slides
-}
-
-function Badge({ time }) {
-  return (
-    <div className="flex flex-col items-center gap-1.5">
-      {time.logo ? (
-        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white p-1 shadow-soft">
-          <img src={time.logo} alt={time.nome} className="h-full w-full object-contain" />
-        </span>
-      ) : (
-        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-sm font-bold text-white ring-1 ring-white/20">
-          {time.sigla}
-        </span>
-      )}
-      <span className="max-w-[80px] truncate text-xs font-medium text-white/75">{time.nome}</span>
-    </div>
-  )
-}
-
-function PlacarSlide({ r }) {
-  return (
-    <div className="relative flex h-full flex-col justify-between overflow-hidden bg-gradient-to-br from-navy-800 to-navy-950 p-5 pt-12">
-      <div className="absolute inset-0 dot-grid opacity-20" />
-      <div className="relative flex justify-end">
-        <span className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-semibold text-white/80">
-          {r.data}
-        </span>
-      </div>
-
-      <div className="relative grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-        <Badge time={r.casa} />
-        <div className="font-display text-4xl font-extrabold leading-none text-white">
-          {r.casa.placar}
-          <span className="mx-1.5 text-white/40">:</span>
-          {r.fora.placar}
-        </div>
-        <Badge time={r.fora} />
-      </div>
-
-      <div className="relative flex flex-col items-center gap-1.5">
-        <span className="rounded-full bg-[#2faa3a] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow-soft">
-          {r.status}
-        </span>
-        <span className="inline-flex max-w-[90%] items-center gap-1 truncate text-[11px] text-white/55">
-          <Trophy className="h-3 w-3 shrink-0" />
-          {r.competicao}
-        </span>
-      </div>
-    </div>
-  )
 }
 
 function FotoSlide({ n }) {
@@ -193,8 +141,6 @@ export default function HeroFeed({ compact = false }) {
         >
           {s.type === 'live' ? (
             <LiveSlide titulo={s.data.titulo} />
-          ) : s.type === 'placar' ? (
-            <PlacarSlide r={s.data} />
           ) : s.type === 'jogo' ? (
             <JogoSlide j={s.data} />
           ) : (

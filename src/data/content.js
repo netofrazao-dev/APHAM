@@ -232,25 +232,6 @@ export const stories = [
   { img: '/midia/eventos/colonia-aquatica.jpg', titulo: 'Confraternização' },
 ]
 
-// RESULTADOS — placares de jogos para o painel do topo (PROVISÓRIO).
-// Edite com os resultados reais; a sigla aparece quando não há logo do time.
-export const resultados = [
-  {
-    data: '2024',
-    competicao: 'Centro Com. Elcione Barbalho',
-    casa: { nome: 'APHAM', sigla: 'APH', logo: '/midia/logo-apham.png', placar: 28 },
-    fora: { nome: 'Adversário', sigla: 'ADV', placar: 22 },
-    status: 'Vitória',
-  },
-  {
-    data: '2015',
-    competicao: "JEP's — Melgaço",
-    casa: { nome: 'APHAM', sigla: 'APH', logo: '/midia/logo-apham.png', placar: 19 },
-    fora: { nome: 'Adversário', sigla: 'ADV', placar: 17 },
-    status: 'Vitória',
-  },
-]
-
 // Feed de novidades/posts.
 // Cards do TFA usam `imgs: [foto1, foto2]` para o efeito de 2 fotos (crossfade).
 // FOTOS E TEXTOS PROVISÓRIOS — usando imagens de exemplo até o cliente enviar
@@ -271,8 +252,7 @@ export const novidades = [
     titulo: 'TFA: a Guiana Francesa no Marajó',
     texto:
       'A primeira competição internacional de handebol do Marajó: o TFA recebeu uma delegação da Guiana Francesa, levando o esporte da região para além das fronteiras do Brasil. (Foto e texto provisórios — aguardando o material oficial.)',
-    img: '/midia/eventos/equipe-masculina.jpg',
-    imgs: ['/midia/eventos/equipe-masculina.jpg', '/midia/eventos/equipe-feminina.jpg'],
+    img: '/midia/eventos/tfa-logo.webp',
   },
   {
     data: '',
@@ -280,8 +260,7 @@ export const novidades = [
     titulo: 'TFA: a grande final — APHAM x APHAM',
     texto:
       'A decisão do título foi entre dois times da própria APHAM, com a taça ficando em casa. A prova de que o trabalho de base do handebol marajoara dá resultado. (Foto e texto provisórios — aguardando o material oficial.)',
-    img: '/midia/eventos/equipe-medalhas.jpg',
-    imgs: ['/midia/eventos/equipe-medalhas.jpg', '/midia/eventos/campeoes-trofeu.jpg'],
+    img: '/midia/eventos/tfa-logo.webp',
   },
   {
     data: '',
@@ -297,7 +276,7 @@ export const novidades = [
     titulo: 'O dia a dia dos treinos',
     texto:
       'Crianças e jovens aprendendo os fundamentos do handebol com disciplina e alegria. (Foto e texto provisórios — aguardando o material oficial.)',
-    img: '/midia/eventos/equipe-feminina.jpg',
+    img: '/midia/marca/logo-escola-esportes.jpg',
   },
   {
     data: '',
@@ -305,7 +284,7 @@ export const novidades = [
     titulo: 'Gincanas pedagógicas',
     texto:
       'Atividades lúdicas que unem esporte, educação e valores dentro e fora da quadra. (Foto e texto provisórios — aguardando o material oficial.)',
-    img: '/midia/eventos/colonia-aquatica.jpg',
+    img: '/midia/marca/logo-escola-esportes.jpg',
   },
 ]
 
