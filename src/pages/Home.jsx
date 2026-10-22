@@ -5,7 +5,6 @@ import Calendario from '../components/Calendario'
 import HandebolMundo from '../components/HandebolMundo'
 import News from '../components/News'
 import LivesAPHAM from '../components/LivesAPHAM'
-import StoreTeaser from '../components/StoreTeaser'
 import Footer from '../components/Footer'
 import BackToTop from '../components/BackToTop'
 
@@ -24,7 +23,6 @@ export default function Home() {
         <Calendario />
         <LivesAPHAM />
         <HandebolMundo />
-        <StoreTeaser />
       </main>
       <Footer />
       <BackToTop />

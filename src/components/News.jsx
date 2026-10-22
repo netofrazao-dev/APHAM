@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { X, ChevronLeft, ChevronRight, Instagram, Radio, PlayCircle, ArrowUpRight } from 'lucide-react'
 import { site } from '../data/content'
 import { useStore } from '../store/StoreContext'
@@ -83,83 +82,6 @@ function CardMedia({ item }) {
   )
 }
 
-// Card ÚNICO das lives dentro do feed de novidades: mostra a capa de UM jogo e
-// troca para outro jogo (aleatório) toda vez que o card aparece na tela.
-function LivesFeedCard({ jogos }) {
-  const lista = (jogos || []).slice(0, 12)
-  const ref = useRef(null)
-  const [i, setI] = useState(() => Math.floor(Math.random() * Math.max(1, lista.length)))
-
-  // Ao aparecer na tela (entrar no viewport), sorteia um jogo diferente.
-  useEffect(() => {
-    const el = ref.current
-    if (!el || lista.length <= 1) return
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            setI((prev) => {
-              let n = Math.floor(Math.random() * lista.length)
-              if (n === prev) n = (n + 1) % lista.length
-              return n
-            })
-          }
-        }
-      },
-      { threshold: 0.4 }
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [lista.length])
-
-  if (!lista.length) return null
-  const j = lista[i % lista.length]
-
-  return (
-    <Reveal>
-      <div ref={ref} className="h-full">
-      <Link
-        to="/lives"
-        className="group flex h-full flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
-      >
-        <div className="relative aspect-[16/10] overflow-hidden bg-navy-900">
-          {lista.map((g, idx) => (
-            <img
-              key={g.id}
-              src={`https://i.ytimg.com/vi/${g.id}/hqdefault.jpg`}
-              alt=""
-              loading="lazy"
-              decoding="async"
-              className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
-              style={{ opacity: idx === i ? 1 : 0 }}
-            />
-          ))}
-          <div className="absolute inset-0 bg-navy-950/25" />
-          <span className="absolute left-3 top-3 rounded-full bg-red-600 px-3 py-1 text-xs font-semibold text-white">Lives APHAM</span>
-          <span className="absolute inset-0 flex items-center justify-center">
-            <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-cyan-500/90 text-white shadow-lift transition-transform duration-300 group-hover:scale-110">
-              <PlayCircle className="h-6 w-6" />
-            </span>
-          </span>
-        </div>
-        <div className="flex flex-1 flex-col p-6">
-          <span className="text-xs font-semibold uppercase tracking-wide text-cyan-600">
-            Jogos transmitidos{j.torneio ? ` · ${j.torneio}` : ''}
-          </span>
-          <h3 className="mt-1 line-clamp-2 font-display text-lg font-bold text-navy-900">{j.titulo}</h3>
-          <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/70">
-            Reveja os jogos da APHAM no YouTube — um jogo diferente a cada visita.
-          </p>
-          <span className="mt-4 inline-flex w-fit items-center gap-1 text-sm font-semibold text-cyan-700">
-            Ver as lives <ArrowUpRight className="h-4 w-4" />
-          </span>
-        </div>
-      </Link>
-      </div>
-    </Reveal>
-  )
-}
-
 // Modal "Saiba mais" — mostra a matéria completa do card.
 function MateriaModal({ item, onClose }) {
   useEffect(() => {
@@ -200,7 +122,7 @@ function MateriaModal({ item, onClose }) {
 }
 
 export default function News() {
-  const { novidades, stories, settings, lives } = useStore()
+  const { novidades, stories, settings } = useStore()
   const aoVivo = settings?.aoVivoAtivo && settings?.aoVivoUrl
   const [storyIdx, setStoryIdx] = useState(null)
   const [materia, setMateria] = useState(null)
@@ -243,7 +165,7 @@ export default function News() {
           <Reveal className="max-w-2xl">
             <span className="eyebrow">
               <span className="h-px w-6 bg-cyan-400" />
-              Novidades
+              APHAM News
             </span>
             <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-navy-900 sm:text-4xl">
               O que está acontecendo na APHAM
@@ -313,9 +235,8 @@ export default function News() {
           </div>
         </Reveal>
 
-        {/* Feed de novidades — 1 card das Lives (rotativo) + os posts */}
+        {/* Feed de novidades (APHAM NEWS) */}
         <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
-          <LivesFeedCard jogos={lives} />
           {feed.map((n, i) => {
             const Card = n.link ? 'a' : 'article'
             const linkProps = n.link

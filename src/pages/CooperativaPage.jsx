@@ -1,5 +1,6 @@
 import PageShell from '../components/PageShell'
 import Cooperativa from '../components/Cooperativa'
+import StoreTeaser from '../components/StoreTeaser'
 
 export default function CooperativaPage() {
   return (
@@ -9,6 +10,7 @@ export default function CooperativaPage() {
       descricao="O esporte como ferramenta de trabalho, renda e inclusão na comunidade marajoara."
     >
       <Cooperativa />
+      <StoreTeaser />
     </PageShell>
   )
 }
