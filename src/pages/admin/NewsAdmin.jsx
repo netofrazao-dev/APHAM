@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus, Pencil, Trash2, X, Upload } from 'lucide-react'
+import { Plus, Pencil, Trash2, X, Upload, ChevronUp, ChevronDown } from 'lucide-react'
 import { useStore, novoId } from '../../store/StoreContext'
 import { fileToOptimizedDataURL } from '../../store/images'
 import { PageTitle, Card, Field, inputCls, btnAccent, btnGhost, btnPrimary } from './ui'
@@ -38,9 +38,12 @@ function Upload1({ value, onChange }) {
 }
 
 export default function NewsAdmin() {
-  const { novidades, stories, saveNovidade, deleteNovidade, saveStory, deleteStory } = useStore()
+  const { novidades, stories, saveNovidade, deleteNovidade, moveNovidade, saveStory, deleteStory } = useStore()
   const [post, setPost] = useState(null)
   const [story, setStory] = useState(null)
+
+  // Lista de posts na ordem que aparece no site (campo `ordem`).
+  const posts = [...novidades].sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0))
 
   const salvarPost = (e) => {
     e.preventDefault()
@@ -48,6 +51,8 @@ export default function NewsAdmin() {
     const foto2 = post.img2 || ''
     saveNovidade({
       id: post.id || novoId('nov'),
+      // Mantém a ordem ao editar; novo post vai para o fim da lista.
+      ordem: post.ordem ?? novidades.length,
       data: post.data || '',
       tag: post.tag || '',
       titulo: post.titulo || '',
@@ -96,15 +101,22 @@ export default function NewsAdmin() {
 
       {/* Posts */}
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="font-display text-lg font-bold text-navy-900">Posts</h2>
+        <div>
+          <h2 className="font-display text-lg font-bold text-navy-900">Posts</h2>
+          <p className="text-xs text-navy-500">Use as setas ↑ ↓ para mudar a ordem dos cards no site.</p>
+        </div>
         <button type="button" onClick={() => setPost({ data: '', tag: '', titulo: '', texto: '', img: '', img2: '' })} className={btnAccent}>
           <Plus className="h-4 w-4" />
           Novo post
         </button>
       </div>
       <div className="space-y-3">
-        {novidades.map((n) => (
-          <Card key={n.id} className="flex items-center gap-4 p-3">
+        {posts.map((n, i) => (
+          <Card key={n.id} className="flex items-center gap-3 p-3">
+            <div className="flex flex-col">
+              <button type="button" onClick={() => moveNovidade(n.id, -1)} disabled={i === 0} className="inline-flex h-6 w-7 items-center justify-center rounded-t-md border border-navy-200 text-navy-600 hover:bg-navy-50 disabled:opacity-30" aria-label="Mover para cima"><ChevronUp className="h-4 w-4" /></button>
+              <button type="button" onClick={() => moveNovidade(n.id, 1)} disabled={i === posts.length - 1} className="-mt-px inline-flex h-6 w-7 items-center justify-center rounded-b-md border border-navy-200 text-navy-600 hover:bg-navy-50 disabled:opacity-30" aria-label="Mover para baixo"><ChevronDown className="h-4 w-4" /></button>
+            </div>
             <div className="h-16 w-20 shrink-0 overflow-hidden rounded-lg bg-navy-100">
               {n.img && <img src={n.img} alt="" className="h-full w-full object-cover" />}
             </div>

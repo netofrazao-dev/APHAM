@@ -232,7 +232,7 @@ export default function News() {
         texto: (p.caption || '').slice(0, 160),
         link: p.permalink,
       }))
-    : novidades.map((n) => ({ ...n, link: null }))
+    : [...novidades].sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0)).map((n) => ({ ...n, link: null }))
   const nav = (dir) =>
     setStoryIdx((i) => (i === null ? i : (i + dir + stories.length) % stories.length))
 

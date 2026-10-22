@@ -51,7 +51,7 @@ function usePersistent(key, seed) {
 // lives), limpamos o cache antigo dessas coleções no navegador para o site
 // voltar a mostrar o conteúdo novo. O banco (Supabase), quando tem dados,
 // continua com prioridade na hidratação. Roda uma vez por navegador.
-const SEED_VERSION = '2026-10-21a'
+const SEED_VERSION = '2026-10-22a'
 try {
   if (localStorage.getItem(PREFIX + 'seedVersion') !== SEED_VERSION) {
     ;['novidades', 'stories', 'lives'].forEach((k) => localStorage.removeItem(PREFIX + k))
@@ -126,7 +126,7 @@ export function StoreProvider({ children }) {
       const [cat, cup, nov, sto, liv, setg] = await Promise.all([
         sb.sbSelect('categorias'),
         sb.sbSelect('cupons'),
-        sb.sbSelect('novidades'),
+        sb.sbSelect('novidades', 'created_at'),
         sb.sbSelect('stories'),
         sb.sbSelect('lives'),
         sb.sbSelectSettings(),
@@ -286,6 +286,21 @@ export function StoreProvider({ children }) {
       sb.sbDelete('novidades', id)
     },
     [setNovidades]
+  )
+  // Reordena as novidades (mover um card para cima/baixo). dir: -1 sobe, +1 desce.
+  // Reatribui `ordem` por posição e salva os itens no banco.
+  const moveNovidade = useCallback(
+    (id, dir) => {
+      const ordenadas = [...novidades].sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0))
+      const idx = ordenadas.findIndex((x) => x.id === id)
+      const j = idx + dir
+      if (idx < 0 || j < 0 || j >= ordenadas.length) return
+      ;[ordenadas[idx], ordenadas[j]] = [ordenadas[j], ordenadas[idx]]
+      const next = ordenadas.map((item, pos) => ({ ...item, ordem: pos }))
+      setNovidades(next)
+      next.forEach((item) => sb.sbUpsert('novidades', item))
+    },
+    [novidades, setNovidades]
   )
   const saveStory = useCallback(
     (s) => {
@@ -504,6 +519,7 @@ export function StoreProvider({ children }) {
     deleteCategoria,
     saveNovidade,
     deleteNovidade,
+    moveNovidade,
     saveStory,
     deleteStory,
     saveLive,

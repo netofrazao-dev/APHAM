@@ -9,7 +9,10 @@ function buildSlides(aoVivo, novidades = [], temJogos = false) {
   const slides = []
   if (aoVivo) slides.push({ type: 'live', data: aoVivo })
 
-  const fotos = (novidades || []).filter((n) => n.img).map((n) => ({ type: 'foto', data: n }))
+  const fotos = (novidades || [])
+    .filter((n) => n.img)
+    .sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0))
+    .map((n) => ({ type: 'foto', data: n }))
   for (const f of fotos) slides.push(f)
 
   if (temJogos) slides.push({ type: 'jogos' })

@@ -10,10 +10,13 @@ import { isSupabaseEnabled, supabase } from '../lib/supabaseClient'
 const on = () => isSupabaseEnabled && supabase
 
 // Lê todos os registros de uma tabela (retorna array de objetos) ou null em erro.
-export async function sbSelect(table) {
+// orderBy: coluna opcional para ordenar de forma estável (ex.: 'created_at').
+export async function sbSelect(table, orderBy) {
   if (!on()) return null
   try {
-    const { data, error } = await supabase.from(table).select('data')
+    let q = supabase.from(table).select('data')
+    if (orderBy) q = q.order(orderBy, { ascending: true })
+    const { data, error } = await q
     if (error) return null
     return (data || []).map((r) => r.data)
   } catch {
