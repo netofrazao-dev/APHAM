@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { X, ChevronLeft, ChevronRight, Instagram, Radio, PlayCircle, ArrowUpRight } from 'lucide-react'
 import { site } from '../data/content'
@@ -83,28 +83,43 @@ function CardMedia({ item }) {
   )
 }
 
-// Card ÚNICO das lives dentro do feed de novidades: fica alternando a capa de
-// um jogo diferente a cada poucos segundos. Leva para a página /lives.
+// Card ÚNICO das lives dentro do feed de novidades: mostra a capa de UM jogo e
+// troca para outro jogo (aleatório) toda vez que o card aparece na tela.
 function LivesFeedCard({ jogos }) {
-  const lista = (jogos || []).slice(0, 8)
-  const [i, setI] = useState(0)
-  const [pausado, setPausado] = useState(false)
+  const lista = (jogos || []).slice(0, 12)
+  const ref = useRef(null)
+  const [i, setI] = useState(() => Math.floor(Math.random() * Math.max(1, lista.length)))
 
+  // Ao aparecer na tela (entrar no viewport), sorteia um jogo diferente.
   useEffect(() => {
-    if (lista.length <= 1 || pausado) return
-    const id = setInterval(() => setI((p) => (p + 1) % lista.length), 4000)
-    return () => clearInterval(id)
-  }, [lista.length, pausado])
+    const el = ref.current
+    if (!el || lista.length <= 1) return
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            setI((prev) => {
+              let n = Math.floor(Math.random() * lista.length)
+              if (n === prev) n = (n + 1) % lista.length
+              return n
+            })
+          }
+        }
+      },
+      { threshold: 0.4 }
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [lista.length])
 
   if (!lista.length) return null
   const j = lista[i % lista.length]
 
   return (
     <Reveal>
+      <div ref={ref} className="h-full">
       <Link
         to="/lives"
-        onMouseEnter={() => setPausado(true)}
-        onMouseLeave={() => setPausado(false)}
         className="group flex h-full flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
       >
         <div className="relative aspect-[16/10] overflow-hidden bg-navy-900">
@@ -115,7 +130,7 @@ function LivesFeedCard({ jogos }) {
               alt=""
               loading="lazy"
               decoding="async"
-              className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
+              className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
               style={{ opacity: idx === i ? 1 : 0 }}
             />
           ))}
@@ -133,13 +148,14 @@ function LivesFeedCard({ jogos }) {
           </span>
           <h3 className="mt-1 line-clamp-2 font-display text-lg font-bold text-navy-900">{j.titulo}</h3>
           <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/70">
-            Reveja os jogos da APHAM no YouTube — eles ficam alternando aqui.
+            Reveja os jogos da APHAM no YouTube — um jogo diferente a cada visita.
           </p>
           <span className="mt-4 inline-flex w-fit items-center gap-1 text-sm font-semibold text-cyan-700">
             Ver as lives <ArrowUpRight className="h-4 w-4" />
           </span>
         </div>
       </Link>
+      </div>
     </Reveal>
   )
 }

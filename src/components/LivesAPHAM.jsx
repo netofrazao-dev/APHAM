@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Radio, PlayCircle, ArrowRight, Youtube } from 'lucide-react'
 import { livesInfo } from '../data/content'
@@ -6,25 +6,40 @@ import { useStore } from '../store/StoreContext'
 import { youtubeEmbed } from '../lib/youtube'
 import Reveal from './Reveal'
 
-// Um único card que fica alternando o jogo que mostra a cada poucos segundos.
+// Um único card que mostra UM jogo e troca para outro (aleatório) toda vez que
+// o card aparece na tela.
 function CardRotativo({ jogos }) {
-  const [i, setI] = useState(0)
-  const [pausado, setPausado] = useState(false)
+  const ref = useRef(null)
+  const [i, setI] = useState(() => Math.floor(Math.random() * Math.max(1, jogos.length)))
 
   useEffect(() => {
-    if (jogos.length <= 1 || pausado) return
-    const id = setInterval(() => setI((p) => (p + 1) % jogos.length), 4000)
-    return () => clearInterval(id)
-  }, [jogos.length, pausado])
+    const el = ref.current
+    if (!el || jogos.length <= 1) return
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            setI((prev) => {
+              let n = Math.floor(Math.random() * jogos.length)
+              if (n === prev) n = (n + 1) % jogos.length
+              return n
+            })
+          }
+        }
+      },
+      { threshold: 0.4 }
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [jogos.length])
 
   if (!jogos.length) return null
   const j = jogos[i % jogos.length]
 
   return (
+    <div ref={ref}>
     <Link
       to="/lives"
-      onMouseEnter={() => setPausado(true)}
-      onMouseLeave={() => setPausado(false)}
       className="group relative block overflow-hidden rounded-2xl border border-navy-700/60 bg-navy-900 shadow-lift"
       aria-label={`Ver lives — ${j.titulo}`}
     >
@@ -36,7 +51,7 @@ function CardRotativo({ jogos }) {
             alt=""
             loading="lazy"
             decoding="async"
-            className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
+            className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
             style={{ opacity: idx === i ? 1 : 0 }}
           />
         ))}
@@ -52,16 +67,9 @@ function CardRotativo({ jogos }) {
           </p>
           <p className="mt-1 line-clamp-2 font-display text-lg font-bold leading-snug text-white">{j.titulo}</p>
         </div>
-        {/* indicadores */}
-        {jogos.length > 1 && (
-          <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-lg bg-navy-950/45 px-2 py-1 ring-1 ring-white/20 backdrop-blur-sm">
-            {jogos.map((_, idx) => (
-              <span key={idx} className={`h-1.5 rounded-full transition-all ${idx === i ? 'w-4 bg-white' : 'w-1.5 bg-white/50'}`} />
-            ))}
-          </div>
-        )}
       </div>
     </Link>
+    </div>
   )
 }
 
