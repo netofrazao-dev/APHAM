@@ -4,7 +4,7 @@ import Stats from '../components/Stats'
 import Calendario from '../components/Calendario'
 import HandebolMundo from '../components/HandebolMundo'
 import News from '../components/News'
-import LivesAPHAM from '../components/LivesAPHAM'
+import LivesHomeCard from '../components/LivesHomeCard'
 import Footer from '../components/Footer'
 import BackToTop from '../components/BackToTop'
 
@@ -21,7 +21,7 @@ export default function Home() {
         <Stats />
         <News />
         <Calendario />
-        <LivesAPHAM />
+        <LivesHomeCard />
         <HandebolMundo />
       </main>
       <Footer />
