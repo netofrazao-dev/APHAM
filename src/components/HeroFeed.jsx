@@ -4,18 +4,15 @@ import { Radio, PlayCircle } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
 
 // Monta a lista de slides do card do topo: (ao vivo) + fotos das novidades +
-// thumbnails dos jogos (Lives APHAM), intercalando foto/jogo.
-function buildSlides(aoVivo, novidades = [], jogosLista = []) {
+// UM único slide de "jogos" (que troca o jogo que mostra toda vez que aparece).
+function buildSlides(aoVivo, novidades = [], temJogos = false) {
   const slides = []
   if (aoVivo) slides.push({ type: 'live', data: aoVivo })
 
   const fotos = (novidades || []).filter((n) => n.img).map((n) => ({ type: 'foto', data: n }))
-  const jogos = (jogosLista || []).slice(0, 6).map((j) => ({ type: 'jogo', data: j }))
-  const colunas = [fotos, jogos]
-  const max = Math.max(...colunas.map((c) => c.length), 0)
-  for (let i = 0; i < max; i++) {
-    for (const c of colunas) if (c[i]) slides.push(c[i])
-  }
+  for (const f of fotos) slides.push(f)
+
+  if (temJogos) slides.push({ type: 'jogos' })
   return slides
 }
 
@@ -37,11 +34,39 @@ function FotoSlide({ n }) {
   )
 }
 
-// Slide de um jogo transmitido (Lives APHAM) — thumbnail do YouTube, leva a /lives.
-function JogoSlide({ j }) {
+// Slide ÚNICO dos jogos (Lives APHAM): mostra UM jogo e troca para outro jogo
+// (aleatório) toda vez que este slide aparece (vira o slide ativo do card).
+function JogosSlide({ jogos, ativo }) {
+  const lista = (jogos || []).slice(0, 12)
+  const [i, setI] = useState(() => Math.floor(Math.random() * Math.max(1, lista.length)))
+  const antes = useRef(ativo)
+
+  useEffect(() => {
+    if (ativo && !antes.current && lista.length > 1) {
+      setI((prev) => {
+        let n = Math.floor(Math.random() * lista.length)
+        if (n === prev) n = (n + 1) % lista.length
+        return n
+      })
+    }
+    antes.current = ativo
+  }, [ativo, lista.length])
+
+  if (!lista.length) return null
+  const j = lista[i % lista.length]
+
   return (
     <Link to="/lives" className="group relative block h-full overflow-hidden" aria-label={j.titulo}>
-      <img src={`https://i.ytimg.com/vi/${j.id}/hqdefault.jpg`} alt="" className="h-full w-full object-cover" loading="lazy" />
+      {lista.map((g, idx) => (
+        <img
+          key={g.id}
+          src={`https://i.ytimg.com/vi/${g.id}/hqdefault.jpg`}
+          alt=""
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
+          style={{ opacity: idx === i ? 1 : 0 }}
+        />
+      ))}
       <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/30 to-navy-950/10" />
       <span className="absolute inset-0 flex items-center justify-center">
         <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-cyan-500/90 text-white shadow-lift transition-transform duration-300 group-hover:scale-110">
@@ -91,7 +116,10 @@ export default function HeroFeed({ compact = false }) {
       ? { titulo: settings.aoVivoTitulo || 'APHAM ao vivo' }
       : null
 
-  const slides = useMemo(() => buildSlides(aoVivo, novidades, lives), [aoVivo, novidades, lives])
+  const slides = useMemo(
+    () => buildSlides(aoVivo, novidades, (lives || []).length > 0),
+    [aoVivo, novidades, lives]
+  )
   const [i, setI] = useState(0)
   // Pausa a rotação enquanto o dedo está em cima (ou o mouse sobre o card).
   const [paused, setPaused] = useState(false)
@@ -141,8 +169,8 @@ export default function HeroFeed({ compact = false }) {
         >
           {s.type === 'live' ? (
             <LiveSlide titulo={s.data.titulo} />
-          ) : s.type === 'jogo' ? (
-            <JogoSlide j={s.data} />
+          ) : s.type === 'jogos' ? (
+            <JogosSlide jogos={lives} ativo={idx === i} />
           ) : (
             <FotoSlide n={s.data} />
           )}
