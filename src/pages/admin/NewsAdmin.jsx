@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus, Pencil, Trash2, X, Upload, ChevronUp, ChevronDown } from 'lucide-react'
+import { Plus, Pencil, Trash2, X, Upload, ChevronUp, ChevronDown, Square, SquareStack } from 'lucide-react'
 import { useStore, novoId } from '../../store/StoreContext'
 import { fileToOptimizedDataURL } from '../../store/images'
 import { PageTitle, Card, Field, inputCls, btnAccent, btnGhost, btnPrimary } from './ui'
@@ -38,7 +38,7 @@ function Upload1({ value, onChange }) {
 }
 
 export default function NewsAdmin() {
-  const { novidades, stories, saveNovidade, deleteNovidade, moveNovidade, saveStory, deleteStory } = useStore()
+  const { novidades, stories, saveNovidade, deleteNovidade, moveNovidade, setSombraTodos, saveStory, deleteStory } = useStore()
   const [post, setPost] = useState(null)
   const [story, setStory] = useState(null)
 
@@ -53,6 +53,8 @@ export default function NewsAdmin() {
       id: post.id || novoId('nov'),
       // Mantém a ordem ao editar; novo post vai para o fim da lista.
       ordem: post.ordem ?? novidades.length,
+      // Mantém o estado da sombra do card (ligada por padrão).
+      sombra: post.sombra,
       data: post.data || '',
       tag: post.tag || '',
       titulo: post.titulo || '',
@@ -103,13 +105,29 @@ export default function NewsAdmin() {
       <div className="mb-3 flex items-center justify-between">
         <div>
           <h2 className="font-display text-lg font-bold text-navy-900">Posts</h2>
-          <p className="text-xs text-navy-500">Use as setas ↑ ↓ para mudar a ordem dos cards no site.</p>
+          <p className="text-xs text-navy-500">Use as setas ↑ ↓ para a ordem. O botão de sombra liga/desliga o sombreado de cada card.</p>
         </div>
         <button type="button" onClick={() => setPost({ data: '', tag: '', titulo: '', texto: '', img: '', img2: '' })} className={btnAccent}>
           <Plus className="h-4 w-4" />
           Novo post
         </button>
       </div>
+
+      {/* Sombra dos cards — todos de uma vez */}
+      {posts.length > 0 && (
+        <div className="mb-3 flex flex-wrap items-center gap-2 rounded-xl border border-navy-100 bg-navy-50/60 px-3 py-2">
+          <span className="text-sm font-semibold text-navy-700">Sombra dos cards:</span>
+          <button type="button" onClick={() => setSombraTodos(true)} className="inline-flex items-center gap-1.5 rounded-lg border border-navy-200 bg-white px-3 py-1.5 text-sm font-semibold text-navy-700 shadow-soft hover:bg-navy-50">
+            <SquareStack className="h-4 w-4" />
+            Ligar em todos
+          </button>
+          <button type="button" onClick={() => setSombraTodos(false)} className="inline-flex items-center gap-1.5 rounded-lg border border-navy-200 bg-white px-3 py-1.5 text-sm font-semibold text-navy-700 hover:bg-navy-50">
+            <Square className="h-4 w-4" />
+            Tirar de todos
+          </button>
+        </div>
+      )}
+
       <div className="space-y-3">
         {posts.map((n, i) => (
           <Card key={n.id} className="flex items-center gap-3 p-3">
@@ -125,6 +143,17 @@ export default function NewsAdmin() {
               <h3 className="truncate font-display text-sm font-bold text-navy-900">{n.titulo}</h3>
             </div>
             <div className="flex gap-1.5">
+              <button
+                type="button"
+                onClick={() => saveNovidade({ ...n, sombra: n.sombra === false })}
+                title={n.sombra === false ? 'Sem sombra (clique para ligar)' : 'Com sombra (clique para tirar)'}
+                aria-label="Ligar/desligar sombra"
+                className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border ${
+                  n.sombra === false ? 'border-navy-200 text-navy-400' : 'border-navy-300 bg-white text-navy-800 shadow-md'
+                } hover:bg-navy-50`}
+              >
+                <SquareStack className="h-4 w-4" />
+              </button>
               <button type="button" onClick={() => setPost({ ...n, img2: n.imgs?.[1] || '' })} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-700 hover:bg-navy-50" aria-label="Editar"><Pencil className="h-4 w-4" /></button>
               <button type="button" onClick={() => window.confirm('Excluir este post?') && deleteNovidade(n.id)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-red-200 text-red-600 hover:bg-red-50" aria-label="Excluir"><Trash2 className="h-4 w-4" /></button>
             </div>

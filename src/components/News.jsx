@@ -242,11 +242,14 @@ export default function News() {
             const linkProps = n.link
               ? { href: n.link, target: '_blank', rel: 'noopener noreferrer' }
               : {}
+            const temSombra = n.sombra !== false // sombra ligada por padrão
             return (
               <Reveal key={n.id || i} delay={0.06 * i}>
                 <Card
                   {...linkProps}
-                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
+                  className={`group flex h-full flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white transition-all duration-300 ${
+                    temSombra ? 'shadow-soft hover:-translate-y-1 hover:shadow-lift' : ''
+                  }`}
                 >
                   <div className="relative aspect-[16/10] overflow-hidden">
                     <CardMedia item={n} />

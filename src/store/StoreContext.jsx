@@ -302,6 +302,15 @@ export function StoreProvider({ children }) {
     },
     [novidades, setNovidades]
   )
+  // Liga/desliga a sombra de TODOS os cards de novidades de uma vez.
+  const setSombraTodos = useCallback(
+    (valor) => {
+      const next = novidades.map((n) => ({ ...n, sombra: valor }))
+      setNovidades(next)
+      next.forEach((n) => sb.sbUpsert('novidades', n))
+    },
+    [novidades, setNovidades]
+  )
   const saveStory = useCallback(
     (s) => {
       setStories((l) => upsert(l, s))
@@ -520,6 +529,7 @@ export function StoreProvider({ children }) {
     saveNovidade,
     deleteNovidade,
     moveNovidade,
+    setSombraTodos,
     saveStory,
     deleteStory,
     saveLive,
