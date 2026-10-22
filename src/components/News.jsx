@@ -247,8 +247,8 @@ export default function News() {
               <Reveal key={n.id || i} delay={0.06 * i}>
                 <Card
                   {...linkProps}
-                  className={`group flex h-full flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white transition-all duration-300 ${
-                    temSombra ? 'shadow-soft hover:-translate-y-1 hover:shadow-lift' : ''
+                  className={`group flex h-full flex-col overflow-hidden rounded-2xl border bg-white transition-all duration-300 ${
+                    temSombra ? 'border-navy-100 shadow-lift hover:-translate-y-1' : 'border-navy-200'
                   }`}
                 >
                   <div className="relative aspect-[16/10] overflow-hidden">
