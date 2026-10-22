@@ -34,7 +34,6 @@ export const nav = [
   { label: 'Projetos', to: '/projetos' },
   { label: 'Participar', to: '/participar' },
   { label: 'Equipes', to: '/equipes' },
-  { label: 'Lives APHAM', to: '/lives' },
   { label: 'Competições e Eventos', to: '/competicoes' },
   { label: 'Galeria', to: '/galeria' },
   { label: 'Fale Conosco', to: '/contato' },
@@ -47,7 +46,6 @@ export const sumario = [
   { label: 'Projetos', to: '/projetos' },
   { label: 'Participar', to: '/participar' },
   { label: 'Equipes', to: '/equipes' },
-  { label: 'Lives APHAM', to: '/lives' },
   { label: 'Competições e Eventos', to: '/competicoes' },
   { label: 'Galeria', to: '/galeria' },
   { label: 'Fale Conosco', to: '/contato' },
@@ -203,9 +201,22 @@ export const calendario = {
     'As competições e ações da APHAM ao longo de 2026. Use as setas para passar os meses.',
   nota: 'Datas provisórias — ajuste conforme a agenda oficial da associação.',
   ano: 2026,
+  // Cada evento: data (início) + fim opcional (eventos de vários dias) + cor.
+  // cor: 'cyan' | 'amber' | 'red' | 'green' | 'blue' | 'purple'.
   eventos: [
-    { data: '2026-09-19', titulo: 'TFA — Taça das Fronteiras Amazônicas', local: 'Breves — PA' },
-    { data: '2026-09-21', titulo: 'TFA — Grande final (APHAM x APHAM)', local: 'Breves — PA' },
+    {
+      data: '2026-09-19',
+      fim: '2026-09-21',
+      titulo: 'TFA — Taça das Fronteiras Amazônicas',
+      local: 'Breves — PA',
+      cor: 'cyan',
+    },
+    {
+      data: '2026-09-21',
+      titulo: 'TFA — Grande final (APHAM x APHAM)',
+      local: 'Breves — PA',
+      cor: 'amber',
+    },
   ],
 }
 

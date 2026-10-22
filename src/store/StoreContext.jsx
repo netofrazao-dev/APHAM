@@ -47,6 +47,20 @@ function usePersistent(key, seed) {
   return [state, setState]
 }
 
+// Migração de seed: ao atualizar o conteúdo base do código (novidades, stories,
+// lives), limpamos o cache antigo dessas coleções no navegador para o site
+// voltar a mostrar o conteúdo novo. O banco (Supabase), quando tem dados,
+// continua com prioridade na hidratação. Roda uma vez por navegador.
+const SEED_VERSION = '2026-10-21a'
+try {
+  if (localStorage.getItem(PREFIX + 'seedVersion') !== SEED_VERSION) {
+    ;['novidades', 'stories', 'lives'].forEach((k) => localStorage.removeItem(PREFIX + k))
+    localStorage.setItem(PREFIX + 'seedVersion', SEED_VERSION)
+  }
+} catch {
+  /* ignora (modo privado / indisponível) */
+}
+
 function upsert(list, item) {
   const i = list.findIndex((x) => x.id === item.id)
   if (i >= 0) {
