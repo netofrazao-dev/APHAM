@@ -113,6 +113,7 @@ export const projetos = {
     {
       nome: 'Semear Hand',
       logo: '/midia/marca/logo-semear-hand.jpg',
+      foto: '/midia/projetos/semear-hand-foto.jpg',
       resumo:
         'Educação integral pelo handebol — "aprendizagem que transforma". Semifinalista do Prêmio Itaú-Unicef 2015.',
       texto:

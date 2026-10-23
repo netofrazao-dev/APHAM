@@ -1,6 +1,7 @@
 import { Trophy } from 'lucide-react'
 import { clubes as clubesSeed, equipes } from '../data/content'
 import { useStore } from '../store/StoreContext'
+import AlternaImagem from './AlternaImagem'
 import Reveal from './Reveal'
 
 export default function Equipes() {
@@ -32,15 +33,14 @@ export default function Equipes() {
           {clubes.map((c, i) => (
             <Reveal key={c.nome} delay={0.06 * i}>
               <article className="flex h-full flex-col rounded-2xl bg-navy-900 p-6 text-center shadow-lift ring-1 ring-white/5">
-                <div className="mx-auto flex h-28 w-28 items-center justify-center overflow-hidden rounded-2xl bg-white/5 ring-1 ring-white/10">
-                  <img
-                    src={c.escudo}
-                    alt={`Escudo ${c.nome}`}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-full w-full object-contain p-2"
-                  />
-                </div>
+                <AlternaImagem
+                  className="mx-auto h-36 w-36 rounded-2xl bg-white/5 ring-1 ring-white/10"
+                  alt={`Escudo ${c.nome}`}
+                  imagens={[
+                    { src: c.escudo, className: 'object-contain p-2' },
+                    c.foto && { src: c.foto, className: 'object-cover' },
+                  ]}
+                />
                 <h3 className="mt-5 font-display text-lg font-bold text-white">{c.nome}</h3>
                 {c.titulos && c.titulos.length > 0 && (
                   <ul className="mt-3 space-y-1 text-left">

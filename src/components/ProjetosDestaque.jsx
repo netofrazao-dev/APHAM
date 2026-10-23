@@ -1,5 +1,6 @@
 import { Info } from 'lucide-react'
 import { projetos } from '../data/content'
+import AlternaImagem from './AlternaImagem'
 import Reveal from './Reveal'
 
 export default function ProjetosDestaque() {
@@ -21,15 +22,15 @@ export default function ProjetosDestaque() {
         <div className="mt-14 space-y-8">
           {projetos.lista.map((p, i) => (
             <Reveal key={p.nome} delay={0.06 * i}>
-              <article className="grid grid-cols-1 items-center gap-8 rounded-3xl border border-navy-100 bg-white p-6 shadow-soft sm:p-8 lg:grid-cols-[220px_1fr]">
-                <div className="flex items-center justify-center rounded-2xl bg-navy-50 p-8">
-                  <img
-                    src={p.logo}
-                    alt={p.nome}
-                    loading="lazy"
-                    className="max-h-28 w-auto object-contain"
-                  />
-                </div>
+              <article className="grid grid-cols-1 items-center gap-8 rounded-3xl border border-navy-100 bg-white p-6 shadow-soft sm:p-8 lg:grid-cols-[300px_1fr]">
+                <AlternaImagem
+                  className="aspect-square w-full rounded-2xl bg-navy-50"
+                  alt={p.nome}
+                  imagens={[
+                    { src: p.logo, className: 'object-contain p-8' },
+                    p.foto && { src: p.foto, className: 'object-cover' },
+                  ]}
+                />
                 <div>
                   <h3 className="font-display text-2xl font-extrabold text-navy-900">{p.nome}</h3>
                   <p className="mt-2 text-sm font-semibold text-cyan-700">{p.resumo}</p>

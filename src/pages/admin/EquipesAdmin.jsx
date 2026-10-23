@@ -117,7 +117,12 @@ export default function EquipesAdmin() {
             </div>
             <div className="space-y-4">
               <Field label="Nome do time *"><input required value={time.nome} onChange={(e) => setTime((p) => ({ ...p, nome: e.target.value }))} className={inputCls} /></Field>
-              <Field label="Escudo"><UploadEscudo value={time.escudo} onChange={(v) => setTime((p) => ({ ...p, escudo: v }))} /></Field>
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Escudo"><UploadEscudo value={time.escudo} onChange={(v) => setTime((p) => ({ ...p, escudo: v }))} /></Field>
+                <Field label="Foto do time" hint="Alterna com o escudo.">
+                  <UploadEscudo value={time.foto} onChange={(v) => setTime((p) => ({ ...p, foto: v }))} />
+                </Field>
+              </div>
               <Field label="História"><textarea rows={4} value={time.historia} onChange={(e) => setTime((p) => ({ ...p, historia: e.target.value }))} className={`${inputCls} resize-y`} placeholder="Um pouco da história do time..." /></Field>
               <Field label="Títulos" hint="Um por linha.">
                 <textarea rows={3} value={time.titulosTexto} onChange={(e) => setTime((p) => ({ ...p, titulosTexto: e.target.value }))} className={`${inputCls} resize-y`} placeholder={'Campeão TFA 2024\nVice-campeão Copa Handebol'} />
