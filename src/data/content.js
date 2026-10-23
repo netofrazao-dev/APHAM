@@ -122,6 +122,7 @@ export const projetos = {
     {
       nome: 'Escola de Esportes',
       logo: '/midia/marca/logo-escola-esportes.jpg',
+      foto: '/midia/projetos/escola-esportes-foto.jpg',
       resumo:
         '"No Esporte com Valores" — iniciação e formação esportiva. Semifinalista do Prêmio Itaú-Unicef 2018.',
       texto:
