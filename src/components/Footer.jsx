@@ -1,11 +1,16 @@
 import { Link } from 'react-router-dom'
 import { ShoppingBag, Clock } from 'lucide-react'
 import { site, nav, contato } from '../data/content'
+import { useStore } from '../store/StoreContext'
 import Logo from './Logo'
 import Icon from './Icon'
 import MarajoaraBand from './MarajoaraBand'
 
 export default function Footer() {
+  const { settings } = useStore()
+  const endereco = settings?.endereco || site.endereco
+  const email = settings?.email || site.email
+  const telefone = settings?.telefone || site.telefone
   return (
     <footer className="relative bg-navy-950 text-white">
       <MarajoaraBand className="h-3 w-full" color="#12a0e6" />
@@ -88,9 +93,9 @@ export default function Footer() {
               Contato
             </h4>
             <ul className="mt-4 space-y-2.5 text-sm text-white/60">
-              <li>{site.endereco}</li>
-              <li>{site.email}</li>
-              <li>{site.telefone}</li>
+              <li>{endereco}</li>
+              <li>{email}</li>
+              <li>{telefone}</li>
             </ul>
             {site.lojaPausada ? (
               <span className="btn-accent pointer-events-none mt-6 opacity-90">

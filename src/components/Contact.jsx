@@ -8,7 +8,10 @@ import Reveal from './Reveal'
 import Icon from './Icon'
 
 export default function Contact() {
-  const { addMensagem } = useStore()
+  const { addMensagem, settings } = useStore()
+  const endereco = settings?.endereco || site.endereco
+  const email = settings?.email || site.email
+  const telefone = settings?.telefone || site.telefone
   const toast = useToast()
   const [form, setForm] = useState({ nome: '', email: '', mensagem: '' })
   const [enviado, setEnviado] = useState(false)
@@ -32,9 +35,9 @@ export default function Contact() {
   }
 
   const detalhes = [
-    { icone: MapPin, label: 'Endereço', valor: site.endereco },
-    { icone: Mail, label: 'E-mail', valor: site.email },
-    { icone: Phone, label: 'Telefone', valor: site.telefone },
+    { icone: MapPin, label: 'Endereço', valor: endereco },
+    { icone: Mail, label: 'E-mail', valor: email },
+    { icone: Phone, label: 'Telefone', valor: telefone },
   ]
 
   return (
@@ -92,7 +95,7 @@ export default function Contact() {
             <div className="mt-8 overflow-hidden rounded-2xl border border-navy-100 shadow-soft">
               <iframe
                 src={mapaEmbed}
-                title={`Localização da APHAM — ${site.endereco}`}
+                title={`Localização da APHAM — ${endereco}`}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 allowFullScreen

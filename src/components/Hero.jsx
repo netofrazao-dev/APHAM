@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { HeartHandshake, ChevronDown, Youtube, Facebook, Instagram } from 'lucide-react'
 import { hero, assinaturaSocialPlay, site, redesHeader } from '../data/content'
+import { useStore } from '../store/StoreContext'
 import HeroFeed from './HeroFeed'
 
 const SOCIAL_ICONS = { Youtube, Facebook, Instagram }
-const redes = redesHeader.map((r) => ({ ...r, href: site[r.url] }))
 
 // Camadas de fundo (sem pessoas) que vão alternando no topo do site.
 const frames = [
@@ -17,6 +17,11 @@ const frames = [
 
 export default function Hero() {
   const [active, setActive] = useState(0)
+  const { settings } = useStore()
+  const redes = redesHeader.map((r) => ({ ...r, href: settings?.[r.url] || site[r.url] }))
+  const heroTagline = settings?.heroTagline || hero.tagline
+  const heroTitulo = settings?.heroTitulo || 'Muito mais que'
+  const heroDestaque = settings?.heroDestaque || 'handebol'
 
   useEffect(() => {
     const id = setInterval(() => setActive((i) => (i + 1) % frames.length), 6000)
@@ -110,7 +115,7 @@ export default function Hero() {
             style={{ transformOrigin: 'left center' }}
             className="whitespace-nowrap font-display text-lg font-bold tracking-tight text-white sm:text-xl lg:text-2xl"
           >
-            Mais que uma Associação...
+            {heroTagline}
           </motion.h2>
 
           <motion.h1
@@ -124,9 +129,9 @@ export default function Hero() {
             style={{ transformOrigin: 'left center' }}
             className="mt-3 font-display text-5xl font-extrabold leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-7xl"
           >
-            Muito mais que{' '}
+            {heroTitulo}{' '}
             <span className="relative whitespace-nowrap text-cyan-400">
-              handebol
+              {heroDestaque}
               <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 12" fill="none" preserveAspectRatio="none">
                 <path d="M2 8 C 50 2, 150 2, 198 8" stroke="#33b6f5" strokeWidth="3" strokeLinecap="round" />
               </svg>

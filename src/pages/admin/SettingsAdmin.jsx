@@ -74,6 +74,39 @@ export default function SettingsAdmin() {
 
       <form onSubmit={salvar} className="space-y-6">
         <Card>
+          <h2 className="mb-1 font-display font-bold text-navy-900">Topo do site (hero)</h2>
+          <p className="mb-4 text-sm text-navy-500">Os textos grandes da primeira dobra do site.</p>
+          <div className="grid grid-cols-1 gap-4">
+            <Field label="Texto pequeno (em cima)" hint='Ex.: "Mais que uma Associação..."'>
+              <input value={form.heroTagline ?? ''} onChange={(e) => set('heroTagline', e.target.value)} placeholder="Mais que uma Associação..." className={inputCls} />
+            </Field>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field label="Título — parte branca" hint='Ex.: "Muito mais que"'>
+                <input value={form.heroTitulo ?? ''} onChange={(e) => set('heroTitulo', e.target.value)} placeholder="Muito mais que" className={inputCls} />
+              </Field>
+              <Field label="Palavra em destaque (ciano)" hint='Ex.: "handebol"'>
+                <input value={form.heroDestaque ?? ''} onChange={(e) => set('heroDestaque', e.target.value)} placeholder="handebol" className={inputCls} />
+              </Field>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <h2 className="mb-1 font-display font-bold text-navy-900">Contato e redes sociais</h2>
+          <p className="mb-4 text-sm text-navy-500">Aparecem no rodapé, no menu e na página "Fale Conosco".</p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field label="Telefone"><input value={form.telefone ?? ''} onChange={(e) => set('telefone', e.target.value)} placeholder="(91) 99178-9031" className={inputCls} /></Field>
+            <Field label="E-mail de contato"><input value={form.email ?? ''} onChange={(e) => set('email', e.target.value)} placeholder="apham.cvmf@gmail.com" className={inputCls} /></Field>
+            <div className="sm:col-span-2">
+              <Field label="Endereço"><input value={form.endereco ?? ''} onChange={(e) => set('endereco', e.target.value)} placeholder="Rua Justo Chermont, Centro — Breves/PA" className={inputCls} /></Field>
+            </div>
+            <Field label="Instagram (link)"><input value={form.instagram ?? ''} onChange={(e) => set('instagram', e.target.value)} placeholder="https://instagram.com/..." className={inputCls} /></Field>
+            <Field label="Facebook (link)"><input value={form.facebook ?? ''} onChange={(e) => set('facebook', e.target.value)} placeholder="https://facebook.com/..." className={inputCls} /></Field>
+            <Field label="YouTube (link do canal)"><input value={form.youtube ?? ''} onChange={(e) => set('youtube', e.target.value)} placeholder="https://youtube.com/@..." className={inputCls} /></Field>
+          </div>
+        </Card>
+
+        <Card>
           <h2 className="mb-4 font-display font-bold text-navy-900">Loja</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Nome da loja"><input value={form.nomeLoja} onChange={(e) => set('nomeLoja', e.target.value)} className={inputCls} /></Field>
@@ -81,7 +114,6 @@ export default function SettingsAdmin() {
             <div className="sm:col-span-2">
               <Field label="Descrição da loja"><textarea rows={2} value={form.descricao} onChange={(e) => set('descricao', e.target.value)} className={`${inputCls} resize-none`} /></Field>
             </div>
-            <Field label="E-mail"><input value={form.email} onChange={(e) => set('email', e.target.value)} className={inputCls} /></Field>
             <Field label="Informação de entrega"><input value={form.entregaInfo} onChange={(e) => set('entregaInfo', e.target.value)} className={inputCls} /></Field>
             <Field label="Taxa de entrega (R$)" hint="0 = grátis / a combinar">
               <input type="number" min="0" step="0.01" value={form.entregaTaxa ?? 0} onChange={(e) => set('entregaTaxa', e.target.value === '' ? 0 : Number(e.target.value))} className={inputCls} />

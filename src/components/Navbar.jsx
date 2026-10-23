@@ -2,16 +2,18 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu, X, ShoppingBag, Youtube, Facebook, Instagram } from 'lucide-react'
 import { nav, sumario, hero, site, redesHeader } from '../data/content'
+import { useStore } from '../store/StoreContext'
 import Logo from './Logo'
 
 const SOCIAL_ICONS = { Youtube, Facebook, Instagram }
-const redes = redesHeader.map((r) => ({ ...r, href: site[r.url] }))
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const { pathname } = useLocation()
   const isHome = pathname === '/'
+  const { settings } = useStore()
+  const redes = redesHeader.map((r) => ({ ...r, href: settings?.[r.url] || site[r.url] }))
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
