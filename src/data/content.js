@@ -389,7 +389,7 @@ export const clubes = [
   },
   {
     nome: 'Huniv',
-    escudo: '/midia/logo-apham.png',
+    escudo: '/midia/equipes/huniv.jpg',
     historia: 'Conteúdo provisório — a história do time será enviada pela associação.',
     titulos: [],
     foto: '',
@@ -466,6 +466,7 @@ export const cooperativa = {
 export const documentario = {
   descricao:
     'A história da APHAM contada em capítulos. Assista no nosso canal e conheça também o folder do documentário.',
+  capa: '/midia/documentos/capa-documentario.jpg',
   folder: '/midia/documentos/documentario.pdf',
   folderPronto: true,
   capitulos: [

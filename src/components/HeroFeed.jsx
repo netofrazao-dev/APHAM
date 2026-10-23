@@ -23,9 +23,8 @@ function FotoSlide({ n }) {
   return (
     <div className="relative h-full overflow-hidden">
       <img src={n.img} alt="" className="h-full w-full object-cover" loading="lazy" />
-      {/* Foto esmaecida à esquerda (funde com o fundo) e sólida à direita */}
-      <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/30 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/25 to-navy-950/10" />
+      {/* Só um degradê no rodapé para a leitura do texto (sem esmaecer a foto à esquerda) */}
+      <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/20 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 p-5 pr-20">
         <p className="text-xs font-semibold uppercase tracking-wide text-cyan-200">
           {n.tag}

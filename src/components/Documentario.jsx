@@ -99,6 +99,14 @@ export default function Documentario() {
           )}
         </Reveal>
 
+        {documentario.capa && (
+          <Reveal delay={0.1}>
+            <div className="mt-10 overflow-hidden rounded-3xl border border-white/10 bg-white shadow-lift">
+              <img src={documentario.capa} alt="Capa do documentário da APHAM" className="w-full object-contain" />
+            </div>
+          </Reveal>
+        )}
+
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {documentario.capitulos.map((c, i) => (
             <CapituloCard key={i} c={c} i={i} />
