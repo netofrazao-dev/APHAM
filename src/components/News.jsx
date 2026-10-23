@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Radio, PlayCircle, ArrowUpRight } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
 import Reveal from './Reveal'
+import Stories from './Stories'
 
 // Mídia do card: uma foto, ou duas (ou mais) que se alternam com efeito de
 // transição (crossfade). Use `imgs: [a, b]` na novidade para o efeito de 2 fotos.
@@ -120,6 +121,7 @@ export default function News() {
           <span className="eyebrow">
             <span className="h-px w-6 bg-cyan-400" />
             APHAM News
+            <span className="h-px w-6 bg-cyan-400" />
           </span>
           <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-navy-900 sm:text-4xl">
             O que está acontecendo na APHAM
@@ -205,6 +207,11 @@ export default function News() {
               </Reveal>
             )
           })}
+        </div>
+
+        {/* Posts anteriores (os "storys" salvos) — depois dos cards */}
+        <div className="mt-16">
+          <Stories titulo="Posts anteriores" subtitulo="Reveja os posts que a APHAM já publicou — toque para ver em tela cheia." />
         </div>
       </div>
 

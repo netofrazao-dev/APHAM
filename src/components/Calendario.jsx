@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ChevronLeft, ChevronRight, MapPin, Info } from 'lucide-react'
 import { calendario } from '../data/content'
+import { useStore } from '../store/StoreContext'
 import Reveal from './Reveal'
 
 const MESES = [
@@ -28,9 +29,9 @@ function parseData(s) {
 
 // Expande cada evento (inclui intervalos com `fim`) para ocorrências por dia,
 // agrupadas por "mes-dia" dentro do ano do calendário.
-function ocorrenciasPorDia() {
+function ocorrenciasPorDia(eventos) {
   const map = {}
-  for (const e of calendario.eventos || []) {
+  for (const e of eventos || []) {
     const ini = parseData(e.data)
     if (!ini) continue
     const fim = parseData(e.fim) || ini
@@ -46,9 +47,11 @@ function ocorrenciasPorDia() {
 }
 
 export default function Calendario() {
+  const { settings } = useStore()
+  const eventos = settings?.calendarioEventos ?? calendario.eventos
   const hoje = new Date()
   const [mes, setMes] = useState(hoje.getFullYear() === ANO ? hoje.getMonth() : 0)
-  const mapa = ocorrenciasPorDia()
+  const mapa = ocorrenciasPorDia(eventos)
 
   // getDay(): 0=Dom..6=Sáb. Queremos semana começando na segunda.
   const primeiro = (new Date(ANO, mes, 1).getDay() + 6) % 7
@@ -60,7 +63,7 @@ export default function Calendario() {
   const ehHoje = (d) => hoje.getFullYear() === ANO && hoje.getMonth() === mes && hoje.getDate() === d
 
   // Eventos do mês (únicos) para a lista detalhada.
-  const eventosDoMes = (calendario.eventos || [])
+  const eventosDoMes = (eventos || [])
     .filter((e) => {
       const ini = parseData(e.data)
       const fim = parseData(e.fim) || ini

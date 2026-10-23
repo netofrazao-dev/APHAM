@@ -1,8 +1,11 @@
 import { Trophy } from 'lucide-react'
-import { clubes, equipes } from '../data/content'
+import { clubes as clubesSeed, equipes } from '../data/content'
+import { useStore } from '../store/StoreContext'
 import Reveal from './Reveal'
 
 export default function Equipes() {
+  const { settings } = useStore()
+  const clubes = settings?.clubes ?? clubesSeed
   return (
     <section id="equipes" className="relative overflow-hidden py-24 lg:py-28">
       <div className="absolute inset-0 bg-navy-950" />
