@@ -403,7 +403,7 @@ export const clubes = [
   },
   {
     nome: 'Primatas',
-    escudo: '/midia/logo-apham.png',
+    escudo: '/midia/equipes/primatas.jpg',
     historia: 'Conteúdo provisório — a história do time será enviada pela associação.',
     titulos: [],
     foto: '',

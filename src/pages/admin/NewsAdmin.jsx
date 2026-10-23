@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Plus, Pencil, Trash2, X, Upload, ChevronUp, ChevronDown, Square, SquareStack } from 'lucide-react'
 import { useStore, novoId } from '../../store/StoreContext'
+import { novidadesSeed } from '../../store/seed'
 import { fileToOptimizedDataURL } from '../../store/images'
 import { PageTitle, Card, Field, inputCls, btnAccent, btnGhost, btnPrimary } from './ui'
 
@@ -44,6 +45,11 @@ export default function NewsAdmin() {
 
   // Lista de posts na ordem que aparece no site (campo `ordem`).
   const posts = [...novidades].sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0))
+
+  // Cards de exemplo (do código) que não estão cadastrados — ex.: o card da taça
+  // com o efeito de 2 fotos. Permite recriá-los com um clique.
+  const faltando = novidadesSeed.filter((s) => !novidades.some((n) => n.id === s.id))
+  const restaurarFaltando = () => faltando.forEach((s) => saveNovidade(s))
 
   const salvarPost = (e) => {
     e.preventDefault()
@@ -112,6 +118,21 @@ export default function NewsAdmin() {
           Novo post
         </button>
       </div>
+
+      {/* Recriar cards de exemplo que faltam (ex.: o card da taça com 2 fotos) */}
+      {faltando.length > 0 && (
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-cyan-200 bg-cyan-50 px-3 py-2">
+          <span className="text-sm text-cyan-900">
+            {faltando.length === 1
+              ? `Há 1 card de exemplo não cadastrado: "${faltando[0].titulo}".`
+              : `Há ${faltando.length} cards de exemplo não cadastrados.`}
+          </span>
+          <button type="button" onClick={restaurarFaltando} className={btnGhost}>
+            <Plus className="h-4 w-4" />
+            Recriar {faltando.length === 1 ? 'esse card' : 'esses cards'}
+          </button>
+        </div>
+      )}
 
       {/* Sombra dos cards — todos de uma vez */}
       {posts.length > 0 && (
