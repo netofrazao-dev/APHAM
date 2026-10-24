@@ -24,10 +24,10 @@ export default function ProjetosDestaque() {
             <Reveal key={p.nome} delay={0.06 * i}>
               <article className="grid grid-cols-1 items-center gap-8 rounded-3xl border border-navy-100 bg-white p-6 shadow-soft sm:p-8 lg:grid-cols-[300px_1fr]">
                 <AlternaImagem
-                  className="aspect-square w-full rounded-2xl bg-navy-50"
+                  className="aspect-square w-full overflow-hidden rounded-2xl bg-navy-50"
                   alt={p.nome}
                   imagens={[
-                    { src: p.logo, className: 'object-contain p-8' },
+                    { src: p.logo, className: 'object-contain p-1.5' },
                     p.foto && { src: p.foto, className: 'object-cover' },
                   ]}
                 />

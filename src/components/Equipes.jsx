@@ -34,10 +34,10 @@ export default function Equipes() {
             <Reveal key={c.nome} delay={0.06 * i}>
               <article className="flex h-full flex-col rounded-2xl bg-navy-900 p-6 text-center shadow-lift ring-1 ring-white/5">
                 <AlternaImagem
-                  className="mx-auto h-36 w-36 rounded-2xl bg-white/5 ring-1 ring-white/10"
+                  className="mx-auto h-44 w-44 overflow-hidden rounded-2xl bg-white/5 ring-1 ring-white/10"
                   alt={`Escudo ${c.nome}`}
                   imagens={[
-                    { src: c.escudo, className: 'object-contain p-2' },
+                    { src: c.escudo, className: 'object-contain p-0.5' },
                     c.foto && { src: c.foto, className: 'object-cover' },
                   ]}
                 />
