@@ -109,6 +109,8 @@ export default function Calendario() {
       <img src="/midia/eventos/ginasio-melgaco.jpg" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-br from-navy-900/95 via-navy-800/90 to-cyan-700/80" />
       <div className="absolute inset-0 dot-grid opacity-10" />
+      {/* Funde a parte de baixo com a faixa das Lives, que vem logo depois */}
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-navy-950" />
 
       <div className="section-pad relative mx-auto w-full max-w-[90rem]">
         <Reveal className="mx-auto max-w-2xl text-center">
