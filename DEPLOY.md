@@ -38,8 +38,8 @@ O código já está pronto para o domínio (endereço oficial nas tags de compar
    valores que o Vercel mostrar. Normalmente são:
    | Tipo | Nome | Valor |
    |---|---|---|
-   | `A` | `@` (raiz) | `76.76.21.21` |
-   | `CNAME` | `www` | `cname.vercel-dns.com` |
+   | `A` | `@` (raiz) | `216.198.79.1` (o antigo `76.76.21.21` também funciona) |
+   | `CNAME` | `www` | o valor que o Vercel mostrar no card do `www` (o antigo `cname.vercel-dns.com` também funciona) |
 
    Apague os registros `A`/`CNAME` antigos de `@` e `www` (ex.: os do Wix). **Não mexa**
    em registros `MX` (e-mail) nem `TXT` que já existirem.
