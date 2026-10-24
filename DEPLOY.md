@@ -25,6 +25,37 @@ Pronto: o site fica no ar num endereço `*.vercel.app`. (O domínio próprio fic
 
 ---
 
+## 1.1) Domínio próprio — www.handebolmarajo.org
+
+O código já está pronto para o domínio (endereço oficial nas tags de compartilhamento,
+`public/robots.txt` e `public/sitemap.xml`). Falta ligar o domínio no Vercel e no DNS:
+
+1. No Vercel: **Project → Settings → Domains → Add** e adicione os dois:
+   - `www.handebolmarajo.org` → domínio principal;
+   - `handebolmarajo.org` → escolha **Redirect to www.handebolmarajo.org** (308).
+2. O Vercel mostra os registros de DNS que faltam. No painel onde o domínio está
+   registrado/gerenciado (Registro.br, Wix, GoDaddy, Hostinger…), crie **exatamente** os
+   valores que o Vercel mostrar. Normalmente são:
+   | Tipo | Nome | Valor |
+   |---|---|---|
+   | `A` | `@` (raiz) | `76.76.21.21` |
+   | `CNAME` | `www` | `cname.vercel-dns.com` |
+
+   Apague os registros `A`/`CNAME` antigos de `@` e `www` (ex.: os do Wix). **Não mexa**
+   em registros `MX` (e-mail) nem `TXT` que já existirem.
+3. A propagação leva de minutos a algumas horas. Quando o Vercel mostrar **Valid
+   Configuration** nos dois, o HTTPS (cadeado) é emitido automaticamente.
+4. Depois que o site estiver no ar, cadastre o domínio no **Google Search Console**
+   (search.google.com/search-console) e envie o sitemap
+   `https://www.handebolmarajo.org/sitemap.xml`.
+
+> ⚠️ Enquanto o domínio apontar para o site antigo (Wix), mudar o DNS **tira o site
+> antigo do ar** — faça a troca só quando o novo estiver aprovado.
+> Se trocar de domínio no futuro, atualize `site.url` em `src/data/content.js`,
+> `index.html`, `public/robots.txt` e `public/sitemap.xml`.
+
+---
+
 ## 2) Supabase (banco de dados + login do admin)
 
 1. Crie um projeto em **supabase.com**.

@@ -9,6 +9,8 @@
 
 export const site = {
   nome: 'APHAM',
+  // Domínio oficial (sem barra no final). Também está em index.html, public/robots.txt e public/sitemap.xml.
+  url: 'https://www.handebolmarajo.org',
   nomeCompleto: 'Associação de Praticantes de Handebol do Marajó',
   cidade: 'Breves',
   estado: 'Pará',

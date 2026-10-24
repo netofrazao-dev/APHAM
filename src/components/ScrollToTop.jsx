@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { site } from '../data/content'
 
 const BASE = 'APHAM · Associação de Praticantes de Handebol do Marajó'
 
@@ -38,6 +39,10 @@ export default function ScrollToTop() {
   const { pathname, hash, key } = useLocation()
   useEffect(() => {
     document.title = tituloPara(pathname)
+    // Endereço oficial da página (Google e prévias de link no WhatsApp/Facebook).
+    const url = site.url + pathname
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href', url)
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content', url)
 
     if (hash) {
       // Rola até a seção da âncora. Como algumas páginas carregam sob demanda,

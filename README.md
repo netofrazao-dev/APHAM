@@ -84,7 +84,7 @@ Estas precisam que você entre em algum serviço/crie conta — deixamos para a 
 1. **Instagram automático** nas Novidades (precisa de conta Instagram comercial + app no Meta).
 2. **Banco de dados (Supabase)** + **login seguro** do admin + **keep-alive** automático (para não pausar em 7 dias).
 3. **Envio de e-mails** nas interações/pedidos (ex.: Resend).
-4. **Deploy no Vercel/GitHub** e **apontar o domínio** próprio.
+4. **Deploy no Vercel/GitHub** e **apontar o domínio** próprio (código já pronto — passo a passo em `DEPLOY.md`, seção 1.1).
 
 ## 📋 Conteúdo real que ainda falta
 - Os **8 vídeos** exportados do Wix (colocar em `public/midia/videos/` — nomes no arquivo `src/data/content.js`).
