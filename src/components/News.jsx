@@ -98,7 +98,7 @@ export default function News() {
     if (!n) return
     document.getElementById('novidades')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     setMateria({ ...n, link: null })
-    navigate({ search: '' }, { replace: true })
+    navigate({ search: '' }, { replace: true, state: { manterScroll: true } })
   }, [novidadeId, novidades, navigate])
 
   // Tenta buscar os posts do Instagram (via /api/instagram). Se não houver

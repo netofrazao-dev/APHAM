@@ -30,10 +30,13 @@ function tituloPara(pathname) {
 }
 
 // Rola para o topo (ou até a âncora, quando há #) e ajusta o título ao trocar de rota.
+// Também roda ao clicar num link para a página atual (ex.: "Início" estando na home),
+// pois cada clique gera uma nova `key`. Navegações com state.manterScroll não rolam.
 export default function ScrollToTop() {
-  const { pathname, hash } = useLocation()
+  const { pathname, hash, key, state } = useLocation()
   useEffect(() => {
     document.title = tituloPara(pathname)
+    if (state?.manterScroll) return
 
     if (hash) {
       // Rola até a seção da âncora. Como algumas páginas carregam sob demanda,
@@ -53,6 +56,6 @@ export default function ScrollToTop() {
     }
 
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' in window ? 'instant' : 'auto' })
-  }, [pathname, hash])
+  }, [pathname, hash, key]) // eslint-disable-line react-hooks/exhaustive-deps
   return null
 }
