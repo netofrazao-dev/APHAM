@@ -8,8 +8,9 @@
 //    capa { img, alt, cheia }    → imagem da apresentação (cheia = foto ocupando o card)
 //    lema, resumo                → texto ao lado da capa
 //    doc, rotuloDoc              → PDF (botões "Ver"/"Baixar")
+//    links [{ to, rotulo }]      → botões para outras páginas do site (ex.: galeria)
 //    numeros [{ valor, label }]  → destaques em números
-//    blocos [...]                → seções (tipos: colunas, texto, cards, datas, artigos, memoria, imagem, destaque)
+//    blocos [...]                → seções (tipos: colunas, texto, cards, datas, artigos, memoria, imagem, destaque, dados)
 //    citacao { texto, autor }    → frase do folder
 //    paginas [...]               → imagens das páginas do PDF (prévia clicável)
 //    ficha [{ nome | nomes, cargo }]
@@ -26,6 +27,7 @@ export const marajoSolidario = {
     'A maior ação de distribuição de alimentos do Marajó durante a pandemia de COVID-19. Por meio da Ação MARAJÓ Solidário!, a APHAM levou cerca de 20 toneladas de alimentos aos 16 municípios da Região de Integração do Marajó, atendendo famílias de crianças, adolescentes e jovens em situação de vulnerabilidade social.',
   doc: '/midia/documentos/folder-marajo-solidario.pdf',
   rotuloDoc: 'Ver o folder da ação',
+  links: [{ to: '/galeria/marajo-solidario', rotulo: 'Ver fotos e vídeos' }],
   numeros: [
     { valor: '19,5 t', label: 'de alimentos não perecíveis' },
     { valor: '16', label: 'municípios do Marajó atendidos' },
@@ -70,6 +72,14 @@ export const marajoSolidario = {
           { titulo: 'Organizações sociais e instituições filantrópicas do Marajó Ocidental', texto: '2ª quinzena de dezembro de 2020' },
         ],
       },
+    },
+    {
+      tipo: 'destaque',
+      rotulo: 'Galeria',
+      titulo: 'A ação em imagens e vídeos',
+      img: '/midia/marajo-solidario/logo-marajo-solidario.jpg',
+      paragrafos: ['Veja os registros da distribuição de alimentos nos municípios do Marajó — fotos e vídeos da Ação Marajó Solidário.'],
+      link: { to: '/galeria/marajo-solidario', rotulo: 'Abrir a galeria da ação' },
     },
   ],
   citacao: {
@@ -598,6 +608,10 @@ export const projetosDetalhes = {
     descricao: 'Aprendendo com Valores: Educação e Promoção Social para a Juventude!',
     capa: { img: '/midia/marca/logo-escola-esportes.jpg', alt: 'Logo do projeto Escola de Esportes' },
     lema: 'Proposta piloto de educação em tempo integral',
+    doc: '/midia/documentos/proposta-pedagogica-escola-de-esportes-2026.pdf',
+    rotuloDoc: 'Ver a Proposta Pedagógica',
+    tituloPaginas: 'Proposta Político-Pedagógica 2026',
+    paginas: ['/midia/folders/proposta-pedagogica-capa.jpg'],
     resumo: [
       'A Escola de Esportes atende adolescentes de 12 a 17 anos no contraturno escolar, em parceria com a escola pública, unindo esporte, reforço escolar, educação cidadã e acompanhamento das famílias.',
       'É uma proposta piloto de educação em tempo integral em Breves: tempo qualificado — e não apenas tempo ocupado — enquanto a educação integral não chega a todos. Herdeira do Semear Hand, ganhou em 2026 uma Proposta Político-Pedagógica própria, a “pedra fundamental” do projeto.',
@@ -730,9 +744,104 @@ export const projetosDetalhes = {
     },
     outrosDocs: [{ titulo: 'Quadro de horários das turmas (PDF)', href: '/midia/documentos/horarios-escola-esportes.pdf' }],
     ficha: [
-      { nome: 'Genésio Jorge de Oliveira Pena', cargo: 'Presidente da APHAM' },
+      { nome: 'Genésio Jorge de Oliveira Pena', cargo: 'Presidente da APHAM (2018)' },
       { nome: 'Claybe Fernando Furtado Cirino', cargo: 'Coordenador do Projeto Escola de Esportes' },
       { nomes: ['Érico dos Santos Santiago', 'Vivia Michilles', 'Claybe Fernando Furtado Cirino'], cargo: 'Professores das turmas' },
     ],
   },
+}
+
+// LEI DE INCENTIVO AO ESPORTE — a partir do Ofício nº 2463/2026/MESP/SE/DPPIE/CGLIE-CAP
+// (Ministério do Esporte, 07/07/2026), que abriu as contas do projeto no Banco do
+// Brasil. O ofício NÃO é publicado no site (traz e-mails e um formulário de
+// autorização bancária); só os dados que o próprio ofício manda informar aos doadores.
+// Limites de dedução: Decreto nº 12.861/2026.
+export const incentivoFolder = {
+  eyebrow: 'Imposto de Renda',
+  titulo: 'Lei de Incentivo ao Esporte',
+  descricao: 'Apoie a Escola de Esportes com parte do seu Imposto de Renda — sem custo extra para você.',
+  capa: { img: '/midia/marca/lei-incentivo-esporte.jpg', alt: 'Lei de Incentivo ao Esporte' },
+  lema: 'Projeto aprovado pelo Ministério do Esporte',
+  resumo: [
+    'O Projeto Escola de Esportes — Aprendendo com Valores: Educação e Promoção para a Juventude! está apto a captar recursos pela Lei de Incentivo ao Esporte. O Ministério do Esporte abriu, em nome da APHAM, a conta oficial do projeto no Banco do Brasil.',
+    'Pessoas e empresas podem destinar parte do Imposto de Renda devido diretamente para o projeto: o valor que iria para o governo passa a financiar esporte, educação e cidadania para a juventude do Marajó.',
+  ],
+  links: [
+    { to: '/contato', rotulo: 'Quero apoiar' },
+    { to: '/projetos/escola-de-esportes', rotulo: 'Conheça o projeto' },
+  ],
+  numeros: [
+    { valor: 'Até 7%', label: 'do IR devido — pessoa física' },
+    { valor: 'Até 2%', label: 'do IR devido — empresas no Lucro Real' },
+    { valor: 'R$ 0', label: 'de custo extra: é imposto que já seria pago' },
+    { valor: '100%', label: 'do valor vai para a conta oficial do projeto' },
+  ],
+  blocos: [
+    {
+      tipo: 'colunas',
+      colunas: [
+        {
+          titulo: 'O que é a Lei de Incentivo',
+          paragrafos: [
+            'É uma lei federal que permite a pessoas físicas e empresas destinarem parte do Imposto de Renda devido a projetos esportivos aprovados pelo Ministério do Esporte, por meio de doação ou patrocínio.',
+            'Na prática, você não gasta a mais: o valor destinado é abatido do imposto que você já teria de pagar — e, em vez de ir para o caixa geral do governo, vai direto para um projeto que você escolheu.',
+          ],
+        },
+        {
+          titulo: 'O projeto aprovado',
+          paragrafos: [
+            'Os recursos captados financiam a Escola de Esportes: cerca de 100 adolescentes de 12 a 17 anos atendidos no contraturno escolar em Breves, com handebol, futsal e voleibol, reforço escolar, educação cidadã e acompanhamento das famílias.',
+            'O dinheiro fica na conta do projeto, acompanhada pelo Ministério do Esporte, e só é movimentado para a execução do projeto aprovado.',
+          ],
+          caixas: [
+            { rotulo: 'Processo', texto: 'Nº 71000.019450/2026-61 — Ministério do Esporte' },
+            { rotulo: 'Situação', texto: 'Em captação de recursos (Ofício nº 2463/2026, de 07/07/2026)' },
+          ],
+        },
+      ],
+    },
+    {
+      tipo: 'dados',
+      titulo: 'Conta oficial para doações',
+      intro: 'Conta de captação aberta pelo Ministério do Esporte em nome da APHAM, exclusiva para doações e patrocínios ao projeto.',
+      itens: [
+        { rotulo: 'Banco', valor: 'Banco do Brasil' },
+        { rotulo: 'Agência', valor: '0558-4' },
+        { rotulo: 'Conta Captação', valor: '66824-9' },
+        { rotulo: 'Titular', valor: 'APHAM' },
+      ],
+      nota: 'Depois de depositar, envie o comprovante para a APHAM pelo WhatsApp ou e-mail para emitirmos o recibo da doação.',
+    },
+    {
+      tipo: 'cards',
+      titulo: 'Como apoiar, passo a passo',
+      icone: 'target',
+      itens: [
+        { titulo: '1. Calcule', texto: 'Veja quanto você pode destinar: até 7% do imposto devido (pessoa física) ou até 2% (empresas no Lucro Real).' },
+        { titulo: '2. Deposite', texto: 'Faça a doação ou o patrocínio na Conta Captação do projeto no Banco do Brasil (agência 0558-4, conta 66824-9).' },
+        { titulo: '3. Envie o comprovante', texto: 'Mande o comprovante para a APHAM. Nós emitimos o recibo que comprova a destinação.' },
+        { titulo: '4. Declare', texto: 'Na declaração do Imposto de Renda, informe a doação para que o valor seja abatido do imposto devido.' },
+      ],
+    },
+    {
+      tipo: 'cards',
+      titulo: 'Quem pode apoiar',
+      icone: 'users',
+      itens: [
+        { titulo: 'Pessoa física', texto: 'Quem faz a declaração do Imposto de Renda no modelo completo pode destinar até 7% do imposto devido, somado às demais deduções de incentivo.' },
+        { titulo: 'Empresas', texto: 'Empresas tributadas pelo Lucro Real podem destinar até 2% do IRPJ devido em cada período, como doação ou patrocínio — e ainda associar a marca a um projeto social.' },
+      ],
+    },
+    {
+      tipo: 'destaque',
+      rotulo: 'O projeto',
+      titulo: 'Escola de Esportes — Aprendendo com Valores',
+      img: '/midia/marca/logo-escola-esportes.jpg',
+      paragrafos: [
+        'Proposta piloto de educação em tempo integral no Marajó: esporte, reforço escolar, educação cidadã e acompanhamento das famílias, com uma Proposta Político-Pedagógica própria.',
+      ],
+      link: { to: '/projetos/escola-de-esportes', rotulo: 'Conheça o projeto' },
+    },
+  ],
+  citacao: { texto: 'A boa educação da juventude é a prenda mais segura da felicidade de um Estado!', autor: 'Axel Oxenstierna' },
 }

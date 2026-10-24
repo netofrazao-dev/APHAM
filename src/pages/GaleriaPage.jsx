@@ -1,6 +1,7 @@
 import PageShell from '../components/PageShell'
 import Gallery from '../components/Gallery'
 import Videos from '../components/Videos'
+import Albuns from '../components/Albuns'
 
 export default function GaleriaPage() {
   return (
@@ -9,6 +10,7 @@ export default function GaleriaPage() {
       titulo="A APHAM em imagens e vídeos"
       descricao="Fotos e vídeos da associação — a nossa história registrada."
     >
+      <Albuns />
       <Gallery />
       <Videos />
     </PageShell>

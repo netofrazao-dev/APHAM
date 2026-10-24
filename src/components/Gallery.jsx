@@ -1,9 +1,18 @@
 import { useEffect, useState } from 'react'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
-import { galeria } from '../data/content'
+import { galeria as galeriaGeral } from '../data/content'
 import Reveal from './Reveal'
 
-export default function Gallery() {
+// Grade de fotos com visualização em tela cheia. Sem props, mostra a galeria geral;
+// os álbuns (/galeria/:slug) passam as próprias fotos e textos.
+export default function Gallery({
+  itens = galeriaGeral,
+  id = 'galeria',
+  eyebrow = 'Galeria',
+  titulo = 'A APHAM em imagens',
+  texto = 'Momentos de quadra, formação e ação social que contam a nossa história.',
+}) {
+  const galeria = itens
   const [idx, setIdx] = useState(null)
   const open = idx !== null
 
@@ -20,23 +29,21 @@ export default function Gallery() {
       window.removeEventListener('keydown', onKey)
       document.body.style.overflow = ''
     }
-  }, [open])
+  }, [open, galeria.length])
 
   return (
-    <section id="galeria" className="section-pad py-24 lg:py-28">
+    <section id={id} className="section-pad py-24 lg:py-28">
       <div className="container-x">
         <Reveal className="mx-auto max-w-2xl text-center">
           <span className="eyebrow flex justify-center">
             <span className="h-px w-6 bg-cyan-400" />
-            Galeria
+            {eyebrow}
             <span className="h-px w-6 bg-cyan-400" />
           </span>
           <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-navy-900 sm:text-4xl">
-            A APHAM em imagens
+            {titulo}
           </h2>
-          <p className="mt-4 text-ink/70">
-            Momentos de quadra, formação e ação social que contam a nossa história.
-          </p>
+          <p className="mt-4 text-ink/70">{texto}</p>
         </Reveal>
 
         <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-4">

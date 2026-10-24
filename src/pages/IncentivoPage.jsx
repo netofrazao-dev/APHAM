@@ -1,14 +1,6 @@
-import PageShell from '../components/PageShell'
-import TaxIncentive from '../components/TaxIncentive'
+import FolderPage from '../components/FolderPage'
+import { incentivoFolder } from '../data/folders'
 
 export default function IncentivoPage() {
-  return (
-    <PageShell
-      eyebrow="Imposto de Renda"
-      titulo="Lei de Incentivo ao Esporte"
-      descricao="Apoie a APHAM destinando parte do seu Imposto de Renda — sem custo extra para você."
-    >
-      <TaxIncentive />
-    </PageShell>
-  )
+  return <FolderPage dados={incentivoFolder} />
 }

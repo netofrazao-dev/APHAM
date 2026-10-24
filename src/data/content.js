@@ -517,6 +517,23 @@ export const galeria = [
   { img: '/midia/fotos/foto5.jpeg', legenda: 'Acompanhamento escolar' },
 ]
 
+// ÁLBUNS DA GALERIA — cada álbum tem uma página própria (/galeria/<slug>) e um
+// card na página Galeria. fotos: [{ img, legenda }]. videos: [{ titulo, url }]
+// para YouTube, ou [{ titulo, arquivo, poster }] para vídeo em /public/midia.
+// Enquanto `fotos` e `videos` estiverem vazios, o álbum mostra "em breve".
+export const albuns = [
+  {
+    slug: 'marajo-solidario',
+    titulo: 'Marajó Solidário',
+    descricao: 'Fotos e vídeos da maior ação de distribuição de alimentos do Marajó durante a pandemia de COVID-19.',
+    capa: '/midia/marajo-solidario/logo-marajo-solidario.jpg',
+    capaContain: true,
+    pagina: { to: '/marajo-solidario', rotulo: 'Conheça a ação' },
+    fotos: [],
+    videos: [],
+  },
+]
+
 export const citacao = {
   texto: 'Aja como se o que você faz fizesse a diferença. E faz!',
   autor: 'William James',

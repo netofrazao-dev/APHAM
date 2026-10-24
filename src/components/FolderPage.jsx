@@ -199,6 +199,29 @@ function Bloco({ b }) {
     )
   }
 
+  // Dados em destaque (ex.: conta bancária para doações), em blocos escuros.
+  if (b.tipo === 'dados') {
+    return (
+      <div className="container-x max-w-4xl text-center">
+        <Reveal>
+          <Titulo>{b.titulo}</Titulo>
+          {b.intro && <p className="mx-auto mt-3 max-w-2xl leading-relaxed text-ink/70">{b.intro}</p>}
+        </Reveal>
+        <Reveal delay={0.05}>
+          <div className="mt-8 grid grid-cols-1 gap-4 rounded-3xl bg-navy-950 p-6 text-left shadow-lift sm:grid-cols-2 sm:p-8 lg:grid-cols-4">
+            {b.itens.map((d) => (
+              <div key={d.rotulo} className="rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10">
+                <p className="text-xs font-semibold uppercase tracking-wide text-cyan-300">{d.rotulo}</p>
+                <p className="mt-1 select-all font-display text-xl font-extrabold text-white">{d.valor}</p>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+        {b.nota && <p className="mx-auto mt-4 max-w-2xl text-sm text-ink/60">{b.nota}</p>}
+      </div>
+    )
+  }
+
   if (b.tipo === 'imagem') {
     return (
       <div className="container-x max-w-4xl">
@@ -302,16 +325,26 @@ export default function FolderPage({ dados: d, extra, depois }) {
               </span>
             )}
             <Paragrafos itens={d.resumo} className="mt-4 text-lg" />
-            {d.doc && (
+            {(d.doc || d.links?.length > 0) && (
               <div className="mt-8 flex flex-wrap gap-3">
-                <a href={d.doc} target="_blank" rel="noopener noreferrer" className="btn-accent">
-                  <FileText className="h-4 w-4" />
-                  {rotuloDoc}
-                </a>
-                <a href={d.doc} download className="btn border border-navy-200 bg-white text-navy-800 hover:bg-navy-50">
-                  <Download className="h-4 w-4" />
-                  Baixar PDF
-                </a>
+                {d.links?.map((l) => (
+                  <Link key={l.to} to={l.to} className="btn-primary">
+                    {l.rotulo}
+                    <ArrowUpRight className="h-4 w-4" />
+                  </Link>
+                ))}
+                {d.doc && (
+                  <>
+                    <a href={d.doc} target="_blank" rel="noopener noreferrer" className="btn-accent">
+                      <FileText className="h-4 w-4" />
+                      {rotuloDoc}
+                    </a>
+                    <a href={d.doc} download className="btn border border-navy-200 bg-white text-navy-800 hover:bg-navy-50">
+                      <Download className="h-4 w-4" />
+                      Baixar PDF
+                    </a>
+                  </>
+                )}
               </div>
             )}
           </Reveal>
@@ -376,7 +409,7 @@ export default function FolderPage({ dados: d, extra, depois }) {
                 </Reveal>
                 <div
                   className={`mt-8 grid grid-cols-1 gap-6 ${
-                    d.paginas.length > 1 ? 'lg:grid-cols-2' : 'mx-auto max-w-3xl'
+                    d.paginas.length > 1 ? 'lg:grid-cols-2' : 'mx-auto max-w-2xl'
                   }`}
                 >
                   {d.paginas.map((src, i) => (
