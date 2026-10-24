@@ -12,6 +12,7 @@ function tituloPara(pathname) {
   if (pathname.startsWith('/checkout')) return 'Finalizar pedido · Loja APHAM'
   if (pathname.startsWith('/pedido')) return 'Acompanhar pedido · APHAM'
   if (pathname.startsWith('/admin')) return 'Painel · APHAM'
+  if (pathname.startsWith('/projetos/')) return 'Projeto · APHAM'
   if (pathname.startsWith('/projetos')) return 'Projetos · APHAM'
   if (pathname.startsWith('/participar')) return 'Participar · APHAM'
   if (pathname.startsWith('/equipes')) return 'Equipes · APHAM'

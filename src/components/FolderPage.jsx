@@ -16,13 +16,15 @@ import {
   Film,
   Flower2,
   School,
+  ArrowUpRight,
 } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import PageShell from './PageShell'
 import Reveal from './Reveal'
 
 // Layout das páginas montadas a partir de um folder/documento (Marajó Solidário,
 // Documentário, Cooperativa, Reconhecimentos…). O conteúdo de cada página fica em
-// src/data/folders.js; aqui só o visual. Ordem: apresentação + números, `extra`
+// src/data/folders.js; aqui só o visual. Também usado nos projetos (sem folder). Ordem: apresentação + números, `extra`
 // (opcional), blocos, citação, folder/documento, ficha técnica e `depois` (opcional).
 
 const ICONES = {
@@ -193,6 +195,46 @@ function Bloco({ b }) {
             </Reveal>
           ))}
         </div>
+      </div>
+    )
+  }
+
+  if (b.tipo === 'imagem') {
+    return (
+      <div className="container-x max-w-4xl">
+        <Reveal>
+          {b.titulo && <Titulo className="mb-6 text-center">{b.titulo}</Titulo>}
+          <figure className="overflow-hidden rounded-2xl bg-white shadow-lift">
+            <img src={b.src} alt={b.legenda || ''} loading="lazy" className="w-full object-cover" />
+            {b.legenda && <figcaption className="px-5 py-4 text-center text-sm text-ink/70">{b.legenda}</figcaption>}
+          </figure>
+        </Reveal>
+      </div>
+    )
+  }
+
+  // Destaque com imagem + texto + link (ex.: o prêmio que o projeto recebeu).
+  if (b.tipo === 'destaque') {
+    return (
+      <div className="container-x max-w-5xl">
+        <Reveal>
+          <div className="grid grid-cols-1 items-center gap-8 overflow-hidden rounded-3xl border border-navy-100 bg-white p-6 shadow-lift sm:p-8 md:grid-cols-[220px_1fr]">
+            <div className="flex h-56 items-center justify-center rounded-2xl bg-navy-50 p-4">
+              <img src={b.img} alt={b.titulo} loading="lazy" className="max-h-full w-auto object-contain" />
+            </div>
+            <div className="text-center md:text-left">
+              {b.rotulo && <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">{b.rotulo}</p>}
+              <h3 className="mt-2 font-display text-2xl font-extrabold text-navy-900">{b.titulo}</h3>
+              <Paragrafos itens={b.paragrafos} className="mt-3" />
+              {b.link && (
+                <Link to={b.link.to} className="btn-primary mt-6">
+                  {b.link.rotulo}
+                  <ArrowUpRight className="h-4 w-4" />
+                </Link>
+              )}
+            </div>
+          </div>
+        </Reveal>
       </div>
     )
   }

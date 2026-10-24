@@ -11,6 +11,7 @@ const Checkout = lazy(() => import('./pages/Checkout'))
 const OrderTracking = lazy(() => import('./pages/OrderTracking'))
 const Privacidade = lazy(() => import('./pages/Privacidade'))
 const Projetos = lazy(() => import('./pages/Projetos'))
+const ProjetoPage = lazy(() => import('./pages/ProjetoPage'))
 const ParticiparPage = lazy(() => import('./pages/ParticiparPage'))
 const EquipesPage = lazy(() => import('./pages/EquipesPage'))
 const CompeticoesPage = lazy(() => import('./pages/CompeticoesPage'))
@@ -46,6 +47,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/projetos" element={<Projetos />} />
+          <Route path="/projetos/:slug" element={<ProjetoPage />} />
           <Route path="/participar" element={<ParticiparPage />} />
           <Route path="/equipes" element={<EquipesPage />} />
           <Route path="/competicoes" element={<CompeticoesPage />} />

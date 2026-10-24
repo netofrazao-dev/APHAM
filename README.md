@@ -95,7 +95,7 @@ Estas precisam que você entre em algum serviço/crie conta — deixamos para a 
 
 ## Onde editar (resumo)
 - Conteúdo do site institucional: `src/data/content.js`.
-- Páginas feitas a partir de folders/documentos (Marajó Solidário, Documentário, Cooperativa e cada prêmio/certificação em `/reconhecimentos/...`): `src/data/folders.js` (visual em `src/components/FolderPage.jsx`).
+- Páginas feitas a partir de folders/documentos (Marajó Solidário, Documentário, Cooperativa, cada prêmio/certificação em `/reconhecimentos/...` e cada projeto em `/projetos/...`): `src/data/folders.js` (visual em `src/components/FolderPage.jsx`).
 - Produtos/novidades/configuração da loja: pelo **/admin** (ou dados iniciais em `src/store/seed.js`).
 - Cores: `tailwind.config.js`.
 - Otimizar imagens novas: `node scripts/optimize-images.mjs`.

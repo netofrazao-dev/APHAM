@@ -1,4 +1,5 @@
-import { Info } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Info, ArrowUpRight } from 'lucide-react'
 import { projetos } from '../data/content'
 import AlternaImagem from './AlternaImagem'
 import Reveal from './Reveal'
@@ -22,7 +23,9 @@ export default function ProjetosDestaque() {
         <div className="mt-14 space-y-8">
           {projetos.lista.map((p, i) => (
             <Reveal key={p.nome} delay={0.06 * i}>
-              <article className="grid grid-cols-1 items-center gap-8 rounded-3xl border border-navy-100 bg-white p-6 shadow-soft sm:p-8 lg:grid-cols-[300px_1fr]">
+              <article className="relative grid grid-cols-1 items-center gap-8 rounded-3xl border border-navy-100 bg-white p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift sm:p-8 lg:grid-cols-[300px_1fr]">
+                {/* O card inteiro abre a página do projeto */}
+                {p.slug && <Link to={`/projetos/${p.slug}`} aria-hidden="true" tabIndex={-1} className="absolute inset-0 z-[5] rounded-3xl" />}
                 <AlternaImagem
                   className="aspect-square w-full overflow-hidden rounded-2xl bg-navy-50"
                   alt={p.nome}
@@ -35,6 +38,12 @@ export default function ProjetosDestaque() {
                   <h3 className="font-display text-2xl font-extrabold text-navy-900">{p.nome}</h3>
                   <p className="mt-2 text-sm font-semibold text-cyan-700">{p.resumo}</p>
                   <p className="mt-3 text-sm leading-relaxed text-ink/70">{p.texto}</p>
+                  {p.slug && (
+                    <Link to={`/projetos/${p.slug}`} className="btn-primary relative z-10 mt-6">
+                      Conheça o projeto
+                      <ArrowUpRight className="h-4 w-4" />
+                    </Link>
+                  )}
                 </div>
               </article>
             </Reveal>

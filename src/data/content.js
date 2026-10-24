@@ -107,7 +107,8 @@ export const sobre = {
 
 // PROJETOS da APHAM (página própria, aberta pelo menu "Projetos").
 // Ordem pedida pelo cliente: 1º Semear Hand, 2º Escola de Esportes.
-// Textos PROVISÓRIOS — serão substituídos pelo conteúdo oficial.
+// Textos tirados dos folders dos prêmios Itaú-Unicef. Cada projeto tem uma página
+// própria (/projetos/<slug>), com o conteúdo em `projetosDetalhes` (folders.js).
 export const projetos = {
   eyebrow: 'Nossos projetos',
   titulo: 'Projetos que transformam pelo esporte',
@@ -115,25 +116,26 @@ export const projetos = {
     'A APHAM desenvolve projetos que usam o handebol como ferramenta de educação, inclusão social e formação de valores para crianças, adolescentes e jovens do Marajó.',
   lista: [
     {
+      slug: 'semear-hand',
       nome: 'Semear Hand',
       logo: '/midia/marca/logo-semear-hand.jpg',
       foto: '/midia/projetos/semear-hand-foto.jpg',
       resumo:
-        'Educação integral pelo handebol — "aprendizagem que transforma". Semifinalista do Prêmio Itaú-Unicef 2015.',
+        'Cultivando Valores pelo Esporte e para a Vida! Semifinalista do Prêmio Itaú-Unicef 2015.',
       texto:
-        'O Semear Hand usa o handebol como semente de aprendizagem e transformação, unindo educação e esporte na formação de crianças e jovens marajoaras. (Texto provisório — ajustar com o conteúdo oficial do projeto.)',
+        'Desde 2009, em parceria com a E.E.E.F.M. Presidente Tancredo de Almeida Neves, em Melgaço, o Semear Hand une esporte e educação na formação integral de alunos-atletas — com oficinas pedagógicas de handebol, acompanhamento escolar e familiar e treinamento desportivo.',
     },
     {
+      slug: 'escola-de-esportes',
       nome: 'Escola de Esportes',
       logo: '/midia/marca/logo-escola-esportes.jpg',
       foto: '/midia/projetos/escola-esportes-foto.jpg',
       resumo:
-        '"No Esporte com Valores" — iniciação e formação esportiva. Semifinalista do Prêmio Itaú-Unicef 2018.',
+        'Aprendendo com Valores: Educação e Promoção Social para a Juventude! Semifinalista do Prêmio Itaú-Unicef 2018.',
       texto:
-        'A Escola de Esportes leva a iniciação ao handebol e a formação de valores a comunidades que antes tinham pouco acesso ao esporte. (Texto provisório — ajustar com o conteúdo oficial do projeto.)',
+        'Proposta piloto de educação em tempo integral em Breves: cerca de 100 adolescentes de 12 a 17 anos, no contraturno escolar, com handebol, futsal e voleibol, reforço escolar, educação cidadã e acompanhamento das famílias.',
     },
   ],
-  nota: 'Conteúdo provisório — os textos oficiais dos projetos serão enviados pela associação.',
 }
 
 // INFORMAÇÕES GERAIS sobre a associação e o handebol (conteúdo PROVISÓRIO —

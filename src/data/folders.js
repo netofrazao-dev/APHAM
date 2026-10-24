@@ -9,7 +9,7 @@
 //    lema, resumo                → texto ao lado da capa
 //    doc, rotuloDoc              → PDF (botões "Ver"/"Baixar")
 //    numeros [{ valor, label }]  → destaques em números
-//    blocos [...]                → seções (tipos: colunas, texto, cards, datas, artigos, memoria)
+//    blocos [...]                → seções (tipos: colunas, texto, cards, datas, artigos, memoria, imagem, destaque)
 //    citacao { texto, autor }    → frase do folder
 //    paginas [...]               → imagens das páginas do PDF (prévia clicável)
 //    ficha [{ nome | nomes, cargo }]
@@ -493,5 +493,246 @@ export const reconhecimentosDetalhes = {
     paginas: ['/midia/folders/certificado-experiencias-rede-1.jpg'],
     ficha: [{ nome: 'Camila Feldberg', cargo: 'Itaú Social — assinatura do certificado' }],
     tituloFicha: 'Assinatura',
+  },
+}
+
+// PROJETOS — uma página para cada item de `projetos.lista` (content.js), pela
+// chave `slug`. Os projetos não têm folder próprio: o Semear Hand usa os folders
+// dos prêmios Itaú-Unicef e do documentário; a Escola de Esportes usa a Proposta
+// Político-Pedagógica (PPP) 2026 do projeto, além do folder do prêmio de 2018.
+export const projetosDetalhes = {
+  'semear-hand': {
+    eyebrow: 'Projeto',
+    titulo: 'Semear Hand',
+    descricao: 'Cultivando Valores pelo Esporte e para a Vida!',
+    capa: { img: '/midia/marca/logo-semear-hand.jpg', alt: 'Logo do projeto Semear Hand' },
+    lema: 'Esporte & Educação desde 2009',
+    resumo: [
+      'O SEMEAR HAND é a ação socioformativa que deu origem ao trabalho pedagógico da APHAM. Desde 2009, em parceria com a E.E.E.F.M. Presidente Tancredo de Almeida Neves, em Melgaço, une ESPORTE & EDUCAÇÃO na formação integral de alunos e alunas atletas.',
+      'O objetivo é o desenvolvimento técnico, ético e essencialmente cidadão — formar atletas e, acima de tudo, pessoas.',
+    ],
+    numeros: [
+      { valor: '2009', label: 'início da parceria com a escola' },
+      { valor: '5', label: 'módulos de estudo da teoria do jogo' },
+      { valor: 'Top 5', label: 'da Região Norte no Prêmio Itaú-Unicef 2015' },
+      { valor: '1.947', label: 'iniciativas concorrentes no Brasil' },
+    ],
+    blocos: [
+      {
+        tipo: 'colunas',
+        colunas: [
+          {
+            titulo: 'Sobre o projeto',
+            paragrafos: [
+              'O Projeto SEMEAR HAND — Cultivando Valores pelo Esporte e para a Vida encontrou na parceria com a E.E.E.F.M. Presidente Tancredo de Almeida Neves terreno fértil para disseminar, pela relação entre esporte e educação, um projeto de formação integral de alunos-atletas.',
+              'Os alunos-atletas das equipes de handebol das escolas parceiras chegaram, em determinado momento, ao protagonismo do esporte escolar no estado do Pará — uma trajetória contada no documentário da APHAM.',
+              'A estrutura pedagógica do Semear Hand é a base do Projeto Escola de Esportes, que ampliou o trabalho a partir de 2018.',
+            ],
+            caixas: [
+              { rotulo: 'Escola parceira', texto: 'E.E.E.F.M. Presidente Tancredo de Almeida Neves — Melgaço/PA' },
+              { rotulo: 'Apoio', texto: 'Pedagogia do Handebol · FHEPA · CMDCA Melgaço' },
+            ],
+          },
+          {
+            titulo: 'Objetivo educacional',
+            paragrafos: [
+              'Proporcionar a vivência de práticas sociais significativas que ajudem a formar personalidades éticas e a reconhecer e afirmar posturas e condutas responsáveis diante dos inúmeros desafios que a sociedade impõe aos jovens da nossa comunidade.',
+            ],
+            lista: [
+              'Formação técnica no handebol',
+              'Acompanhamento da vida escolar',
+              'Participação da família',
+              'Valores dentro e fora da quadra',
+            ],
+          },
+        ],
+      },
+      {
+        tipo: 'imagem',
+        src: '/midia/projetos/semear-hand-foto.jpg',
+        legenda: 'Semear Hand — handebol e educação na formação de alunos-atletas.',
+      },
+      {
+        tipo: 'cards',
+        titulo: 'Como o projeto funciona',
+        intro: 'O Semear Hand se organiza em três frentes que caminham juntas.',
+        icone: 'book',
+        itens: [
+          { titulo: 'Oficinas Pedagógicas de Handebol', texto: 'Formação em 5 módulos de estudo da teoria do jogo — histórico, técnico e tático —, visando o desenvolvimento integral do aluno-atleta.' },
+          { titulo: 'Acompanhamento Socioeducativo', lista: ['Monitoramento do rendimento escolar', 'Visitas regulares às residências dos alunos', 'Encontros de formação com a família'] },
+          { titulo: 'Treinamento Desportivo', texto: 'Trabalho regular de formação e desenvolvimento técnico, orientado pelos módulos das Oficinas Pedagógicas de Handebol.' },
+        ],
+      },
+      {
+        tipo: 'destaque',
+        rotulo: 'Reconhecimento',
+        titulo: 'Semifinalista do Prêmio Itaú-Unicef 2015',
+        img: '/midia/marca/premio-itau-2015.jpg',
+        paragrafos: [
+          'Na 11ª edição do prêmio, o Semear Hand ficou entre os 5 semifinalistas da Região Norte, entre 1.947 iniciativas de todo o Brasil — conquistando para a APHAM e para a escola parceira o direito de usar o Selo Itaú-Unicef.',
+        ],
+        link: { to: '/reconhecimentos/premio-itau-unicef-2015', rotulo: 'Ver o prêmio' },
+      },
+      {
+        tipo: 'destaque',
+        rotulo: 'A continuação',
+        titulo: 'O Semear Hand vive na Escola de Esportes',
+        img: '/midia/marca/logo-escola-esportes.jpg',
+        paragrafos: [
+          'A estrutura pedagógica do Semear Hand é a base do Projeto Escola de Esportes, que ampliou o trabalho para novas modalidades, mais escolas e uma Proposta Político-Pedagógica própria.',
+        ],
+        link: { to: '/projetos/escola-de-esportes', rotulo: 'Conheça a Escola de Esportes' },
+      },
+    ],
+    citacao: { texto: 'Para tudo há um tempo, para cada coisa há um momento debaixo dos céus.', autor: 'Eclesiastes 3:1' },
+    ficha: [
+      { nome: 'Claybe Fernando Furtado Cirino', cargo: 'Coordenador do projeto Semear Hand' },
+      { nome: 'Hélio Pena Baía', cargo: 'Diretor da E.E.E.F.M. Tancredo de A. Neves (2015)' },
+      { nome: 'Semaias Miranda Melo', cargo: 'Presidente da APHAM (2015)' },
+    ],
+  },
+
+  'escola-de-esportes': {
+    eyebrow: 'Projeto',
+    titulo: 'Escola de Esportes',
+    descricao: 'Aprendendo com Valores: Educação e Promoção Social para a Juventude!',
+    capa: { img: '/midia/marca/logo-escola-esportes.jpg', alt: 'Logo do projeto Escola de Esportes' },
+    lema: 'Proposta piloto de educação em tempo integral',
+    resumo: [
+      'A Escola de Esportes atende adolescentes de 12 a 17 anos no contraturno escolar, em parceria com a escola pública, unindo esporte, reforço escolar, educação cidadã e acompanhamento das famílias.',
+      'É uma proposta piloto de educação em tempo integral em Breves: tempo qualificado — e não apenas tempo ocupado — enquanto a educação integral não chega a todos. Herdeira do Semear Hand, ganhou em 2026 uma Proposta Político-Pedagógica própria, a “pedra fundamental” do projeto.',
+    ],
+    numeros: [
+      { valor: '~100', label: 'adolescentes atendidos por ano' },
+      { valor: '12–17', label: 'anos — faixa etária do projeto' },
+      { valor: '3', label: 'modalidades: handebol, futsal e voleibol' },
+      { valor: '4', label: 'eixos temáticos, um por bimestre' },
+    ],
+    blocos: [
+      {
+        tipo: 'colunas',
+        colunas: [
+          {
+            titulo: 'Por que o projeto existe',
+            paragrafos: [
+              'No Marajó, rios e furos são as estradas: muitas crianças e adolescentes dependem de barcos para chegar à escola, e a oferta de esporte, cultura, lazer e proteção social é pequena diante da demanda.',
+              'Breves tem IDHM de 0,503 (baixo) e Melgaço, onde a APHAM também atua, 0,418 — o menor do país. Nos anos finais do ensino fundamental, o Ideb é de 3,8 em Breves e 3,3 em Melgaço, contra 5,0 no Brasil.',
+              'O que um adolescente faz no contraturno — se convive com adultos que o acolhem, se aprende, pratica esporte e é acompanhado — interfere na sua permanência na escola, na sua saúde e na sua proteção contra as violências.',
+            ],
+          },
+          {
+            titulo: 'Objetivo geral',
+            paragrafos: [
+              'Promover a formação integral de crianças, adolescentes e jovens como atletas-cidadãos — éticos, críticos, solidários e participativos — articulando esporte, educação e promoção social, em parceria com a escola pública, a família e a comunidade.',
+              'No esporte educacional da APHAM, todos jogam: não há seleção precoce de talentos nem exclusão por baixo rendimento, e a competição é recurso pedagógico — aprende-se a vencer e a perder com dignidade.',
+            ],
+            caixas: [
+              { rotulo: 'Escolas parceiras', texto: 'E.M.E.F. Prof. Estevão Gomes · E.M.E.F. Bom Jesus' },
+              { rotulo: 'Quem participa', texto: 'Alunos da rede pública, de 12 a 17 anos, com 50% de meninas e 50% de meninos' },
+            ],
+          },
+        ],
+      },
+      {
+        tipo: 'cards',
+        titulo: 'Nós acreditamos… com Fé, Esperança & Amor!',
+        intro: 'A frase-símbolo da APHAM não é enfeite: cada palavra é um compromisso pedagógico.',
+        icone: 'heart',
+        itens: [
+          { titulo: 'Fé', texto: 'Crer no potencial de cada adolescente — inclusive daqueles a quem o mundo já disse “não” — e no poder transformador da educação e do esporte.' },
+          { titulo: 'Esperança', texto: 'Esperança é verbo: esperançar — agir, planejar e persistir. Cada bimestre é uma etapa concreta de construção de futuro.' },
+          { titulo: 'Amor', texto: 'Cuidado, acolhida e compromisso com o outro: escutar, exigir com respeito, corrigir sem humilhar e celebrar cada conquista.' },
+        ],
+      },
+      {
+        tipo: 'cards',
+        titulo: 'Do eu ao nós, do nós ao direito, do direito à ação',
+        intro: 'O ano do projeto acompanha o calendário escolar e se organiza em quatro eixos temáticos — um por bimestre —, cada um com sua culminância.',
+        icone: 'target',
+        itens: [
+          { titulo: 'Valores Humanos', texto: '1º bimestre (mar–abr) · O EU e o NÓS: acolhida, vínculo e convivência.', lista: ['Pergunta: “Que valores fazem de nós um time — dentro e fora da quadra?”', 'Culminância: Festival de Acolhida e Jogos Cooperativos e o Pacto de Convivência'] },
+          { titulo: 'Cultura Local', texto: '2º bimestre (mai–jul) · O NOSSO CHÃO: identidade, território e saberes do Marajó.', lista: ['Culminância: Festival “Jogos e Saberes do Marajó” e o Livro de Saberes e Brincadeiras'] },
+          { titulo: 'Cidadania', texto: '3º bimestre (ago–set) · O NOSSO DIREITO: direitos, deveres e democracia.', lista: ['Culminância: “Jogos da Cidadania” e a Assembleia de Direitos'] },
+          { titulo: 'Participação Social', texto: '4º bimestre (out–dez) · O NOSSO FUTURO: protagonismo, ação comunitária e projeto de vida.', lista: ['Culminância: Mostra Anual Escola de Esportes e certificação'] },
+        ],
+      },
+      {
+        tipo: 'imagem',
+        src: '/midia/projetos/escola-esportes-foto.jpg',
+        legenda: 'Escola de Esportes — esporte, educação e promoção social para a juventude.',
+      },
+      {
+        tipo: 'cards',
+        titulo: 'Como o projeto funciona',
+        intro: 'Três componentes que se integram em torno do eixo de cada bimestre.',
+        icone: 'school',
+        itens: [
+          { titulo: 'OPIES', texto: 'Oficinas Pedagógicas de Iniciação e Especialização: 5 módulos de 16 horas (80 horas no ano), com estudo de textos e vídeos e prática em quadra — unindo o saber esportivo à reflexão sobre valores, cultura e cidadania.' },
+          { titulo: 'Treinamento Desportivo', texto: 'Formação técnica e tática em jogos, treinos e minitorneios — o principal “laboratório” dos valores do bimestre. O jogo se ensina pelo próprio jogo.' },
+          { titulo: 'Acompanhamento Socioeducativo', lista: ['Monitoramento do desempenho escolar', 'Reforço em Língua Portuguesa e Matemática', 'Oficinas de Educação Cidadã', 'Acompanhamento e encontros com as famílias'] },
+        ],
+      },
+      {
+        tipo: 'colunas',
+        colunas: [
+          {
+            titulo: 'Um turno no projeto',
+            paragrafos: 'Os turnos acontecem de segunda a sábado, pela manhã e à tarde, sempre no contraturno escolar.',
+            lista: [
+              'Acolhida e Roda de Valores — frequência, “palavra do dia” e o valor do bimestre (20 min)',
+              'Lanche e convivência (20 min)',
+              'Bloco formativo — reforço escolar, educação cidadã ou OPIES (1h30)',
+              'Bloco esportivo — fundamentos, tática, jogos e minitorneios (1h30)',
+              'Roda de fechamento — “O que aprendi hoje? O que preciso melhorar?” (20 min)',
+            ],
+          },
+          {
+            titulo: 'A semana',
+            lista: [
+              'Segunda — Educação Cidadã + fundamentos técnicos',
+              'Terça — Reforço de Língua Portuguesa + jogo e tática',
+              'Quarta — OPIES (estudo, vídeos e pesquisa) + modalidade em foco',
+              'Quinta — Reforço de Matemática + jogos cooperativos e pré-desportivos',
+              'Sexta — Educação Cidadã / projeto do bimestre + jogos coletivos e minitorneios',
+              'Sábado — festivais, encontros com as famílias, culminâncias e competições',
+            ],
+          },
+        ],
+      },
+      {
+        tipo: 'cards',
+        titulo: 'Metas do projeto',
+        intro: 'Metas de referência para o ano de 2026, acompanhadas e revisadas a cada ano.',
+        icone: 'award',
+        itens: [
+          { titulo: 'Frequência escolar', texto: 'Ao menos 90% dos participantes com frequência igual ou superior a 85% nas escolas parceiras.' },
+          { titulo: 'Desempenho escolar', texto: 'Redução de 70% nas reprovações e “notas vermelhas” em relação à situação de ingresso.' },
+          { titulo: 'Educação cidadã', texto: '36 oficinas por turma no ano — ECA, combate ao bullying, prevenção às drogas e direitos humanos.' },
+          { titulo: 'Famílias', texto: '4 encontros gerais no ano, um por bimestre, com a presença de pelo menos 80% das famílias.' },
+          { titulo: 'Rede de proteção', texto: 'Casos de violação de direitos encaminhados ao CRAS/CREAS ou ao Conselho Tutelar em até 48 horas.' },
+          { titulo: 'Comunidade', texto: 'Pelo menos 2 festivais esportivos ou torneios abertos ao público, além das culminâncias de cada bimestre.' },
+        ],
+      },
+      {
+        tipo: 'destaque',
+        rotulo: 'Reconhecimento',
+        titulo: 'Semifinalista do Prêmio Itaú-Unicef 2018',
+        img: '/midia/marca/premio-itau-2018.jpg',
+        paragrafos: [
+          'Na 13ª edição, entre 3.514 iniciativas, a Escola de Esportes ficou entre as 12 melhores ações socioeducativas da Região Norte e entre as 100 melhores do Brasil — o segundo selo da APHAM em apenas três anos.',
+        ],
+        link: { to: '/reconhecimentos/premio-itau-unicef-2018', rotulo: 'Ver o prêmio' },
+      },
+    ],
+    citacao: {
+      texto: 'Se você quiser um ano de prosperidade, cultive grãos. Se você quiser dez anos de prosperidade, cultive árvores. Mas se você quiser cem anos de prosperidade, cultive gente.',
+      autor: 'Provérbio chinês — “cultivar gente é o nosso ofício”',
+    },
+    outrosDocs: [{ titulo: 'Quadro de horários das turmas (PDF)', href: '/midia/documentos/horarios-escola-esportes.pdf' }],
+    ficha: [
+      { nome: 'Genésio Jorge de Oliveira Pena', cargo: 'Presidente da APHAM' },
+      { nome: 'Claybe Fernando Furtado Cirino', cargo: 'Coordenador do Projeto Escola de Esportes' },
+      { nomes: ['Érico dos Santos Santiago', 'Vivia Michilles', 'Claybe Fernando Furtado Cirino'], cargo: 'Professores das turmas' },
+    ],
   },
 }
