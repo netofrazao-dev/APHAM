@@ -35,6 +35,7 @@ export const nav = [
   { label: 'Participar', to: '/participar' },
   { label: 'Equipes', to: '/equipes' },
   { label: 'Competições e Eventos', to: '/competicoes' },
+  { label: 'Marajó Solidário', to: '/marajo-solidario' },
   { label: 'Galeria', to: '/galeria' },
   { label: 'Fale Conosco', to: '/contato' },
 ]
@@ -47,9 +48,51 @@ export const sumario = [
   { label: 'Participar', to: '/participar' },
   { label: 'Equipes', to: '/equipes' },
   { label: 'Competições e Eventos', to: '/competicoes' },
+  { label: 'Marajó Solidário', to: '/marajo-solidario' },
   { label: 'Galeria', to: '/galeria' },
   { label: 'Fale Conosco', to: '/contato' },
 ]
+
+// Página "Marajó Solidário" — ação de distribuição de alimentos na pandemia de COVID-19.
+// Textos tirados do folder oficial da ação (public/midia/documentos/folder-marajo-solidario.pdf).
+export const marajoSolidario = {
+  logo: '/midia/marajo-solidario/logo-marajo-solidario.jpg',
+  folder: '/midia/documentos/folder-marajo-solidario.pdf',
+  paginasFolder: ['/midia/marajo-solidario/folder-pagina-1.jpg', '/midia/marajo-solidario/folder-pagina-2.jpg'],
+  lema: 'Em favor de todos que necessitam!',
+  resumo:
+    'A maior ação de distribuição de alimentos do Marajó durante a pandemia de COVID-19. Por meio da Ação MARAJÓ Solidário!, a APHAM levou cerca de 20 toneladas de alimentos aos 16 municípios da Região de Integração do Marajó, atendendo famílias de crianças, adolescentes e jovens em situação de vulnerabilidade social.',
+  numeros: [
+    { valor: '19,5 t', label: 'de alimentos não perecíveis' },
+    { valor: '16', label: 'municípios do Marajó atendidos' },
+    { valor: '2.200', label: 'kits de alimentação para famílias de Breves' },
+    { valor: 'Dez/2020', label: 'a Jan/2021 — período de distribuição' },
+  ],
+  historia: [
+    'Em 2020, após celebrar sua 1ª década de existência, a APHAM passou por um processo criterioso de inscrição, análise e seleção e entrou na Plataforma Juntos Pelas Crianças — rede de organizações que trabalha pela proteção de crianças e adolescentes e contra a violência, com atuação em todos os estados do país.',
+    'Com essa aprovação, a plataforma indicou a APHAM para fazer parte da Campanha Brasil Acolhedor, do Programa Federal Pátria Voluntária. O ingresso nessa ação possibilitou chegar ao povo marajoara, no período de crise socioeconômica e de saúde pública causada pela COVID-19, com aproximadamente 20 toneladas de alimentos.',
+  ],
+  objetivo:
+    'Criar uma rede articulada para a distribuição de alimentos não perecíveis para famílias de crianças, adolescentes e jovens em condição de vulnerabilidade social, a partir da identificação de instituições sociais — sem atrelamento político-partidário e sem fins lucrativos — com reconhecido prestígio e atuação social na comunidade marajoara.',
+  distribuicao: [
+    { valor: '8 toneladas', texto: 'distribuídas entre os 16 municípios da Região de Integração do Marajó, através das dioceses e paróquias locais.' },
+    { valor: '4 toneladas', texto: 'distribuídas entre projetos e ações sociais da região, pré-identificados pelo cadastramento da Ação MARAJÓ Solidário!.' },
+    { valor: '8 toneladas', texto: 'para montar 2.200 kits de alimentação, entregues às famílias cadastradas pela APHAM em Breves, nas zonas urbana e rural.' },
+  ],
+  periodo: [
+    { quem: '16 municípios da Região de Integração do Marajó', quando: '2ª quinzena de dezembro de 2020 a 2ª quinzena de janeiro de 2021' },
+    { quem: 'Organizações sociais e instituições filantrópicas do Marajó Ocidental', quando: '2ª quinzena de dezembro de 2020' },
+  ],
+  parceiros: {
+    promocao: ['Pátria Voluntária', 'Brasil Acolhedor'],
+    apoio: ['Pátria Amada Brasil — Governo Federal', 'Juntos Pelas Crianças'],
+  },
+  ficha: [
+    { nome: 'Genésio Jorge de Oliveira Pena', cargo: 'Presidente da APHAM' },
+    { nome: 'Claybe Fernando Furtado Cirino', cargo: 'Coordenador de Projetos da APHAM' },
+    { nome: 'Érico dos Santos Santiago', cargo: 'Coordenador da Ação Marajó Solidário' },
+  ],
+}
 
 // Redes sociais que aparecem no header (ao lado dos links).
 export const redesHeader = [

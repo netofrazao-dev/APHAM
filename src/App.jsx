@@ -23,6 +23,7 @@ const DocumentarioPage = lazy(() => import('./pages/DocumentarioPage'))
 const LivesPage = lazy(() => import('./pages/LivesPage'))
 const PostsAnteriores = lazy(() => import('./pages/PostsAnteriores'))
 const NovidadePage = lazy(() => import('./pages/NovidadePage'))
+const MarajoSolidarioPage = lazy(() => import('./pages/MarajoSolidarioPage'))
 const ApoiePage = lazy(() => import('./pages/ApoiePage'))
 const QuemSomosPage = lazy(() => import('./pages/QuemSomosPage'))
 const NotFound = lazy(() => import('./pages/NotFound'))
@@ -56,6 +57,7 @@ export default function App() {
           <Route path="/lives" element={<LivesPage />} />
           <Route path="/posts-anteriores" element={<PostsAnteriores />} />
           <Route path="/novidades/:id" element={<NovidadePage />} />
+          <Route path="/marajo-solidario" element={<MarajoSolidarioPage />} />
           <Route path="/apoie" element={<ApoiePage />} />
           <Route path="/quem-somos" element={<QuemSomosPage />} />
           <Route path="/loja" element={<Store />} />

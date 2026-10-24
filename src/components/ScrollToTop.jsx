@@ -22,6 +22,7 @@ function tituloPara(pathname) {
   if (pathname.startsWith('/cooperativa')) return 'Cooperativa Social · APHAM'
   if (pathname.startsWith('/documentario')) return 'Documentário · APHAM'
   if (pathname.startsWith('/lives')) return 'Lives APHAM · APHAM'
+  if (pathname.startsWith('/marajo-solidario')) return 'Marajó Solidário · APHAM'
   if (pathname.startsWith('/novidades')) return 'Novidades · APHAM'
   if (pathname.startsWith('/posts-anteriores')) return 'Posts anteriores · APHAM'
   if (pathname.startsWith('/apoie')) return 'Apoie o nosso projeto · APHAM'
