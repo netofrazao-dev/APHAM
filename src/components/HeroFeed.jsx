@@ -19,10 +19,10 @@ function buildSlides(aoVivo, novidades = [], temJogos = false) {
   return slides
 }
 
-// Clicar na foto abre a matéria dessa novidade (seção Novidades da home).
+// Clicar na foto abre a subpágina dessa novidade.
 function FotoSlide({ n }) {
   return (
-    <Link to={`/?novidade=${encodeURIComponent(n.id)}`} state={{ manterScroll: true }} className="relative block h-full overflow-hidden" aria-label={n.titulo}>
+    <Link to={`/novidades/${encodeURIComponent(n.id)}`} className="relative block h-full overflow-hidden" aria-label={n.titulo}>
       <img src={n.img} alt="" className="h-full w-full object-cover" loading="lazy" />
       {/* Só um degradê no rodapé para a leitura do texto (sem esmaecer a foto à esquerda) */}
       <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/20 to-transparent" />

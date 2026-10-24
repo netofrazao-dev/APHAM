@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Radio, PlayCircle, ArrowUpRight, X } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
 import Reveal from './Reveal'
@@ -86,20 +85,6 @@ export default function News() {
   const aoVivo = settings?.aoVivoAtivo && settings?.aoVivoUrl
   const [materia, setMateria] = useState(null)
   const [igPosts, setIgPosts] = useState([])
-  const [params] = useSearchParams()
-  const navigate = useNavigate()
-
-  // Veio de um clique no card "Novidades" do topo (/?novidade=<id>):
-  // rola até esta seção, abre a matéria e limpa o parâmetro da URL.
-  const novidadeId = params.get('novidade')
-  useEffect(() => {
-    if (!novidadeId) return
-    const n = novidades.find((x) => String(x.id) === novidadeId)
-    if (!n) return
-    document.getElementById('novidades')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    setMateria({ ...n, link: null })
-    navigate({ search: '' }, { replace: true, state: { manterScroll: true } })
-  }, [novidadeId, novidades, navigate])
 
   // Tenta buscar os posts do Instagram (via /api/instagram). Se não houver
   // (ainda sem token ou em desenvolvimento), usa as novidades do painel.

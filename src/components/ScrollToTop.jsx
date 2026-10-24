@@ -22,6 +22,7 @@ function tituloPara(pathname) {
   if (pathname.startsWith('/cooperativa')) return 'Cooperativa Social · APHAM'
   if (pathname.startsWith('/documentario')) return 'Documentário · APHAM'
   if (pathname.startsWith('/lives')) return 'Lives APHAM · APHAM'
+  if (pathname.startsWith('/novidades')) return 'Novidades · APHAM'
   if (pathname.startsWith('/posts-anteriores')) return 'Posts anteriores · APHAM'
   if (pathname.startsWith('/apoie')) return 'Apoie o nosso projeto · APHAM'
   if (pathname.startsWith('/quem-somos')) return 'Quem somos · APHAM'
@@ -31,12 +32,11 @@ function tituloPara(pathname) {
 
 // Rola para o topo (ou até a âncora, quando há #) e ajusta o título ao trocar de rota.
 // Também roda ao clicar num link para a página atual (ex.: "Início" estando na home),
-// pois cada clique gera uma nova `key`. Navegações com state.manterScroll não rolam.
+// pois cada clique gera uma nova `key`.
 export default function ScrollToTop() {
-  const { pathname, hash, key, state } = useLocation()
+  const { pathname, hash, key } = useLocation()
   useEffect(() => {
     document.title = tituloPara(pathname)
-    if (state?.manterScroll) return
 
     if (hash) {
       // Rola até a seção da âncora. Como algumas páginas carregam sob demanda,
