@@ -448,8 +448,8 @@ export const reconhecimentos = [
   },
   {
     titulo: 'Certificado Experiências em Rede',
-    descricao: 'Certificação do trabalho da APHAM no programa Experiências em Rede.',
-    img: '/midia/logo-apham.png',
+    descricao: 'Certificação do trabalho da APHAM no programa Experiências em Rede (Itaú Social).',
+    img: '/midia/marca/experiencias-em-rede.png',
     doc: '/midia/documentos/certificado-experiencias-rede.pdf',
     docPronto: true,
   },
