@@ -428,7 +428,7 @@ export const reconhecimentos = [
     titulo: 'Utilidade Pública Municipal',
     descricao:
       'A APHAM é reconhecida como entidade de utilidade pública municipal pela Lei Municipal nº 2.527, de 17 de dezembro de 2018, no município de Breves.',
-    img: '/midia/logo-apham.png',
+    img: '/midia/marca/brasao-breves.jpg',
     doc: '/midia/documentos/utilidade-publica-municipal.pdf',
     docPronto: true,
   },
