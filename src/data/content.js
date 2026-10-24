@@ -419,9 +419,17 @@ export const reconhecimentos = [
   {
     titulo: 'Utilidade Pública Estadual',
     descricao:
-      'A APHAM foi reconhecida como entidade de utilidade pública pela Lei Estadual nº 10.594/2024 — um reconhecimento oficial do nosso trabalho social e esportivo no Marajó. (Confirmar ano e parlamentar autor.)',
-    img: '/midia/logo-apham.png',
+      'A APHAM é reconhecida como entidade de utilidade pública estadual pela Lei Estadual nº 10.594, de 20 de junho de 2024 — reconhecimento oficial do nosso trabalho social e esportivo no Marajó.',
+    img: '/midia/marca/brasao-para.jpg',
     doc: '/midia/documentos/utilidade-publica.pdf',
+    docPronto: true,
+  },
+  {
+    titulo: 'Utilidade Pública Municipal',
+    descricao:
+      'A APHAM é reconhecida como entidade de utilidade pública municipal pela Lei Municipal nº 2.527, de 17 de dezembro de 2018, no município de Breves.',
+    img: '/midia/logo-apham.png',
+    doc: '/midia/documentos/utilidade-publica-municipal.pdf',
     docPronto: true,
   },
   {
