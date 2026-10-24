@@ -117,8 +117,8 @@ export default function News() {
   return (
     <section id="novidades" className="section-pad py-24 lg:py-28">
       <div className="container-x">
-        <Reveal className="max-w-2xl">
-          <span className="eyebrow">
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <span className="eyebrow flex justify-center">
             <span className="h-px w-6 bg-cyan-400" />
             APHAM News
             <span className="h-px w-6 bg-cyan-400" />
@@ -209,9 +209,9 @@ export default function News() {
           })}
         </div>
 
-        {/* Posts anteriores (os "storys" salvos) — depois dos cards */}
+        {/* Mais Antigas (os "storys" salvos) — depois dos cards */}
         <div className="mt-16">
-          <Stories titulo="Posts anteriores" subtitulo="Reveja os posts que a APHAM já publicou — toque para ver em tela cheia." />
+          <Stories titulo="Mais Antigas" subtitulo="Reveja os posts que a APHAM já publicou — toque para ver em tela cheia." />
         </div>
       </div>
 

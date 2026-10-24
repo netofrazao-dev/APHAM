@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 
-// Visualizador em tela cheia dos "posts anteriores" (storys).
+// Visualizador em tela cheia das publicações "Mais Antigas" (storys).
 export default function StoryViewer({ index, stories, onClose, onNav }) {
   useEffect(() => {
     const onKey = (e) => {

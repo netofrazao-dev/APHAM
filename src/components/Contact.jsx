@@ -44,15 +44,16 @@ export default function Contact() {
     <section id="contato" className="section-pad py-24 lg:py-28">
       <div className="container-x grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
         <div>
-          <Reveal>
-            <span className="eyebrow">
+          <Reveal className="text-center">
+            <span className="eyebrow flex justify-center">
               <span className="h-px w-6 bg-cyan-400" />
               {contato.eyebrow}
+              <span className="h-px w-6 bg-cyan-400" />
             </span>
             <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-navy-900 sm:text-4xl">
               {contato.titulo}
             </h2>
-            <p className="mt-4 max-w-md text-ink/70">
+            <p className="mx-auto mt-4 max-w-md text-ink/70">
               Quer treinar, apoiar ou saber mais sobre a APHAM? Deixe sua mensagem ou fale pelas
               nossas redes.
             </p>

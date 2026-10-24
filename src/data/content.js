@@ -207,7 +207,8 @@ export const calendario = {
     'As competições e ações da APHAM ao longo de 2026. Use as setas para passar os meses.',
   nota: 'Datas provisórias — ajuste conforme a agenda oficial da associação.',
   ano: 2026,
-  // Cada evento: data (início) + fim opcional (eventos de vários dias) + cor.
+  // Cada evento: data (início) + fim opcional (eventos de vários dias) + tipo
+  // (categoria que aparece na etiqueta: Competição, Evento, Ação social…) + cor.
   // cor: 'cyan' | 'amber' | 'red' | 'green' | 'blue' | 'purple'.
   eventos: [
     {
@@ -215,12 +216,14 @@ export const calendario = {
       fim: '2026-09-21',
       titulo: 'TFA — Taça das Fronteiras Amazônicas',
       local: 'Breves — PA',
+      tipo: 'Competição',
       cor: 'cyan',
     },
     {
       data: '2026-09-21',
       titulo: 'TFA — Grande final (APHAM x APHAM)',
       local: 'Breves — PA',
+      tipo: 'Final',
       cor: 'amber',
     },
   ],

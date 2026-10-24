@@ -14,10 +14,11 @@ export default function Equipes() {
       <div className="absolute -right-24 top-20 h-80 w-80 rounded-full bg-cyan-500/20 blur-3xl" />
 
       <div className="section-pad container-x relative">
-        <Reveal className="max-w-2xl">
-          <span className="eyebrow text-cyan-300">
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <span className="eyebrow flex justify-center text-cyan-300">
             <span className="h-px w-6 bg-cyan-400" />
             Nossas equipes
+            <span className="h-px w-6 bg-cyan-400" />
           </span>
           <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
             Os times do handebol do Marajó

@@ -17,17 +17,18 @@ export default function PageShell({ eyebrow, titulo, descricao, children }) {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-900/50" />
         <div className="absolute -left-20 top-0 h-64 w-64 rounded-full bg-cyan-500/20 blur-3xl" />
-        <div className="section-pad container-x relative">
+        <div className="section-pad container-x relative text-center">
           {eyebrow && (
-            <span className="eyebrow text-cyan-300">
+            <span className="eyebrow flex justify-center text-cyan-300">
               <span className="h-px w-6 bg-cyan-400" />
               {eyebrow}
+              <span className="h-px w-6 bg-cyan-400" />
             </span>
           )}
           <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
             {titulo}
           </h1>
-          {descricao && <p className="mt-4 max-w-2xl text-white/70">{descricao}</p>}
+          {descricao && <p className="mx-auto mt-4 max-w-2xl text-white/70">{descricao}</p>}
         </div>
       </header>
 

@@ -12,15 +12,15 @@ export default function PostsAnteriores() {
 
   return (
     <PageShell
-      eyebrow="Posts anteriores"
-      titulo="Posts anteriores da APHAM"
+      eyebrow="Mais Antigas"
+      titulo="Mais Antigas da APHAM"
       descricao="Reveja os momentos que a associação já publicou — toque em um post para ver em tela cheia."
     >
       <section className="section-pad py-16 lg:py-20">
         <div className="container-x">
           {stories.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-navy-200 py-20 text-center text-navy-500">
-              Ainda não há posts anteriores.
+              Ainda não há publicações mais antigas.
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">

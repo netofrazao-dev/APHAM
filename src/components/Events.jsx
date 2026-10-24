@@ -72,10 +72,11 @@ export default function Events() {
   return (
     <section id="eventos" className="section-pad py-24 lg:py-28">
       <div className="container-x">
-        <Reveal className="max-w-2xl">
-          <span className="eyebrow">
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <span className="eyebrow flex justify-center">
             <span className="h-px w-6 bg-cyan-400" />
             Eventos e campeonatos
+            <span className="h-px w-6 bg-cyan-400" />
           </span>
           <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-navy-900 sm:text-4xl">
             A história viva do handebol marajoara

@@ -253,9 +253,10 @@ export default function FolderPage({ dados: d, extra, depois }) {
           </Reveal>
           <Reveal delay={0.08}>
             {d.lema && (
-              <span className="eyebrow">
+              <span className="eyebrow flex justify-center">
                 <span className="h-px w-6 bg-cyan-400" />
                 {d.lema}
+                <span className="h-px w-6 bg-cyan-400" />
               </span>
             )}
             <Paragrafos itens={d.resumo} className="mt-4 text-lg" />

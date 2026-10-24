@@ -77,10 +77,11 @@ export default function Capitulos() {
       <div className="absolute inset-0 dot-grid opacity-20" />
       <div className="absolute -left-24 top-20 h-80 w-80 rounded-full bg-cyan-500/20 blur-3xl" />
       <div className="container-x relative">
-        <Reveal className="max-w-2xl">
-          <span className="eyebrow text-cyan-300">
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <span className="eyebrow flex justify-center text-cyan-300">
             <span className="h-px w-6 bg-cyan-400" />
             Assista aqui
+            <span className="h-px w-6 bg-cyan-400" />
           </span>
           <h2 className="mt-4 font-display text-2xl font-extrabold text-white sm:text-3xl">Os 4 capítulos</h2>
           <p className="mt-3 text-white/70">{documentario.descricao}</p>

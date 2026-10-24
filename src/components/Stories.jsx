@@ -6,8 +6,8 @@ import StoryViewer from './StoryViewer'
 import Reveal from './Reveal'
 
 // Bolinhas (stories) que abrem em tela cheia. Bloco sem seção própria — o pai
-// cuida do espaçamento. Usado na home como "Posts anteriores".
-export default function Stories({ titulo = 'Posts anteriores', subtitulo = 'Toque para ver em tela cheia.' }) {
+// cuida do espaçamento. Usado na home como "Mais Antigas".
+export default function Stories({ titulo = 'Mais Antigas', subtitulo = 'Toque para ver em tela cheia.' }) {
   const { stories } = useStore()
   const [storyIdx, setStoryIdx] = useState(null)
   const nav = (dir) =>
@@ -23,7 +23,7 @@ export default function Stories({ titulo = 'Posts anteriores', subtitulo = 'Toqu
           <p className="mt-2 text-ink/70">{subtitulo}</p>
         </div>
         <Link to="/posts-anteriores" className="btn-ghost shrink-0">
-          Ver todos os posts <ArrowUpRight className="h-4 w-4" />
+          Ver todas <ArrowUpRight className="h-4 w-4" />
         </Link>
       </Reveal>
       <Reveal>

@@ -10,7 +10,7 @@ export default function Faq() {
     <section id="faq" className="section-pad py-24 lg:py-28">
       <div className="container-x">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <span className="eyebrow justify-center">
+          <span className="eyebrow flex justify-center">
             <span className="h-px w-6 bg-cyan-400" />
             Perguntas frequentes
             <span className="h-px w-6 bg-cyan-400" />

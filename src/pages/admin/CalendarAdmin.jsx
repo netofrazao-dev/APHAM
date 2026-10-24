@@ -12,6 +12,8 @@ const CORES = [
   { id: 'blue', nome: 'Azul', classe: 'bg-blue-600' },
   { id: 'purple', nome: 'Roxo', classe: 'bg-purple-600' },
 ]
+// Sugestões de categoria (etiqueta colorida do evento na home); pode digitar outra.
+const TIPOS = ['Competição', 'Final', 'Evento', 'Ação social', 'Treino', 'Reunião']
 const corClasse = (c) => (CORES.find((x) => x.id === c) || CORES[0]).classe
 
 function fmt(e) {
@@ -23,7 +25,7 @@ function fmt(e) {
 export default function CalendarAdmin() {
   const { settings, updateSettings } = useStore()
   const [eventos, setEventos] = useState(() => settings?.calendarioEventos ?? calendario.eventos)
-  const [item, setItem] = useState(null) // { idx, data, fim, titulo, local, cor }
+  const [item, setItem] = useState(null) // { idx, data, fim, titulo, local, tipo, cor }
   const [salvo, setSalvo] = useState(false)
 
   const persistir = (lista) => {
@@ -44,6 +46,7 @@ export default function CalendarAdmin() {
       fim: item.fim || undefined,
       titulo: item.titulo.trim(),
       local: item.local?.trim() || '',
+      tipo: item.tipo?.trim() || 'Evento',
       cor: item.cor || 'cyan',
     }
     const lista = [...eventos]
@@ -61,10 +64,10 @@ export default function CalendarAdmin() {
 
   return (
     <div>
-      <PageTitle title="Calendário" subtitle="Competições e ações da APHAM em 2026">
+      <PageTitle title="Calendário" subtitle="Competições e ações da APHAM — aparecem na home (próximos eventos) e na agenda completa">
         <div className="flex items-center gap-2">
           {salvo && <span className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-600"><Check className="h-4 w-4" />Salvo</span>}
-          <button type="button" onClick={() => setItem({ data: '', fim: '', titulo: '', local: '', cor: 'cyan' })} className={btnAccent}>
+          <button type="button" onClick={() => setItem({ data: '', fim: '', titulo: '', local: '', tipo: 'Competição', cor: 'cyan' })} className={btnAccent}>
             <Plus className="h-4 w-4" />
             Novo evento
           </button>
@@ -83,10 +86,11 @@ export default function CalendarAdmin() {
                 <p className="mt-0.5 flex flex-wrap items-center gap-x-3 text-xs text-navy-500">
                   <span className="inline-flex items-center gap-1"><CalendarDays className="h-3 w-3" />{fmt(e)}</span>
                   {e.local && <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" />{e.local}</span>}
+                  {e.tipo && <span className="rounded bg-navy-100 px-1.5 py-0.5 font-semibold text-navy-700">{e.tipo}</span>}
                 </p>
               </div>
               <div className="flex gap-1.5">
-                <button type="button" onClick={() => setItem({ idx, data: e.data, fim: e.fim || '', titulo: e.titulo, local: e.local || '', cor: e.cor || 'cyan' })} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-700 hover:bg-navy-50" aria-label="Editar"><Pencil className="h-4 w-4" /></button>
+                <button type="button" onClick={() => setItem({ idx, data: e.data, fim: e.fim || '', titulo: e.titulo, local: e.local || '', tipo: e.tipo || 'Evento', cor: e.cor || 'cyan' })} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-700 hover:bg-navy-50" aria-label="Editar"><Pencil className="h-4 w-4" /></button>
                 <button type="button" onClick={() => remover(idx)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-red-200 text-red-600 hover:bg-red-50" aria-label="Remover"><Trash2 className="h-4 w-4" /></button>
               </div>
             </Card>
@@ -108,7 +112,13 @@ export default function CalendarAdmin() {
               </div>
               <Field label="Título *"><input required value={item.titulo} onChange={(e) => setItem((p) => ({ ...p, titulo: e.target.value }))} className={inputCls} placeholder="TFA — Taça das Fronteiras Amazônicas" /></Field>
               <Field label="Local"><input value={item.local} onChange={(e) => setItem((p) => ({ ...p, local: e.target.value }))} className={inputCls} placeholder="Breves — PA" /></Field>
-              <Field label="Cor">
+              <Field label="Categoria" hint="Aparece na etiqueta colorida do evento na home">
+                <input list="tipos-evento" value={item.tipo} onChange={(e) => setItem((p) => ({ ...p, tipo: e.target.value }))} className={inputCls} placeholder="Competição" />
+                <datalist id="tipos-evento">
+                  {TIPOS.map((t) => <option key={t} value={t} />)}
+                </datalist>
+              </Field>
+              <Field label="Cor da etiqueta">
                 <div className="flex flex-wrap gap-2">
                   {CORES.map((c) => (
                     <button key={c.id} type="button" onClick={() => setItem((p) => ({ ...p, cor: c.id }))} className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium ${item.cor === c.id ? 'border-navy-800 bg-navy-50' : 'border-navy-200'}`}>

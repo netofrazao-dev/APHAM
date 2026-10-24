@@ -47,11 +47,12 @@ export default function About() {
           {/* Texto */}
           <div className="order-1 lg:order-2">
             <Reveal>
-              <span className="eyebrow">
+              <span className="eyebrow flex justify-center">
                 <span className="h-px w-6 bg-cyan-400" />
                 {sobre.eyebrow}
+                <span className="h-px w-6 bg-cyan-400" />
               </span>
-              <h2 className="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-navy-900 sm:text-4xl">
+              <h2 className="mt-4 text-center font-display text-3xl font-extrabold leading-tight tracking-tight text-navy-900 sm:text-4xl">
                 {sobre.titulo}
               </h2>
             </Reveal>

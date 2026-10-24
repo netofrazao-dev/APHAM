@@ -9,7 +9,7 @@ export default function Participar() {
     <section id="participar" className="section-pad py-24 lg:py-28">
       <div className="container-x">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <span className="eyebrow justify-center">
+          <span className="eyebrow flex justify-center">
             <span className="h-px w-6 bg-cyan-400" />
             {participar.eyebrow}
             <span className="h-px w-6 bg-cyan-400" />
