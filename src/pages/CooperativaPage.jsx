@@ -1,16 +1,7 @@
-import PageShell from '../components/PageShell'
-import Cooperativa from '../components/Cooperativa'
+import FolderPage from '../components/FolderPage'
 import StoreTeaser from '../components/StoreTeaser'
+import { cooperativaFolder } from '../data/folders'
 
 export default function CooperativaPage() {
-  return (
-    <PageShell
-      eyebrow="Cooperativa Social"
-      titulo="Cooperativa Social da APHAM"
-      descricao="O esporte como ferramenta de trabalho, renda e inclusão na comunidade marajoara."
-    >
-      <Cooperativa />
-      <StoreTeaser />
-    </PageShell>
-  )
+  return <FolderPage dados={cooperativaFolder} depois={<StoreTeaser />} />
 }

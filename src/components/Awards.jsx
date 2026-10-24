@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Award, ArrowUpRight, FileText } from 'lucide-react'
 import { reconhecimentos, apoios } from '../data/content'
 import Reveal from './Reveal'
@@ -24,7 +25,7 @@ export default function Awards() {
         <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {reconhecimentos.map((r, i) => (
             <Reveal key={i} delay={0.06 * i}>
-              <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-soft">
+              <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift">
                 <div className="flex h-44 items-center justify-center bg-navy-50 p-5">
                   <img
                     src={r.img}
@@ -40,7 +41,16 @@ export default function Awards() {
                   </span>
                   <h3 className="mt-4 font-display text-base font-bold text-navy-900">{r.titulo}</h3>
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/70">{r.descricao}</p>
-                  {r.docPronto ? (
+                  {r.slug ? (
+                    // O card inteiro abre a página de detalhes (link "esticado" sobre o card).
+                    <Link
+                      to={`/reconhecimentos/${r.slug}`}
+                      className="mt-4 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-cyan-700 transition-colors after:absolute after:inset-0 hover:text-cyan-800"
+                    >
+                      Ver detalhes
+                      <ArrowUpRight className="h-4 w-4" />
+                    </Link>
+                  ) : r.docPronto ? (
                     <a
                       href={r.doc}
                       target="_blank"

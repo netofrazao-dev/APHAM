@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Play, FileText, Clapperboard, Clock } from 'lucide-react'
+import { Play, Clapperboard, Clock } from 'lucide-react'
 import { documentario } from '../data/content'
 import { youtubeId, youtubeEmbed } from '../lib/youtube'
 import Reveal from './Reveal'
@@ -69,45 +69,23 @@ function CapituloCard({ c, i }) {
   )
 }
 
-export default function Documentario() {
+// Capítulos do documentário (vídeos do YouTube tocando no próprio site).
+export default function Capitulos() {
   return (
-    <section id="documentario" className="relative overflow-hidden py-24 lg:py-28">
+    <section className="section-pad relative overflow-hidden border-t border-navy-100 py-16 lg:py-20">
       <div className="absolute inset-0 bg-navy-950" />
       <div className="absolute inset-0 dot-grid opacity-20" />
       <div className="absolute -left-24 top-20 h-80 w-80 rounded-full bg-cyan-500/20 blur-3xl" />
-
-      <div className="section-pad container-x relative">
+      <div className="container-x relative">
         <Reveal className="max-w-2xl">
           <span className="eyebrow text-cyan-300">
             <span className="h-px w-6 bg-cyan-400" />
-            Documentário
+            Assista aqui
           </span>
-          <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-            A história da APHAM em capítulos
-          </h2>
-          <p className="mt-4 text-white/70">{documentario.descricao}</p>
-          {documentario.folderPronto && (
-            <a
-              href={documentario.folder}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-accent mt-6"
-            >
-              <FileText className="h-4 w-4" />
-              Ver o folder do documentário
-            </a>
-          )}
+          <h2 className="mt-4 font-display text-2xl font-extrabold text-white sm:text-3xl">Os 4 capítulos</h2>
+          <p className="mt-3 text-white/70">{documentario.descricao}</p>
         </Reveal>
-
-        {documentario.capa && (
-          <Reveal delay={0.1}>
-            <div className="mt-10 overflow-hidden rounded-3xl border border-white/10 bg-white shadow-lift">
-              <img src={documentario.capa} alt="Capa do documentário da APHAM" className="w-full object-contain" />
-            </div>
-          </Reveal>
-        )}
-
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {documentario.capitulos.map((c, i) => (
             <CapituloCard key={i} c={c} i={i} />
           ))}

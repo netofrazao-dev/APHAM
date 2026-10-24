@@ -17,6 +17,7 @@ const CompeticoesPage = lazy(() => import('./pages/CompeticoesPage'))
 const GaleriaPage = lazy(() => import('./pages/GaleriaPage'))
 const ContatoPage = lazy(() => import('./pages/ContatoPage'))
 const ReconhecimentosPage = lazy(() => import('./pages/ReconhecimentosPage'))
+const ReconhecimentoPage = lazy(() => import('./pages/ReconhecimentoPage'))
 const IncentivoPage = lazy(() => import('./pages/IncentivoPage'))
 const CooperativaPage = lazy(() => import('./pages/CooperativaPage'))
 const DocumentarioPage = lazy(() => import('./pages/DocumentarioPage'))
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="/galeria" element={<GaleriaPage />} />
           <Route path="/contato" element={<ContatoPage />} />
           <Route path="/reconhecimentos" element={<ReconhecimentosPage />} />
+          <Route path="/reconhecimentos/:slug" element={<ReconhecimentoPage />} />
           <Route path="/incentivo" element={<IncentivoPage />} />
           <Route path="/cooperativa" element={<CooperativaPage />} />
           <Route path="/documentario" element={<DocumentarioPage />} />

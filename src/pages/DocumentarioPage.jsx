@@ -1,14 +1,7 @@
-import PageShell from '../components/PageShell'
-import Documentario from '../components/Documentario'
+import FolderPage from '../components/FolderPage'
+import Capitulos from '../components/Capitulos'
+import { documentarioFolder } from '../data/folders'
 
 export default function DocumentarioPage() {
-  return (
-    <PageShell
-      eyebrow="Documentário"
-      titulo="O documentário da APHAM"
-      descricao="A história da associação contada em capítulos — assista aqui mesmo, direto no site."
-    >
-      <Documentario />
-    </PageShell>
-  )
+  return <FolderPage dados={documentarioFolder} extra={<Capitulos />} />
 }

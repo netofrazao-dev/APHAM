@@ -55,47 +55,6 @@ export const sumario = [
   { label: 'Fale Conosco', to: '/contato' },
 ]
 
-// Página "Marajó Solidário" — ação de distribuição de alimentos na pandemia de COVID-19.
-// Textos tirados do folder oficial da ação (public/midia/documentos/folder-marajo-solidario.pdf).
-export const marajoSolidario = {
-  logo: '/midia/marajo-solidario/logo-marajo-solidario.jpg',
-  folder: '/midia/documentos/folder-marajo-solidario.pdf',
-  paginasFolder: ['/midia/marajo-solidario/folder-pagina-1.jpg', '/midia/marajo-solidario/folder-pagina-2.jpg'],
-  lema: 'Em favor de todos que necessitam!',
-  resumo:
-    'A maior ação de distribuição de alimentos do Marajó durante a pandemia de COVID-19. Por meio da Ação MARAJÓ Solidário!, a APHAM levou cerca de 20 toneladas de alimentos aos 16 municípios da Região de Integração do Marajó, atendendo famílias de crianças, adolescentes e jovens em situação de vulnerabilidade social.',
-  numeros: [
-    { valor: '19,5 t', label: 'de alimentos não perecíveis' },
-    { valor: '16', label: 'municípios do Marajó atendidos' },
-    { valor: '2.200', label: 'kits de alimentação para famílias de Breves' },
-    { valor: 'Dez/2020', label: 'a Jan/2021 — período de distribuição' },
-  ],
-  historia: [
-    'Em 2020, após celebrar sua 1ª década de existência, a APHAM passou por um processo criterioso de inscrição, análise e seleção e entrou na Plataforma Juntos Pelas Crianças — rede de organizações que trabalha pela proteção de crianças e adolescentes e contra a violência, com atuação em todos os estados do país.',
-    'Com essa aprovação, a plataforma indicou a APHAM para fazer parte da Campanha Brasil Acolhedor, do Programa Federal Pátria Voluntária. O ingresso nessa ação possibilitou chegar ao povo marajoara, no período de crise socioeconômica e de saúde pública causada pela COVID-19, com aproximadamente 20 toneladas de alimentos.',
-  ],
-  objetivo:
-    'Criar uma rede articulada para a distribuição de alimentos não perecíveis para famílias de crianças, adolescentes e jovens em condição de vulnerabilidade social, a partir da identificação de instituições sociais — sem atrelamento político-partidário e sem fins lucrativos — com reconhecido prestígio e atuação social na comunidade marajoara.',
-  distribuicao: [
-    { valor: '8 toneladas', texto: 'distribuídas entre os 16 municípios da Região de Integração do Marajó, através das dioceses e paróquias locais.' },
-    { valor: '4 toneladas', texto: 'distribuídas entre projetos e ações sociais da região, pré-identificados pelo cadastramento da Ação MARAJÓ Solidário!.' },
-    { valor: '8 toneladas', texto: 'para montar 2.200 kits de alimentação, entregues às famílias cadastradas pela APHAM em Breves, nas zonas urbana e rural.' },
-  ],
-  periodo: [
-    { quem: '16 municípios da Região de Integração do Marajó', quando: '2ª quinzena de dezembro de 2020 a 2ª quinzena de janeiro de 2021' },
-    { quem: 'Organizações sociais e instituições filantrópicas do Marajó Ocidental', quando: '2ª quinzena de dezembro de 2020' },
-  ],
-  parceiros: {
-    promocao: ['Pátria Voluntária', 'Brasil Acolhedor'],
-    apoio: ['Pátria Amada Brasil — Governo Federal', 'Juntos Pelas Crianças'],
-  },
-  ficha: [
-    { nome: 'Genésio Jorge de Oliveira Pena', cargo: 'Presidente da APHAM' },
-    { nome: 'Claybe Fernando Furtado Cirino', cargo: 'Coordenador de Projetos da APHAM' },
-    { nome: 'Érico dos Santos Santiago', cargo: 'Coordenador da Ação Marajó Solidário' },
-  ],
-}
-
 // Redes sociais que aparecem no header (ao lado dos links).
 export const redesHeader = [
   { nome: 'YouTube', icone: 'Youtube', url: 'youtube' },
@@ -458,10 +417,12 @@ export const clubes = [
 ]
 
 // RECONHECIMENTOS E CREDENCIAIS — cada item: imagem + texto curto + documento.
+// slug: endereço da página de detalhes (/reconhecimentos/<slug>), com o conteúdo em folders.js.
 // docPronto: false = o PDF ainda não foi recebido (mostra "documento em breve").
 // img: troque pela imagem/logo oficial de cada um quando o cliente enviar.
 export const reconhecimentos = [
   {
+    slug: 'utilidade-publica-estadual',
     titulo: 'Utilidade Pública Estadual',
     descricao:
       'A APHAM é reconhecida como entidade de utilidade pública estadual pela Lei Estadual nº 10.594, de 20 de junho de 2024 — reconhecimento oficial do nosso trabalho social e esportivo no Marajó.',
@@ -470,6 +431,7 @@ export const reconhecimentos = [
     docPronto: true,
   },
   {
+    slug: 'utilidade-publica-municipal',
     titulo: 'Utilidade Pública Municipal',
     descricao:
       'A APHAM é reconhecida como entidade de utilidade pública municipal pela Lei Municipal nº 2.527, de 17 de dezembro de 2018, no município de Breves.',
@@ -478,6 +440,7 @@ export const reconhecimentos = [
     docPronto: true,
   },
   {
+    slug: 'premio-itau-unicef-2018',
     titulo: 'Prêmio Itaú-Unicef 2018 — Semifinalista',
     descricao: 'Categoria 1: OSC em Ação — projeto "Escola de Esportes: No Esporte com Valores".',
     img: '/midia/marca/premio-itau-2018.jpg',
@@ -485,6 +448,7 @@ export const reconhecimentos = [
     docPronto: true,
   },
   {
+    slug: 'premio-itau-unicef-2015',
     titulo: 'Prêmio Itaú-Unicef 2015 — Semifinalista',
     descricao: 'Educação Integral: Aprendizagem que Transforma — projeto "Semear Hand".',
     img: '/midia/marca/premio-itau-2015.jpg',
@@ -492,6 +456,7 @@ export const reconhecimentos = [
     docPronto: true,
   },
   {
+    slug: 'experiencias-em-rede',
     titulo: 'Certificado Experiências em Rede',
     descricao: 'Certificação do trabalho da APHAM no programa Experiências em Rede (Itaú Social).',
     img: '/midia/marca/experiencias-em-rede.png',
@@ -500,30 +465,11 @@ export const reconhecimentos = [
   },
 ]
 
-// COOPERATIVA SOCIAL — área dedicada (abre pelo selo azul do topo, #cooperativa).
-export const cooperativa = {
-  eyebrow: 'Cooperativa Social',
-  titulo: 'Esporte que gera trabalho, renda e inclusão',
-  descricao:
-    'Além da formação esportiva, a APHAM atua como cooperativa social — unindo pessoas em torno de atividades que geram trabalho, renda e oportunidades para a comunidade marajoara. É o esporte como ferramenta de desenvolvimento humano e econômico, dentro e fora da quadra.',
-  destaques: [
-    { titulo: 'Trabalho e renda', texto: 'Oportunidades de geração de renda para famílias ligadas ao projeto.' },
-    { titulo: 'Inclusão social', texto: 'Ações que ampliam a participação e a autonomia da comunidade.' },
-    { titulo: 'Desenvolvimento local', texto: 'Fortalecimento da economia e da cultura esportiva no Marajó.' },
-  ],
-  img: '/midia/logo-apham.png',
-  doc: '/midia/documentos/cooperativa-social.pdf',
-  docPronto: true,
-}
-
-// DOCUMENTÁRIO — capítulos no YouTube + folder. Cole as URLs do YouTube em cada
+// DOCUMENTÁRIO — capítulos no YouTube (o restante da página está em folders.js). Cole as URLs do YouTube em cada
 // capítulo (quando vazio, mostra "em breve").
 export const documentario = {
   descricao:
-    'A história da APHAM contada em capítulos. Assista no nosso canal e conheça também o folder do documentário.',
-  capa: '/midia/documentos/capa-documentario.jpg',
-  folder: '/midia/documentos/documentario.pdf',
-  folderPronto: true,
+    'A história da APHAM contada em capítulos — assista aqui mesmo, direto no site.',
   capitulos: [
     { titulo: 'Capítulo 1', url: 'https://youtu.be/qejbS-Kh-zc' },
     { titulo: 'Capítulo 2', url: 'https://youtu.be/lg2tCbv9fNs' },
