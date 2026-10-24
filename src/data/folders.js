@@ -744,7 +744,7 @@ export const projetosDetalhes = {
     },
     outrosDocs: [{ titulo: 'Quadro de horários das turmas (PDF)', href: '/midia/documentos/horarios-escola-esportes.pdf' }],
     ficha: [
-      { nome: 'Genésio Jorge de Oliveira Pena', cargo: 'Presidente da APHAM (2018)' },
+      { nome: 'Genésio Jorge de Oliveira Pena', cargo: 'Presidente da APHAM' },
       { nome: 'Claybe Fernando Furtado Cirino', cargo: 'Coordenador do Projeto Escola de Esportes' },
       { nomes: ['Érico dos Santos Santiago', 'Vivia Michilles', 'Claybe Fernando Furtado Cirino'], cargo: 'Professores das turmas' },
     ],
