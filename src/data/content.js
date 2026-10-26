@@ -385,34 +385,57 @@ export const equipes = [
   { nome: 'Nossos Campeões', papel: 'Conquistas em quadra', img: '/midia/eventos/campeoes-trofeu.jpg' },
 ]
 
-// CLUBES/EQUIPES DO CAMPEONATO — escudo + história + títulos.
-// escudo: troque pelo escudo oficial quando chegar (Huniv e Primatas estão com
-// o logo da APHAM). historia vazia = o card não mostra texto.
+// CLUBES/EQUIPES DO CAMPEONATO — card na página Equipes e página própria em
+// /equipes/<slug> (slug gerado do nome). cores: as do escudo (usadas na página
+// do time); fundoEscudo: a cor de fundo da imagem do escudo, para o card ficar
+// sem "moldura". Os jogos do time vêm das Lives (pelo nome no título do jogo).
+// historia e titulos: preenchidos pelo painel /admin → Equipes (vazios = a
+// página do time não mostra essas seções).
 export const clubes = [
   {
     nome: 'Canibal',
+    nomeCompleto: 'Canibal Handebol Clube',
+    cidade: 'Breves — Marajó — PA',
+    lema: 'Pratique handebol: esporte, saúde, lazer, cidadania e qualidade de vida.',
     escudo: '/midia/equipes/canibal.jpg',
+    fundoEscudo: '#ffffff',
+    cores: { primaria: '#0b7a3b', secundaria: '#f2c200' },
     historia: '',
     titulos: [],
     foto: '',
   },
   {
     nome: 'Huniv',
+    nomeCompleto: 'Huniv',
+    cidade: '',
+    lema: '',
     escudo: '/midia/equipes/huniv.jpg',
+    fundoEscudo: '#f3f2ed',
+    cores: { primaria: '#2f6b2a', secundaria: '#c9a227' },
     historia: '',
     titulos: [],
     foto: '',
   },
   {
     nome: 'Bulls',
+    nomeCompleto: 'Bulls Handball E.R.',
+    cidade: '',
+    lema: '',
     escudo: '/midia/equipes/bulls.jpg',
+    fundoEscudo: '#ffffff',
+    cores: { primaria: '#141414', secundaria: '#d6d6d6' },
     historia: '',
     titulos: [],
     foto: '',
   },
   {
     nome: 'Primatas',
+    nomeCompleto: 'Primatas Handebol',
+    cidade: '',
+    lema: '',
     escudo: '/midia/equipes/primatas.jpg',
+    fundoEscudo: '#000000',
+    cores: { primaria: '#101010', secundaria: '#2f6fe0' },
     historia: '',
     titulos: [],
     foto: '',

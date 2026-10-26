@@ -14,6 +14,7 @@ const Projetos = lazy(() => import('./pages/Projetos'))
 const ProjetoPage = lazy(() => import('./pages/ProjetoPage'))
 const ParticiparPage = lazy(() => import('./pages/ParticiparPage'))
 const EquipesPage = lazy(() => import('./pages/EquipesPage'))
+const TimePage = lazy(() => import('./pages/TimePage'))
 const CompeticoesPage = lazy(() => import('./pages/CompeticoesPage'))
 const GaleriaPage = lazy(() => import('./pages/GaleriaPage'))
 const AlbumPage = lazy(() => import('./pages/AlbumPage'))
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="/projetos/:slug" element={<ProjetoPage />} />
           <Route path="/participar" element={<ParticiparPage />} />
           <Route path="/equipes" element={<EquipesPage />} />
+          <Route path="/equipes/:slug" element={<TimePage />} />
           <Route path="/competicoes" element={<CompeticoesPage />} />
           <Route path="/galeria" element={<GaleriaPage />} />
           <Route path="/galeria/:slug" element={<AlbumPage />} />

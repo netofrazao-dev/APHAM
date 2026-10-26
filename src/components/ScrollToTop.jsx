@@ -15,6 +15,7 @@ function tituloPara(pathname) {
   if (pathname.startsWith('/projetos/')) return 'Projeto · APHAM'
   if (pathname.startsWith('/projetos')) return 'Projetos · APHAM'
   if (pathname.startsWith('/participar')) return 'Participar · APHAM'
+  if (pathname.startsWith('/equipes/')) return 'Equipe · APHAM'
   if (pathname.startsWith('/equipes')) return 'Equipes · APHAM'
   if (pathname.startsWith('/competicoes')) return 'Competições · APHAM'
   if (pathname.startsWith('/galeria/')) return 'Álbum · Galeria · APHAM'

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Plus, Pencil, Trash2, X, Check, Upload, Trophy } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
-import { clubes as clubesSeed } from '../../data/content'
+import { listarClubes } from '../../lib/clubes'
 import { fileToOptimizedDataURL } from '../../store/images'
 import { PageTitle, Card, Field, inputCls, btnAccent, btnGhost, btnPrimary } from './ui'
 
@@ -38,8 +38,9 @@ function UploadEscudo({ value, onChange }) {
 
 export default function EquipesAdmin() {
   const { settings, updateSettings } = useStore()
-  const [times, setTimes] = useState(() => settings?.clubes ?? clubesSeed)
-  const [time, setTime] = useState(null) // { idx, nome, escudo, historia, titulosTexto }
+  // Já com cores, lema e cidade do código para times salvos antes desses campos existirem.
+  const [times, setTimes] = useState(() => listarClubes(settings).map(({ slug, ...t }) => t))
+  const [time, setTime] = useState(null) // { idx, nome, nomeCompleto, cidade, lema, escudo, fundoEscudo, corPrimaria, corSecundaria, historia, titulosTexto, foto }
   const [salvo, setSalvo] = useState(false)
 
   const persistir = (lista) => {
@@ -57,7 +58,12 @@ export default function EquipesAdmin() {
     }
     const t = {
       nome: time.nome.trim(),
+      nomeCompleto: time.nomeCompleto?.trim() || '',
+      cidade: time.cidade?.trim() || '',
+      lema: time.lema?.trim() || '',
       escudo: time.escudo || '',
+      fundoEscudo: time.fundoEscudo || '#ffffff',
+      cores: { primaria: time.corPrimaria || '#0b2a52', secundaria: time.corSecundaria || '#22d3ee' },
       historia: time.historia?.trim() || '',
       titulos: (time.titulosTexto || '').split('\n').map((s) => s.trim()).filter(Boolean),
       foto: time.foto || '',
@@ -79,7 +85,7 @@ export default function EquipesAdmin() {
       <PageTitle title="Equipes" subtitle="Os times do campeonato — escudo, história e títulos">
         <div className="flex items-center gap-2">
           {salvo && <span className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-600"><Check className="h-4 w-4" />Salvo</span>}
-          <button type="button" onClick={() => setTime({ nome: '', escudo: '', historia: '', titulosTexto: '', foto: '' })} className={btnAccent}>
+          <button type="button" onClick={() => setTime({ nome: '', nomeCompleto: '', cidade: '', lema: '', escudo: '', fundoEscudo: '#ffffff', corPrimaria: '#0b2a52', corSecundaria: '#22d3ee', historia: '', titulosTexto: '', foto: '' })} className={btnAccent}>
             <Plus className="h-4 w-4" />
             Novo time
           </button>
@@ -100,7 +106,7 @@ export default function EquipesAdmin() {
               </p>
             </div>
             <div className="flex gap-1.5">
-              <button type="button" onClick={() => setTime({ idx, nome: t.nome, escudo: t.escudo || '', historia: t.historia || '', titulosTexto: (t.titulos || []).join('\n'), foto: t.foto || '' })} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-700 hover:bg-navy-50" aria-label="Editar"><Pencil className="h-4 w-4" /></button>
+              <button type="button" onClick={() => setTime({ idx, nome: t.nome, nomeCompleto: t.nomeCompleto || '', cidade: t.cidade || '', lema: t.lema || '', escudo: t.escudo || '', fundoEscudo: t.fundoEscudo || '#ffffff', corPrimaria: t.cores?.primaria || '#0b2a52', corSecundaria: t.cores?.secundaria || '#22d3ee', historia: t.historia || '', titulosTexto: (t.titulos || []).join('\n'), foto: t.foto || '' })} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-700 hover:bg-navy-50" aria-label="Editar"><Pencil className="h-4 w-4" /></button>
               <button type="button" onClick={() => remover(idx)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-red-200 text-red-600 hover:bg-red-50" aria-label="Remover"><Trash2 className="h-4 w-4" /></button>
             </div>
           </Card>
@@ -116,7 +122,17 @@ export default function EquipesAdmin() {
               <button type="button" onClick={() => setTime(null)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-navy-500 hover:bg-navy-100"><X className="h-5 w-5" /></button>
             </div>
             <div className="space-y-4">
-              <Field label="Nome do time *"><input required value={time.nome} onChange={(e) => setTime((p) => ({ ...p, nome: e.target.value }))} className={inputCls} /></Field>
+              <Field label="Nome do time *" hint="Também forma o endereço da página do time (ex.: /equipes/canibal)."><input required value={time.nome} onChange={(e) => setTime((p) => ({ ...p, nome: e.target.value }))} className={inputCls} /></Field>
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Nome completo"><input value={time.nomeCompleto} onChange={(e) => setTime((p) => ({ ...p, nomeCompleto: e.target.value }))} className={inputCls} placeholder="Canibal Handebol Clube" /></Field>
+                <Field label="Cidade"><input value={time.cidade} onChange={(e) => setTime((p) => ({ ...p, cidade: e.target.value }))} className={inputCls} placeholder="Breves — PA" /></Field>
+              </div>
+              <Field label="Lema"><input value={time.lema} onChange={(e) => setTime((p) => ({ ...p, lema: e.target.value }))} className={inputCls} placeholder="Frase do time (aparece em destaque na página)" /></Field>
+              <div className="grid grid-cols-3 gap-4">
+                <Field label="Cor principal"><input type="color" value={time.corPrimaria} onChange={(e) => setTime((p) => ({ ...p, corPrimaria: e.target.value }))} className="h-10 w-full cursor-pointer rounded-lg border border-navy-200" /></Field>
+                <Field label="Cor de destaque"><input type="color" value={time.corSecundaria} onChange={(e) => setTime((p) => ({ ...p, corSecundaria: e.target.value }))} className="h-10 w-full cursor-pointer rounded-lg border border-navy-200" /></Field>
+                <Field label="Fundo do escudo" hint="Cor do fundo da imagem"><input type="color" value={time.fundoEscudo} onChange={(e) => setTime((p) => ({ ...p, fundoEscudo: e.target.value }))} className="h-10 w-full cursor-pointer rounded-lg border border-navy-200" /></Field>
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <Field label="Escudo"><UploadEscudo value={time.escudo} onChange={(v) => setTime((p) => ({ ...p, escudo: v }))} /></Field>
                 <Field label="Foto do time" hint="Alterna com o escudo.">
