@@ -539,21 +539,106 @@ export const galeria = [
 ]
 
 // ÁLBUNS DA GALERIA — cada álbum tem uma página própria (/galeria/<slug>) e um
-// card na página Galeria. fotos: [{ img, legenda }]. videos: [{ titulo, url }]
-// para YouTube, ou [{ titulo, arquivo, poster }] para vídeo em /public/midia.
-// Enquanto `fotos` e `videos` estiverem vazios, o álbum mostra "em breve".
+// card na página Galeria. fotos: [{ img, mini, legenda, vertical }] — `mini` é a
+// versão leve usada na grade (a `img` abre em tela cheia). Para contar a história
+// em partes, use `capitulos: [{ titulo, texto, fotos }]` no lugar de `fotos`.
+// videos: [{ titulo, url }] para YouTube, ou [{ titulo, arquivo, poster, duracao }]
+// para vídeo em /public/midia. Opcionais: numeros [{ valor, label }], destaques
+// (nomes de 3 fotos para o mosaico de abertura), videosTitulo, videosTexto e
+// chamada { titulo, texto } (faixa final que leva à página da ação).
+// Enquanto não houver fotos nem vídeos, o álbum mostra "em breve".
+const ms = (nome, legenda, vertical = false) => ({
+  nome,
+  img: `/midia/marajo-solidario/fotos/${nome}.jpg`,
+  mini: `/midia/marajo-solidario/fotos/mini/${nome}.jpg`,
+  legenda,
+  vertical,
+})
+const msVideo = (nome, titulo) => ({
+  titulo,
+  duracao: '00:15',
+  arquivo: `/midia/marajo-solidario/videos/${nome}.mp4`,
+  poster: `/midia/marajo-solidario/videos/${nome}.jpg`,
+})
+
 export const albuns = [
   {
     slug: 'marajo-solidario',
     titulo: 'Marajó Solidário',
     descricao: 'Fotos e vídeos da maior ação de distribuição de alimentos do Marajó durante a pandemia de COVID-19.',
-    capa: '/midia/marajo-solidario/logo-marajo-solidario.jpg',
-    capaContain: true,
+    capa: '/midia/marajo-solidario/fotos/mini/entrega-faixa.jpg',
     pagina: { to: '/marajo-solidario', rotulo: 'Conheça a ação' },
-    fotos: [],
-    videos: [],
+    numeros: [
+      { valor: '19,5 t', label: 'de alimentos' },
+      { valor: '16', label: 'municípios do Marajó' },
+      { valor: '2.200', label: 'kits para famílias de Breves' },
+    ],
+    destaques: ['entrega-comunidade', 'galpao-medida-do-amor', 'entrega-faixa'],
+    capitulos: [
+      {
+        titulo: 'A chegada dos alimentos',
+        texto: 'As toneladas de alimentos não perecíveis chegaram em caminhões e foram descarregadas, caixa por caixa, por uma grande equipe de voluntários.',
+        fotos: [
+          ms('chegada-caminhao', 'O caminhão chega carregado de paletes de alimentos'),
+          ms('chegada-empilhadeira', 'A empilhadeira descarrega os paletes'),
+          ms('chegada-descarga', 'Voluntários descarregam a carga'),
+          ms('chegada-carga', 'Muitas mãos para tirar as caixas do caminhão'),
+          ms('chegada-carrinho', 'Os carrinhos são carregados ao lado do caminhão'),
+          ms('chegada-mao-em-mao', 'Caixa por caixa, de mão em mão'),
+        ],
+      },
+      {
+        titulo: 'Separação e organização',
+        texto: 'No galpão, a força-tarefa organizou as pilhas e separou as cargas que seguiriam para os municípios, os projetos sociais e as famílias cadastradas.',
+        fotos: [
+          ms('galpao-medida-do-amor', '“A medida do amor é amar sem medida” — o galpão tomado pelas caixas'),
+          ms('galpao-pilhas', 'Voluntários montam as pilhas sobre os paletes'),
+          ms('galpao-voluntario', 'Força-tarefa de voluntários na separação'),
+          ms('galpao-equipe', 'A equipe reunida no galpão'),
+          ms('galpao-bastidores', 'Bastidores: a organização da equipe'),
+          ms('separacao-paletes', 'Paletes separados para as entregas'),
+          ms('separacao-carrinho', 'Carrinhos levam as caixas pelo pátio'),
+          ms('separacao-conferencia', 'Conferência da carga antes da entrega'),
+        ],
+      },
+      {
+        titulo: 'A entrega às famílias',
+        texto: 'Os kits chegaram às famílias de crianças, adolescentes e jovens em situação de vulnerabilidade — inclusive nas comunidades à beira do rio.',
+        // Deitadas e em pé alternadas: deixa as colunas da grade com alturas parecidas.
+        fotos: [
+          ms('entrega-comunidade', 'Espaço comunitário à beira do rio recebe os alimentos'),
+          ms('entrega-kit-1', 'Entrega do kit de alimentos', true),
+          ms('entrega-faixa', 'Em favor de todos que necessitam!'),
+          ms('entrega-kits', 'Caixas e kits prontos para a entrega', true),
+          ms('entrega-familias-rio', 'Famílias reunidas para a entrega, com o rio ao fundo'),
+          ms('entrega-kit-2', 'Famílias recebem as cestas', true),
+          ms('entrega-criancas', 'Crianças e famílias no dia da entrega'),
+          ms('entrega-alimentacao', 'Alimentação servida às crianças', true),
+          ms('entrega-margem-rio', 'A comunidade reunida às margens do rio'),
+          ms('entrega-kit-3', 'Entrega das cestas às famílias', true),
+          ms('entrega-kit-4', 'Mais uma família atendida', true),
+        ],
+      },
+    ],
+    videosTitulo: 'Bastidores em vídeo',
+    videosTexto: 'A força-tarefa de voluntários em ação — da chegada da carga à organização do galpão.',
+    chamada: {
+      titulo: 'Conheça a história completa da ação',
+      texto: 'Como a APHAM montou a rede de distribuição, quem apoiou e para onde foram os alimentos.',
+    },
+    videos: [
+      msVideo('carrinhos', 'Carrinhos levam as caixas pelo pátio'),
+      msVideo('chuva', 'Trabalho que não parou nem com a chuva'),
+      msVideo('corrente', 'A corrente de voluntários em ação'),
+      msVideo('mao-em-mao', 'Voluntárias passam as caixas de mão em mão'),
+      msVideo('empilhando', 'Voluntários empilham as caixas no galpão'),
+      msVideo('galpao-cheio', 'O galpão cheio, pronto para a distribuição'),
+    ],
   },
 ]
+
+// Todas as fotos de um álbum (com ou sem capítulos), na ordem da página.
+export const fotosDoAlbum = (a) => (a.capitulos ? a.capitulos.flatMap((c) => c.fotos) : a.fotos || [])
 
 export const citacao = {
   texto: 'Aja como se o que você faz fizesse a diferença. E faz!',

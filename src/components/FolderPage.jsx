@@ -241,10 +241,22 @@ function Bloco({ b }) {
     return (
       <div className="container-x max-w-5xl">
         <Reveal>
-          <div className="grid grid-cols-1 items-center gap-8 overflow-hidden rounded-3xl border border-navy-100 bg-white p-6 shadow-lift sm:p-8 md:grid-cols-[220px_1fr]">
-            <div className="flex h-56 items-center justify-center rounded-2xl bg-navy-50 p-4">
-              <img src={b.img} alt={b.titulo} loading="lazy" className="max-h-full w-auto object-contain" />
-            </div>
+          <div
+            className={`grid grid-cols-1 items-center gap-8 overflow-hidden rounded-3xl border border-navy-100 bg-white p-6 shadow-lift sm:p-8 ${
+              b.fotos ? 'md:grid-cols-[320px_1fr]' : 'md:grid-cols-[220px_1fr]'
+            }`}
+          >
+            {b.fotos ? (
+              <div className="grid h-64 grid-cols-2 grid-rows-2 gap-2">
+                {b.fotos.map((src) => (
+                  <img key={src} src={src} alt="" loading="lazy" className="h-full w-full rounded-xl object-cover" />
+                ))}
+              </div>
+            ) : (
+              <div className="flex h-56 items-center justify-center rounded-2xl bg-navy-50 p-4">
+                <img src={b.img} alt={b.titulo} loading="lazy" className="max-h-full w-auto object-contain" />
+              </div>
+            )}
             <div className="text-center md:text-left">
               {b.rotulo && <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">{b.rotulo}</p>}
               <h3 className="mt-2 font-display text-2xl font-extrabold text-navy-900">{b.titulo}</h3>

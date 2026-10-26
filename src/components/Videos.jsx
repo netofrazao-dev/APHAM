@@ -59,29 +59,36 @@ function VideoModal({ video, onClose }) {
   )
 }
 
-export default function Videos() {
+// Grade de vídeos com player em tela cheia. Sem props, mostra os vídeos gerais;
+// os álbuns (/galeria/:slug) passam os próprios vídeos e textos.
+export default function Videos({
+  itens = videos,
+  id = 'videos',
+  eyebrow = 'Vídeos',
+  titulo = 'Memórias em movimento',
+  texto = 'Histórias, reconhecimentos e momentos que mostram por que a APHAM é muito mais que handebol.',
+  grade = 'sm:grid-cols-2 lg:grid-cols-4',
+  className = '',
+}) {
   const [current, setCurrent] = useState(null)
 
   return (
-    <section id="videos" className="section-pad py-24 lg:py-28">
+    <section id={id} className={`section-pad scroll-mt-24 py-24 lg:py-28 ${className}`}>
       <div className="container-x">
         <Reveal className="mx-auto max-w-2xl text-center">
           <span className="eyebrow flex justify-center">
             <span className="h-px w-6 bg-cyan-400" />
-            Vídeos
+            {eyebrow}
             <span className="h-px w-6 bg-cyan-400" />
           </span>
           <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-navy-900 sm:text-4xl">
-            Memórias em movimento
+            {titulo}
           </h2>
-          <p className="mt-4 text-ink/70">
-            Histórias, reconhecimentos e momentos que mostram por que a APHAM é muito mais que
-            handebol.
-          </p>
+          {texto && <p className="mt-4 text-ink/70">{texto}</p>}
         </Reveal>
 
-        <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {videos.map((v, i) => (
+        <div className={`mt-14 grid grid-cols-1 gap-6 ${grade}`}>
+          {itens.map((v, i) => (
             <Reveal key={v.titulo} delay={0.05 * i}>
               <button
                 type="button"

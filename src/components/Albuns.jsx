@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ArrowUpRight, Images } from 'lucide-react'
-import { albuns } from '../data/content'
+import { albuns, fotosDoAlbum } from '../data/content'
 import Reveal from './Reveal'
 
 // Cards dos álbuns na página Galeria (cada um abre /galeria/<slug>).
@@ -19,7 +19,8 @@ export default function Albuns() {
         </Reveal>
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {albuns.map((a, i) => {
-            const qtd = a.fotos.length + a.videos.length
+            const fotos = fotosDoAlbum(a).length
+            const qtd = fotos + a.videos.length
             return (
               <Reveal key={a.slug} delay={0.06 * i}>
                 <Link
@@ -37,7 +38,7 @@ export default function Albuns() {
                   <div className="flex flex-1 flex-col p-6">
                     <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-cyan-700">
                       <Images className="h-4 w-4" />
-                      {qtd ? `${a.fotos.length} fotos · ${a.videos.length} vídeos` : 'Em breve'}
+                      {qtd ? `${fotos} fotos · ${a.videos.length} vídeos` : 'Em breve'}
                     </span>
                     <h3 className="mt-2 font-display text-xl font-bold text-navy-900">{a.titulo}</h3>
                     <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/70">{a.descricao}</p>
