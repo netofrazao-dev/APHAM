@@ -76,6 +76,28 @@ O código já está pronto para o domínio (endereço oficial nas tags de compar
 
 ---
 
+## 2.1) Lojas parceiras + correção de segurança (rodar uma vez)
+
+1. No Supabase, abra **SQL Editor → New query**, cole TODO o conteúdo de
+   [`supabase/lojas-parceiras.sql`](supabase/lojas-parceiras.sql) e clique em **Run**.
+2. Isso faz duas coisas:
+   - **Segurança:** só quem está na lista de admins pode mexer no site pelo banco
+     (antes, qualquer login podia). Quem já tem login hoje vira admin automaticamente.
+   - **Lojas parceiras:** cria as tabelas de lojas e repasses e as permissões do lojista
+     (ele só mexe na própria loja e nos próprios produtos).
+3. Para adicionar outro admin depois:
+   `insert into admins (user_id) select id from auth.users where email = 'email@exemplo.com';`
+
+Como funciona: o lojista pede cadastro em **/vender**, a APHAM aprova em **/admin → Lojas
+parceiras**, o lojista cuida da loja em **/lojista**. O produto aparece com o preço do lojista
++ a comissão da APHAM (% único, na mesma tela do painel). O cliente paga a APHAM; quando o
+pedido é confirmado, o valor do lojista entra em "A repassar" e a APHAM registra cada repasse.
+
+> Antes de rodar o script, o cadastro de lojas fica fechado ("abre em breve") e o resto do
+> site funciona normalmente.
+
+---
+
 ## 3) E-mail automático (Resend)
 
 1. Crie conta em **resend.com** e gere uma **API Key**.

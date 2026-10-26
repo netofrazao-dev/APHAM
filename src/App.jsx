@@ -32,6 +32,9 @@ const ApoiePage = lazy(() => import('./pages/ApoiePage'))
 const QuemSomosPage = lazy(() => import('./pages/QuemSomosPage'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const AdminApp = lazy(() => import('./pages/admin/AdminApp'))
+const VenderPage = lazy(() => import('./pages/VenderPage'))
+const LojistaApp = lazy(() => import('./pages/lojista/LojistaApp'))
+const LojaParceiraPage = lazy(() => import('./pages/LojaParceiraPage'))
 
 function Loader() {
   return (
@@ -76,6 +79,9 @@ export default function App() {
           <Route path="/pedido/:numero" element={<OrderTracking />} />
           <Route path="/privacidade" element={<Privacidade />} />
           <Route path="/admin/*" element={<AdminApp />} />
+          <Route path="/vender" element={<VenderPage />} />
+          <Route path="/lojista/*" element={<LojistaApp />} />
+          <Route path="/loja/lojas/:slug" element={<LojaParceiraPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

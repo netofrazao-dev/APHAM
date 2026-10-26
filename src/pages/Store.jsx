@@ -1,38 +1,42 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Search, SlidersHorizontal, ShoppingBag } from 'lucide-react'
+import { Search, SlidersHorizontal, ShoppingBag, Store as StoreIcon, ArrowUpRight } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
-import { precoFinal } from '../store/format'
+import { precoVitrine, urlLoja } from '../store/lojas'
 import { lojaConceito, assinaturaSocialPlay, site } from '../data/content'
 import StoreHeader from '../components/store/StoreHeader'
 import StoreFooter from '../components/store/StoreFooter'
 import ProductCard from '../components/store/ProductCard'
 
 export default function Store() {
-  const { produtos, categorias, settings, recentes } = useStore()
+  const { produtosVitrine: produtos, categorias, settings, recentes, comissao, lojasAprovadas, isAdmin, minhaLoja } = useStore()
   const [busca, setBusca] = useState('')
   const [cat, setCat] = useState('todas')
+  const [lojaSel, setLojaSel] = useState('todas') // 'todas' | 'apham' | id da loja
   const [ordem, setOrdem] = useState('destaque')
 
   const lista = useMemo(() => {
-    let l = produtos.filter((p) => p.ativo !== false)
+    let l = produtos
     if (cat !== 'todas') l = l.filter((p) => p.categoria === cat)
+    if (lojaSel === 'apham') l = l.filter((p) => !p.lojaId)
+    else if (lojaSel !== 'todas') l = l.filter((p) => p.lojaId === lojaSel)
     if (busca.trim()) {
       const q = busca.toLowerCase()
       l = l.filter((p) => p.nome.toLowerCase().includes(q) || (p.descricao || '').toLowerCase().includes(q))
     }
     l = [...l]
-    if (ordem === 'menor') l.sort((a, b) => precoFinal(a) - precoFinal(b))
-    else if (ordem === 'maior') l.sort((a, b) => precoFinal(b) - precoFinal(a))
+    if (ordem === 'menor') l.sort((a, b) => precoVitrine(a, comissao) - precoVitrine(b, comissao))
+    else if (ordem === 'maior') l.sort((a, b) => precoVitrine(b, comissao) - precoVitrine(a, comissao))
     else if (ordem === 'nome') l.sort((a, b) => a.nome.localeCompare(b.nome))
     else l.sort((a, b) => (b.destaque === true) - (a.destaque === true))
     return l
-  }, [produtos, cat, busca, ordem])
+  }, [produtos, cat, busca, ordem, lojaSel, comissao])
 
   const lojaFechada = settings.lojaAtiva === false
 
-  // Loja pausada (em preparação) — mostra "em breve" em vez do catálogo.
-  if (site.lojaPausada) {
+  // Loja pausada (em preparação) — mostra "em breve" em vez do catálogo. Admin e
+  // lojistas logados continuam vendo a loja, para montar tudo antes de abrir.
+  if (site.lojaPausada && !isAdmin && !minhaLoja) {
     return (
       <div className="flex min-h-screen flex-col bg-paper">
         <StoreHeader />
@@ -84,6 +88,12 @@ export default function Store() {
         </div>
       </section>
 
+      {site.lojaPausada && (
+        <div className="bg-amber-50 px-4 py-3 text-center text-sm font-medium text-amber-800">
+          Prévia: a loja ainda não está aberta ao público. Só o admin e os lojistas logados veem esta página.
+        </div>
+      )}
+
       {lojaFechada && (
         <div className="bg-cyan-50 px-4 py-3 text-center text-sm font-medium text-cyan-800">
           A loja está temporariamente fechada para novos pedidos. Volte em breve!
@@ -117,6 +127,28 @@ export default function Store() {
             </select>
           </div>
         </div>
+
+        {/* Lojas (APHAM + parceiras) */}
+        {lojasAprovadas.length > 0 && (
+          <div className="container-x mt-4 flex flex-wrap items-center gap-2">
+            <span className="mr-1 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-navy-500">
+              <StoreIcon className="h-3.5 w-3.5" />
+              Vendido por
+            </span>
+            {[{ id: 'todas', nome: 'Todas as lojas' }, { id: 'apham', nome: 'APHAM' }, ...lojasAprovadas].map((l) => (
+              <button
+                key={l.id}
+                type="button"
+                onClick={() => setLojaSel(l.id)}
+                className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
+                  lojaSel === l.id ? 'bg-cyan-500 text-white' : 'border border-navy-200 bg-white text-navy-700 hover:bg-navy-50'
+                }`}
+              >
+                {l.nome}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Categorias */}
         <div className="container-x mt-4 flex flex-wrap gap-2">
@@ -161,11 +193,44 @@ export default function Store() {
         </div>
       </section>
 
+      {/* Lojas parceiras */}
+      <section className="section-pad border-t border-navy-100 bg-white py-12">
+        <div className="container-x">
+          {lojasAprovadas.length > 0 && (
+            <>
+              <h2 className="text-center font-display text-2xl font-extrabold text-navy-900">Lojas parceiras</h2>
+              <p className="mt-2 text-center text-ink/70">Lojas que vendem com a APHAM — cada compra também apoia o handebol do Marajó.</p>
+              <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                {lojasAprovadas.map((l) => (
+                  <Link key={l.id} to={urlLoja(l)} className="group flex items-center gap-3 rounded-2xl border border-navy-100 bg-paper p-4 transition-all hover:-translate-y-0.5 hover:shadow-soft">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-navy-100 font-display font-extrabold text-navy-700">
+                      {l.logo ? <img src={l.logo} alt="" className="h-full w-full object-cover" /> : l.nome.slice(0, 1)}
+                    </span>
+                    <span className="min-w-0 flex-1 truncate font-display text-sm font-bold text-navy-900">{l.nome}</span>
+                    <ArrowUpRight className="h-4 w-4 shrink-0 text-cyan-600" />
+                  </Link>
+                ))}
+              </div>
+            </>
+          )}
+          <div className={`flex flex-col items-center gap-3 rounded-2xl bg-navy-950 p-6 text-center sm:flex-row sm:justify-between sm:text-left ${lojasAprovadas.length ? 'mt-8' : ''}`}>
+            <div>
+              <p className="font-display text-lg font-extrabold text-white">Tem uma loja? Venda aqui com a gente.</p>
+              <p className="text-sm text-white/70">Abra a sua lojinha dentro da loja da APHAM.</p>
+            </div>
+            <Link to="/vender" className="btn-accent shrink-0">
+              Quero vender
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Vistos recentemente */}
       {(() => {
         const vistos = recentes
           .map((id) => produtos.find((p) => p.id === id))
-          .filter((p) => p && p.ativo !== false)
+          .filter(Boolean)
           .slice(0, 4)
         if (vistos.length === 0) return null
         return (

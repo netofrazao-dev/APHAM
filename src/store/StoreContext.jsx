@@ -11,6 +11,7 @@ import {
 import { isSupabaseEnabled, supabase } from '../lib/supabaseClient'
 import * as sb from './sync'
 import { limparNovidade, limparSettings } from './limpeza'
+import { comissaoPct, slugLoja } from './lojas'
 
 // ============================================================================
 //  CONTEXTO DA LOJA
@@ -19,8 +20,8 @@ import { limparNovidade, limparSettings } from './limpeza'
 //  - Com Supabase (variáveis de ambiente configuradas): o banco é a fonte da
 //    verdade — lê do banco ao abrir e grava no banco a cada alteração; o
 //    localStorage continua como cache/reserva.
-//  Login do admin: Supabase Auth (e-mail+senha) quando o banco está ligado;
-//  senão, a senha simples das configurações.
+//  Login: Supabase Auth (e-mail+senha). Quem está na lista de admins do banco
+//  é admin; quem tem uma loja parceira é lojista (ver supabase/lojas-parceiras.sql).
 // ============================================================================
 
 const PREFIX = 'apham:'
@@ -106,6 +107,21 @@ export function StoreProvider({ children }) {
   const [favoritos, setFavoritos] = usePersistent('favoritos', [])
   const [mensagens, setMensagens] = usePersistent('mensagens', [])
   const [recentes, setRecentes] = usePersistent('recentes', [])
+  // Lojas parceiras (marketplace) e repasses da APHAM para os lojistas.
+  const [lojas, setLojas] = usePersistent('lojas', [])
+  const [repasses, setRepasses] = usePersistent('repasses', [])
+  const [usuario, setUsuario] = useState(null) // { id, email, meta } de quem está logado
+  // Sem Supabase (testes locais) as lojas funcionam no navegador; com Supabase,
+  // só depois de rodar o script supabase/lojas-parceiras.sql.
+  const [marketplaceOk, setMarketplaceOk] = useState(!isSupabaseEnabled)
+  const [pedidosLoja, setPedidosLoja] = useState([]) // pedidos que o lojista logado pode ver
+  const [lojistaLocalId, setLojistaLocalId] = useState(() => {
+    try {
+      return sessionStorage.getItem(PREFIX + 'lojista') || null
+    } catch {
+      return null
+    }
+  })
 
   const [isAdmin, setIsAdmin] = useState(() => {
     if (isSupabaseEnabled) return false
@@ -121,7 +137,11 @@ export function StoreProvider({ children }) {
     if (!isSupabaseEnabled) return
     let alive = true
     ;(async () => {
-      const prod = await sb.sbSelect('produtos')
+      const lj = await sb.sbSelectLojas()
+      if (!alive) return
+      setMarketplaceOk(!!lj)
+      if (lj) setLojas(lj)
+      const prod = await sb.sbSelectProdutos()
       if (!alive || !prod || prod.length === 0) return // banco ainda vazio: mantém o seed
       setProdutos(prod)
       const [cat, cup, nov, sto, liv, setg] = await Promise.all([
@@ -146,13 +166,62 @@ export function StoreProvider({ children }) {
     }
   }, [setProdutos, setCategorias, setCupons, setNovidades, setStories, setLives, setSettings])
 
-  // ----- Supabase: sessão do admin -----
+  // ----- Supabase: sessão (admin ou lojista) -----
   useEffect(() => {
     if (!isSupabaseEnabled) return
-    supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session))
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => setIsAdmin(!!session))
-    return () => sub?.subscription?.unsubscribe?.()
+    let alive = true
+    const aplicar = async (session) => {
+      const u = session?.user || null
+      setUsuario(u ? { id: u.id, email: u.email, meta: u.user_metadata || {} } : null)
+      if (!u) {
+        setIsAdmin(false)
+        return
+      }
+      const r = await sb.sbIsAdmin()
+      if (!alive) return
+      // null = script das lojas ainda não rodado: vale a regra antiga (login = admin).
+      setIsAdmin(r === null ? true : r)
+    }
+    supabase.auth.getSession().then(({ data }) => aplicar(data.session))
+    // setTimeout: não chamar o Supabase de dentro do próprio aviso de login.
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => setTimeout(() => aplicar(session), 0))
+    return () => {
+      alive = false
+      sub?.subscription?.unsubscribe?.()
+    }
   }, [])
+
+  // ----- Supabase: ao logar, traz as lojas que a pessoa pode ver, repasses e,
+  // para o lojista, os pedidos com produtos dele. Cria a loja pedida no cadastro
+  // quando o e-mail precisou ser confirmado antes. -----
+  useEffect(() => {
+    if (!isSupabaseEnabled || !usuario) return
+    let alive = true
+    ;(async () => {
+      let lj = await sb.sbSelectLojas()
+      if (!alive || !lj) return
+      let minha = lj.find((l) => l.dono === usuario.id)
+      if (!minha && usuario.meta?.lojaPendente) {
+        try {
+          minha = await sb.sbInsertLoja(usuario.id, usuario.meta.lojaPendente)
+          lj = [...lj, minha]
+        } catch {
+          /* ignora: fica sem loja */
+        }
+      }
+      setLojas(lj)
+      const rep = await sb.sbSelectRepasses()
+      if (alive && rep) setRepasses(rep)
+      if (minha) {
+        const ped = await sb.sbSelect('pedidos')
+        if (alive && ped) setPedidosLoja(ped)
+      }
+    })()
+    return () => {
+      alive = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [usuario?.id])
 
   // ----- Supabase: ao logar como admin, traz pedidos/mensagens e migra se vazio -----
   useEffect(() => {
@@ -162,7 +231,7 @@ export function StoreProvider({ children }) {
       const [ped, msg, prod] = await Promise.all([
         sb.sbSelect('pedidos'),
         sb.sbSelect('mensagens'),
-        sb.sbSelect('produtos'),
+        sb.sbSelectProdutos(),
       ])
       if (!alive) return
       if (ped) setOrders(ped)
@@ -212,9 +281,11 @@ export function StoreProvider({ children }) {
 
   // ----- Produtos -----
   const saveProduto = useCallback(
-    (p) => {
+    (produto) => {
+      const { lojaNome, ...p } = produto // lojaNome é só para a vitrine
       setProdutos((l) => upsert(l, p))
-      sb.sbUpsert('produtos', p)
+      // loja_id só vai junto em produto de loja parceira (o banco usa para as permissões).
+      return sb.sbUpsert('produtos', p, p.lojaId ? { loja_id: p.lojaId } : {})
     },
     [setProdutos]
   )
@@ -357,7 +428,9 @@ export function StoreProvider({ children }) {
   const addOrder = useCallback(
     (o) => {
       setOrders((l) => [o, ...l])
-      sb.sbUpsert('pedidos', o, { numero: o.numero, status: o.status })
+      // Lojas parceiras com produtos no pedido (para cada lojista ver os seus).
+      const ids = [...new Set((o.itens || []).map((i) => i.lojaId).filter(Boolean))]
+      sb.sbUpsert('pedidos', o, { numero: o.numero, status: o.status, ...(ids.length ? { lojas: ids } : {}) })
     },
     [setOrders]
   )
@@ -467,6 +540,164 @@ export function StoreProvider({ children }) {
     }
   }, [])
 
+  // ----- Lojas parceiras -----
+  const pct = comissaoPct(settings)
+  const lojasPorId = useMemo(() => Object.fromEntries(lojas.map((l) => [l.id, l])), [lojas])
+  const lojasAprovadas = useMemo(() => lojas.filter((l) => l.status === 'aprovada'), [lojas])
+  const minhaLoja = useMemo(() => {
+    if (isSupabaseEnabled) return (usuario && lojas.find((l) => l.dono === usuario.id)) || null
+    return lojas.find((l) => l.id === lojistaLocalId) || null
+  }, [lojas, usuario, lojistaLocalId])
+  // Produtos à venda: ativos e, se de loja parceira, só de loja aprovada.
+  const produtosVitrine = useMemo(
+    () =>
+      produtos
+        .filter((p) => p.ativo !== false && (!p.lojaId || lojasPorId[p.lojaId]?.status === 'aprovada'))
+        .map((p) => (p.lojaId ? { ...p, lojaNome: lojasPorId[p.lojaId]?.nome || '' } : p)),
+    [produtos, lojasPorId]
+  )
+  // Pedidos que o lojista logado enxerga (no navegador, filtra os pedidos locais).
+  const pedidosDaMinhaLoja = useMemo(() => {
+    if (!minhaLoja) return []
+    const base = isSupabaseEnabled ? pedidosLoja : orders
+    return base.filter((o) => (o.itens || []).some((i) => i.lojaId === minhaLoja.id))
+  }, [minhaLoja, pedidosLoja, orders])
+
+  const dadosLoja = ({ id, dono, status, criadaEm, ...resto }) => resto
+
+  // Pedido de cadastro de um lojista (cria o login e a loja "em análise").
+  const solicitarLoja = useCallback(
+    async ({ dados, email, senha }) => {
+      const loja = { ...dados, email, slug: slugLoja(dados.nome) }
+      if (!isSupabaseEnabled) {
+        const nova = { ...loja, id: novoId('loja'), dono: 'local', status: 'pendente', criadaEm: new Date().toISOString() }
+        setLojas((l) => [...l, nova])
+        setLojistaLocalId(nova.id)
+        try {
+          sessionStorage.setItem(PREFIX + 'lojista', nova.id)
+        } catch {
+          /* ignora */
+        }
+        return { ok: true, confirmarEmail: false }
+      }
+      if (!marketplaceOk) return { ok: false, erro: 'O cadastro de lojas ainda não está disponível.' }
+      const { data, error } = await supabase.auth.signUp({ email, password: senha, options: { data: { lojaPendente: loja } } })
+      if (error) {
+        const msg = /registered|already/i.test(error.message) ? 'Este e-mail já tem cadastro. Entre pela área do lojista.' : 'Não foi possível criar o cadastro. Confira os dados e tente de novo.'
+        return { ok: false, erro: msg }
+      }
+      if (data.session && data.user) {
+        try {
+          const nova = await sb.sbInsertLoja(data.user.id, loja)
+          setLojas((l) => [...l.filter((x) => x.id !== nova.id), nova])
+        } catch {
+          /* a loja é criada no próximo login (ver efeito acima) */
+        }
+        return { ok: true, confirmarEmail: false }
+      }
+      return { ok: true, confirmarEmail: true }
+    },
+    [marketplaceOk, setLojas]
+  )
+
+  // Login do lojista (no navegador, sem Supabase, entra pelo e-mail da loja).
+  const entrarLojista = useCallback(
+    async (email, senha) => {
+      if (isSupabaseEnabled) return login(email, senha)
+      const l = lojas.find((x) => (x.email || '').toLowerCase() === (email || '').trim().toLowerCase())
+      if (!l) return false
+      setLojistaLocalId(l.id)
+      try {
+        sessionStorage.setItem(PREFIX + 'lojista', l.id)
+      } catch {
+        /* ignora */
+      }
+      return true
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [lojas]
+  )
+  const sairLojista = useCallback(async () => {
+    if (isSupabaseEnabled) {
+      try {
+        await supabase.auth.signOut()
+      } catch {
+        /* ignora */
+      }
+      return
+    }
+    setLojistaLocalId(null)
+    try {
+      sessionStorage.removeItem(PREFIX + 'lojista')
+    } catch {
+      /* ignora */
+    }
+  }, [])
+
+  const atualizarLojaLocal = (nova) => setLojas((l) => l.map((x) => (x.id === nova.id ? nova : x)))
+
+  // O lojista edita os dados da própria loja.
+  const salvarMinhaLoja = useCallback(
+    async (patch) => {
+      if (!minhaLoja) return false
+      const nova = { ...minhaLoja, ...patch }
+      if (!isSupabaseEnabled) {
+        atualizarLojaLocal(nova)
+        return true
+      }
+      try {
+        atualizarLojaLocal(await sb.sbUpdateLoja(minhaLoja.id, { data: dadosLoja(nova) }))
+        return true
+      } catch {
+        return false
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [minhaLoja]
+  )
+
+  // Admin: aprovar, recusar, suspender ou reativar uma loja.
+  const definirStatusLoja = useCallback(
+    async (id, status) => {
+      const atual = lojas.find((l) => l.id === id)
+      if (!atual) return false
+      // Na aprovação garante um endereço único para a página da loja.
+      let slug = atual.slug || slugLoja(atual.nome)
+      if (lojas.some((l) => l.id !== id && l.slug === slug)) slug = `${slug}-${String(id).slice(-4)}`
+      const nova = { ...atual, status, slug }
+      if (!isSupabaseEnabled) {
+        atualizarLojaLocal(nova)
+        return true
+      }
+      try {
+        atualizarLojaLocal(await sb.sbUpdateLoja(id, { status, data: dadosLoja(nova) }))
+        return true
+      } catch {
+        return false
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [lojas]
+  )
+
+  // Admin: registra um pagamento feito a um lojista.
+  const registrarRepasse = useCallback(
+    async (r) => {
+      if (!isSupabaseEnabled) {
+        setRepasses((l) => [{ ...r, id: novoId('rep'), criadoEm: new Date().toISOString() }, ...l])
+        return true
+      }
+      try {
+        const novo = await sb.sbInsertRepasse(r)
+        setRepasses((l) => [novo, ...l])
+        return true
+      } catch {
+        return false
+      }
+    },
+    [setRepasses]
+  )
+
   // Migração manual para o Supabase (botão nas configurações).
   const migrarParaSupabase = useCallback(
     () => sb.sbSeedAll({ produtos, categorias, cupons, novidades, stories, lives, settings }),
@@ -529,6 +760,23 @@ export function StoreProvider({ children }) {
     cartTotal,
     isAdmin,
     supabaseAtivo: isSupabaseEnabled,
+    // Lojas parceiras
+    comissao: pct,
+    lojas,
+    lojasAprovadas,
+    lojasPorId,
+    minhaLoja,
+    usuario,
+    marketplaceOk,
+    produtosVitrine,
+    pedidosDaMinhaLoja,
+    repasses,
+    solicitarLoja,
+    entrarLojista,
+    sairLojista,
+    salvarMinhaLoja,
+    definirStatusLoja,
+    registrarRepasse,
     addToCart,
     updateQtd,
     removeFromCart,

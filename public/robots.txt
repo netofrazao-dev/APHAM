@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /lojista
 Disallow: /carrinho
 Disallow: /checkout
 Disallow: /pedido

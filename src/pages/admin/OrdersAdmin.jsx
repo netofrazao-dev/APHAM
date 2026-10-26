@@ -59,7 +59,11 @@ export default function OrdersAdmin() {
                       <ul className="mt-2 space-y-1 text-sm text-navy-700">
                         {o.itens?.map((i, idx) => (
                           <li key={idx} className="flex justify-between gap-3">
-                            <span>{i.qtd}x {i.nome}{(i.tamanho || i.cor) && <span className="text-navy-400"> ({[i.tamanho, i.cor].filter(Boolean).join(', ')})</span>}</span>
+                            <span>
+                              {i.qtd}x {i.nome}
+                              {(i.tamanho || i.cor) && <span className="text-navy-400"> ({[i.tamanho, i.cor].filter(Boolean).join(', ')})</span>}
+                              {i.lojaId && <span className="ml-1.5 rounded-full bg-violet-100 px-2 py-0.5 text-[11px] font-semibold text-violet-700">{i.lojaNome || 'Loja parceira'}</span>}
+                            </span>
                             <span className="font-medium">{formatBRL(i.preco * i.qtd)}</span>
                           </li>
                         ))}
@@ -70,6 +74,26 @@ export default function OrdersAdmin() {
                         {o.frete > 0 && <div className="flex justify-between"><span>Entrega</span><span>{formatBRL(o.frete)}</span></div>}
                         <div className="flex justify-between font-bold text-navy-900"><span>Total</span><span>{formatBRL(o.total)}</span></div>
                       </div>
+                      {/* Divisão com as lojas parceiras */}
+                      {o.itens?.some((i) => i.lojaId) && (
+                        <div className="mt-3 rounded-xl bg-violet-50 p-3 text-xs text-violet-900">
+                          <p className="font-bold uppercase tracking-wide">Repasse às lojas</p>
+                          {[...new Set(o.itens.filter((i) => i.lojaId).map((i) => i.lojaId))].map((lid) => {
+                            const its = o.itens.filter((i) => i.lojaId === lid)
+                            const lojista = its.reduce((s, i) => s + (i.precoLojista ?? i.preco) * i.qtd, 0)
+                            const cliente = its.reduce((s, i) => s + i.preco * i.qtd, 0)
+                            return (
+                              <div key={lid} className="mt-1 flex justify-between gap-2">
+                                <span>{its[0].lojaNome || 'Loja parceira'}</span>
+                                <span>
+                                  lojista {formatBRL(lojista)} · APHAM {formatBRL(cliente - lojista)}
+                                </span>
+                              </div>
+                            )
+                          })}
+                          <p className="mt-1.5 text-violet-700/80">Entra no “A repassar” da loja quando o pedido for confirmado.</p>
+                        </div>
+                      )}
                     </div>
                     <div className="text-sm text-navy-700">
                       <p className="text-xs font-semibold uppercase tracking-wide text-navy-500">Cliente</p>

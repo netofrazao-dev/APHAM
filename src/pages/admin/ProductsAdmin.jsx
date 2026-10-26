@@ -21,8 +21,15 @@ const vazio = () => ({
   imagens: [],
 })
 
-export default function ProductsAdmin() {
-  const { produtos, categorias, saveProduto, deleteProduto } = useStore()
+// Sem `loja`: painel da APHAM (todos os produtos, com filtro por loja).
+// Com `loja`: área do lojista (só os produtos dele, preço = valor que ele recebe).
+export default function ProductsAdmin({ loja = null }) {
+  const { produtos: todos, categorias, saveProduto, deleteProduto, lojas, comissao } = useStore()
+  const [filtroLoja, setFiltroLoja] = useState('todas')
+  const nomeLoja = (id) => lojas.find((l) => l.id === id)?.nome || 'Loja parceira'
+  const produtos = loja
+    ? todos.filter((p) => p.lojaId === loja.id)
+    : todos.filter((p) => filtroLoja === 'todas' || (filtroLoja === 'apham' ? !p.lojaId : p.lojaId === filtroLoja))
   const [form, setForm] = useState(null) // objeto em edição ou null
   const [enviando, setEnviando] = useState(false)
 
@@ -53,7 +60,7 @@ export default function ProductsAdmin() {
   }
   const removerImagem = (i) => setForm((f) => ({ ...f, imagens: f.imagens.filter((_, idx) => idx !== i) }))
 
-  const salvar = (e) => {
+  const salvar = async (e) => {
     e.preventDefault()
     const id = form.id || `${slugify(form.nome) || 'produto'}-${novoId().slice(-4)}`
     const produto = {
@@ -69,8 +76,10 @@ export default function ProductsAdmin() {
       destaque: !!form.destaque,
       ativo: !!form.ativo,
       imagens: form.imagens || [],
+      ...(loja ? { lojaId: loja.id } : form.lojaId ? { lojaId: form.lojaId } : {}),
     }
-    saveProduto(produto)
+    const ok = await saveProduto(produto)
+    if (ok === false) return alert('Não foi possível salvar o produto. Verifique a conexão e tente de novo.')
     setForm(null)
   }
 
@@ -82,12 +91,28 @@ export default function ProductsAdmin() {
 
   return (
     <div>
-      <PageTitle title="Produtos" subtitle={`${produtos.length} produtos cadastrados`}>
-        <button type="button" onClick={abrirNovo} className={btnAccent}>
-          <Plus className="h-4 w-4" />
-          Novo produto
-        </button>
+      <PageTitle title={loja ? 'Meus produtos' : 'Produtos'} subtitle={`${produtos.length} produtos cadastrados`}>
+        <div className="flex flex-wrap items-center gap-2">
+          {!loja && lojas.length > 0 && (
+            <select value={filtroLoja} onChange={(e) => setFiltroLoja(e.target.value)} className={`${inputCls} w-auto py-2`}>
+              <option value="todas">Todas as lojas</option>
+              <option value="apham">Só da APHAM</option>
+              {lojas.map((l) => (
+                <option key={l.id} value={l.id}>{l.nome}</option>
+              ))}
+            </select>
+          )}
+          <button type="button" onClick={abrirNovo} className={btnAccent}>
+            <Plus className="h-4 w-4" />
+            Novo produto
+          </button>
+        </div>
       </PageTitle>
+      {loja && (
+        <Card className="mb-4 border-cyan-200 bg-cyan-50 text-sm text-cyan-900">
+          Cadastre o preço que <strong>você quer receber</strong>. Na loja, o produto aparece com esse valor + {comissao}% da APHAM.
+        </Card>
+      )}
 
       {produtos.length === 0 ? (
         <Card className="text-sm text-navy-500">Nenhum produto. Clique em "Novo produto".</Card>
@@ -102,6 +127,7 @@ export default function ProductsAdmin() {
                 <div className="flex items-center gap-2">
                   <h3 className="truncate font-display text-sm font-bold text-navy-900">{p.nome}</h3>
                   {p.destaque && <Star className="h-3.5 w-3.5 fill-cyan-400 text-cyan-400" />}
+                  {!loja && p.lojaId && <span className="rounded-full bg-violet-100 px-2 py-0.5 text-[11px] font-semibold text-violet-700">{nomeLoja(p.lojaId)}</span>}
                 </div>
                 <p className="text-xs text-navy-500">
                   {nomeCategoria(p.categoria)} · Estoque: {p.estoque} ·{' '}
@@ -156,7 +182,10 @@ export default function ProductsAdmin() {
               <Field label="Estoque">
                 <input type="number" min="0" value={form.estoque} onChange={(e) => set('estoque', e.target.value)} className={inputCls} />
               </Field>
-              <Field label="Preço (R$) *">
+              <Field
+                label={loja || form.lojaId ? 'Preço do lojista (R$) *' : 'Preço (R$) *'}
+                hint={(loja || form.lojaId) && Number(form.preco) > 0 ? `Na loja: ${formatBRL(Number(form.preco) * (1 + comissao / 100))} (com ${comissao}% da APHAM)` : undefined}
+              >
                 <input type="number" step="0.01" min="0" required value={form.preco} onChange={(e) => set('preco', e.target.value)} className={inputCls} />
               </Field>
               <Field label="Preço promocional (opcional)">
@@ -195,10 +224,12 @@ export default function ProductsAdmin() {
                 </Field>
               </div>
 
-              <label className="flex items-center gap-2 text-sm font-medium text-navy-800">
-                <input type="checkbox" checked={form.destaque} onChange={(e) => set('destaque', e.target.checked)} className="h-4 w-4 rounded border-navy-300 text-cyan-500" />
-                Produto em destaque
-              </label>
+              {!loja && (
+                <label className="flex items-center gap-2 text-sm font-medium text-navy-800">
+                  <input type="checkbox" checked={form.destaque} onChange={(e) => set('destaque', e.target.checked)} className="h-4 w-4 rounded border-navy-300 text-cyan-500" />
+                  Produto em destaque
+                </label>
+              )}
               <label className="flex items-center gap-2 text-sm font-medium text-navy-800">
                 <input type="checkbox" checked={form.ativo} onChange={(e) => set('ativo', e.target.checked)} className="h-4 w-4 rounded border-navy-300 text-cyan-500" />
                 Ativo (visível na loja)

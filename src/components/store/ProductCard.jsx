@@ -2,11 +2,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ShoppingCart, Plus, Heart } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
 import { useToast } from '../Toast'
-import { formatBRL, precoFinal } from '../../store/format'
+import { formatBRL } from '../../store/format'
+import { precoVitrine, precoCheioVitrine, itemCarrinho } from '../../store/lojas'
 import ProductImage from './ProductImage'
 
 export default function ProductCard({ produto }) {
-  const { addToCart, toggleFavorito, isFavorito } = useStore()
+  const { addToCart, toggleFavorito, isFavorito, comissao } = useStore()
   const toast = useToast()
   const navigate = useNavigate()
   const temPromo = produto.precoPromo != null && produto.precoPromo !== ''
@@ -19,15 +20,7 @@ export default function ProductCard({ produto }) {
       navigate(`/loja/produto/${produto.id}`)
       return
     }
-    addToCart({
-      id: produto.id,
-      nome: produto.nome,
-      preco: precoFinal(produto),
-      tamanho: '',
-      cor: '',
-      qtd: 1,
-      imagem: produto.imagens?.[0] || '',
-    })
+    addToCart(itemCarrinho(produto, comissao))
     toast('Adicionado ao carrinho')
   }
 
@@ -65,14 +58,15 @@ export default function ProductCard({ produto }) {
           <h3 className="font-display text-sm font-bold leading-snug text-navy-900 hover:text-cyan-700">
             {produto.nome}
           </h3>
+          {produto.lojaNome && <p className="mt-1 truncate text-xs text-navy-500">Vendido por <span className="font-semibold text-violet-700">{produto.lojaNome}</span></p>}
         </Link>
         <div className="mt-3 flex items-end justify-between gap-2">
           <div>
             {temPromo && (
-              <span className="block text-xs text-navy-400 line-through">{formatBRL(produto.preco)}</span>
+              <span className="block text-xs text-navy-400 line-through">{formatBRL(precoCheioVitrine(produto, comissao))}</span>
             )}
             <span className="font-display text-lg font-extrabold text-navy-900">
-              {formatBRL(precoFinal(produto))}
+              {formatBRL(precoVitrine(produto, comissao))}
             </span>
           </div>
           <button

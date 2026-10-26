@@ -53,7 +53,8 @@ export default function Checkout() {
 
   const montarTexto = (order) => {
     const linhas = order.itens.map(
-      (i) => `• ${i.qtd}x ${i.nome}${i.tamanho || i.cor ? ` (${[i.tamanho, i.cor].filter(Boolean).join(', ')})` : ''} — ${formatBRL(i.preco * i.qtd)}`
+      (i) =>
+        `• ${i.qtd}x ${i.nome}${i.tamanho || i.cor ? ` (${[i.tamanho, i.cor].filter(Boolean).join(', ')})` : ''}${i.lojaNome ? ` [Loja: ${i.lojaNome}]` : ''} — ${formatBRL(i.preco * i.qtd)}`
     )
     return [
       `*Novo pedido — ${settings.nomeLoja}*`,

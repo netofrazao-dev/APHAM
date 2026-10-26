@@ -13,12 +13,14 @@ import {
   ExternalLink,
   Ticket,
   Mail,
+  Store,
 } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
 
 const links = [
   { to: '/admin', label: 'Painel', icon: LayoutDashboard, end: true },
   { to: '/admin/produtos', label: 'Produtos', icon: Package },
+  { to: '/admin/lojas', label: 'Lojas parceiras', icon: Store },
   { to: '/admin/categorias', label: 'Categorias', icon: Tags },
   { to: '/admin/cupons', label: 'Cupons', icon: Ticket },
   { to: '/admin/pedidos', label: 'Pedidos', icon: ClipboardList },

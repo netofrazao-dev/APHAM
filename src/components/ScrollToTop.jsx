@@ -6,6 +6,9 @@ const BASE = 'APHAM · Associação de Praticantes de Handebol do Marajó'
 
 function tituloPara(pathname) {
   if (pathname === '/') return BASE
+  if (pathname.startsWith('/vender')) return 'Venda na loja da APHAM'
+  if (pathname.startsWith('/lojista')) return 'Área do lojista · APHAM'
+  if (pathname.startsWith('/loja/lojas/')) return 'Loja parceira · Loja APHAM'
   if (pathname.startsWith('/loja/produto')) return 'Produto · Loja APHAM'
   if (pathname.startsWith('/loja')) return 'Loja APHAM · Produtos oficiais do handebol'
   if (pathname.startsWith('/carrinho')) return 'Carrinho · Loja APHAM'

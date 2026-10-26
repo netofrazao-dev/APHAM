@@ -13,6 +13,7 @@ import EquipesAdmin from './EquipesAdmin'
 import SettingsAdmin from './SettingsAdmin'
 import CouponsAdmin from './CouponsAdmin'
 import MessagesAdmin from './MessagesAdmin'
+import LojasAdmin from './LojasAdmin'
 
 export default function AdminApp() {
   const { isAdmin } = useStore()
@@ -22,6 +23,7 @@ export default function AdminApp() {
       <Route element={<AdminLayout />}>
         <Route index element={<Dashboard />} />
         <Route path="produtos" element={<ProductsAdmin />} />
+        <Route path="lojas" element={<LojasAdmin />} />
         <Route path="categorias" element={<CategoriesAdmin />} />
         <Route path="cupons" element={<CouponsAdmin />} />
         <Route path="pedidos" element={<OrdersAdmin />} />

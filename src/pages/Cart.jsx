@@ -51,6 +51,7 @@ export default function Cart() {
                               {[item.tamanho, item.cor].filter(Boolean).join(' · ')}
                             </p>
                           )}
+                          {item.lojaNome && <p className="mt-0.5 text-xs text-violet-700">Vendido por {item.lojaNome}</p>}
                         </div>
                         <button type="button" onClick={() => removeFromCart(idx)} className="text-navy-400 hover:text-cyan-700" aria-label="Remover">
                           <Trash2 className="h-4 w-4" />

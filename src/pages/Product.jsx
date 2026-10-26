@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ChevronRight, Minus, Plus, ShoppingCart, Check, Heart } from 'lucide-react'
+import { ChevronRight, Minus, Plus, ShoppingCart, Check, Heart, Store as StoreIcon } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
 import { useToast } from '../components/Toast'
-import { formatBRL, precoFinal } from '../store/format'
+import { formatBRL } from '../store/format'
+import { precoVitrine, precoCheioVitrine, itemCarrinho, urlLoja } from '../store/lojas'
 import StoreHeader from '../components/store/StoreHeader'
 import StoreFooter from '../components/store/StoreFooter'
 import ProductImage from '../components/store/ProductImage'
@@ -12,7 +13,7 @@ import ProductCard from '../components/store/ProductCard'
 export default function Product() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { produtos, addToCart, addRecente, toggleFavorito, isFavorito } = useStore()
+  const { produtosVitrine: produtos, addToCart, addRecente, toggleFavorito, isFavorito, comissao, lojasPorId } = useStore()
   const toast = useToast()
   const produto = produtos.find((p) => p.id === id)
 
@@ -30,7 +31,7 @@ export default function Product() {
   const relacionados = useMemo(
     () =>
       produto
-        ? produtos.filter((p) => p.categoria === produto.categoria && p.id !== produto.id && p.ativo !== false).slice(0, 4)
+        ? produtos.filter((p) => p.categoria === produto.categoria && p.id !== produto.id).slice(0, 4)
         : [],
     [produtos, produto]
   )
@@ -54,15 +55,8 @@ export default function Product() {
   const faltaEscolher = (temTam && !tamanho) || (temCor && !cor)
   const favorito = isFavorito(produto.id)
 
-  const montarItem = () => ({
-    id: produto.id,
-    nome: produto.nome,
-    preco: precoFinal(produto),
-    tamanho,
-    cor,
-    qtd,
-    imagem: produto.imagens?.[0] || '',
-  })
+  const montarItem = () => itemCarrinho(produto, comissao, { tamanho, cor, qtd })
+  const loja = produto.lojaId ? lojasPorId[produto.lojaId] : null
 
   const handleAdd = () => {
     if (faltaEscolher || semEstoque) return
@@ -127,10 +121,22 @@ export default function Product() {
             </div>
             <div className="mt-4 flex items-end gap-3">
               {produto.precoPromo != null && produto.precoPromo !== '' && (
-                <span className="text-lg text-navy-400 line-through">{formatBRL(produto.preco)}</span>
+                <span className="text-lg text-navy-400 line-through">{formatBRL(precoCheioVitrine(produto, comissao))}</span>
               )}
-              <span className="font-display text-3xl font-extrabold text-navy-900">{formatBRL(precoFinal(produto))}</span>
+              <span className="font-display text-3xl font-extrabold text-navy-900">{formatBRL(precoVitrine(produto, comissao))}</span>
             </div>
+
+            {loja && (
+              <Link to={urlLoja(loja)} className="mt-4 flex items-center gap-3 rounded-xl border border-violet-200 bg-violet-50 p-3 transition-colors hover:bg-violet-100">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white font-display font-extrabold text-violet-700">
+                  {loja.logo ? <img src={loja.logo} alt="" className="h-full w-full object-cover" /> : <StoreIcon className="h-5 w-5" />}
+                </span>
+                <span className="text-sm text-navy-700">
+                  Vendido por <strong className="text-violet-800">{loja.nome}</strong>, loja parceira da APHAM
+                  <span className="block text-xs text-navy-500">Pagamento e atendimento pela APHAM · ver a loja</span>
+                </span>
+              </Link>
+            )}
 
             {produto.descricao && <p className="mt-5 leading-relaxed text-ink/75">{produto.descricao}</p>}
 
