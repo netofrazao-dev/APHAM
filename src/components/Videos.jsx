@@ -46,8 +46,7 @@ function VideoModal({ video, onClose }) {
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-navy-950/80 p-6 text-center">
               <Film className="h-8 w-8 text-cyan-300" />
               <p className="max-w-sm text-sm text-white/85">
-                Este vídeo será disponibilizado em breve. O arquivo ainda precisa ser adicionado em
-                <span className="font-mono text-cyan-200"> {video.arquivo}</span>.
+                Este vídeo estará disponível em breve.
               </p>
             </div>
           </div>

@@ -92,11 +92,6 @@ export default function Equipes() {
           </>
         )}
 
-        <Reveal delay={0.1}>
-          <p className="mt-10 text-center text-sm text-white/50">
-            Em breve, as fichas completas dos times, atletas e categorias.
-          </p>
-        </Reveal>
       </div>
     </section>
   )

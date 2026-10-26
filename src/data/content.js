@@ -165,7 +165,6 @@ export const handebol = {
         'Treinos, oficinas, competições e ações sociais fazem parte da rotina da associação, sempre com foco na inclusão e na formação de valores dentro e fora da quadra.',
     },
   ],
-  nota: 'Conteúdo provisório — o texto oficial será enviado pela associação.',
 }
 
 // "Handebol no Brasil e no mundo" — portais oficiais do esporte.
@@ -207,7 +206,6 @@ export const calendario = {
   titulo: 'Calendário da APHAM',
   intro:
     'As competições e ações da APHAM ao longo de 2026. Use as setas para passar os meses.',
-  nota: 'Datas provisórias — ajuste conforme a agenda oficial da associação.',
   ano: 2026,
   // Cada evento: data (início) + fim opcional (eventos de vários dias) + tipo
   // (categoria que aparece na etiqueta: Competição, Evento, Ação social…) + cor.
@@ -256,15 +254,15 @@ export const stories = [
 
 // Feed de novidades/posts.
 // Cards do TFA usam `imgs: [foto1, foto2]` para o efeito de 2 fotos (crossfade).
-// FOTOS E TEXTOS PROVISÓRIOS — usando imagens de exemplo até o cliente enviar
-// as fotos e textos reais do TFA e da Escola de Esportes.
+// Fotos de exemplo nos cards do TFA e da Escola de Esportes até chegarem as
+// fotos reais (troque pelo painel /admin → Novidades).
 export const novidades = [
   {
     data: '',
     tag: 'TFA',
     titulo: 'TFA — a maior competição de handebol do Marajó',
     texto:
-      'A Taça das Fronteiras Amazônicas (TFA) é a maior competição de handebol da região do Marajó. Mais do que uma disputa esportiva, é um encontro que valoriza o handebol amador e de base, levando o esporte a atletas de várias cidades da região.\n\nA competição já aconteceu e teve todos os jogos transmitidos ao vivo pela APHAM. Participaram equipes como Bulls, Canibal, União Handebol, Santos, Amigos e Montabo Athletic, entre outras, nas categorias de base e adulto.\n\n(Texto provisório — ajuste com a associação; a foto da taça e o logo já estão no card.)',
+      'A Taça das Fronteiras Amazônicas (TFA) é a maior competição de handebol da região do Marajó. Mais do que uma disputa esportiva, é um encontro que valoriza o handebol amador e de base, levando o esporte a atletas de várias cidades da região.\n\nA competição já aconteceu e teve todos os jogos transmitidos ao vivo pela APHAM. Participaram equipes como Bulls, Canibal, União Handebol, Santos, Amigos e Montabo Athletic, entre outras, nas categorias de base e adulto.',
     img: '/midia/eventos/tfa-taca.jpg',
     imgs: ['/midia/eventos/tfa-taca.jpg', '/midia/eventos/tfa-logo.webp'],
   },
@@ -273,7 +271,7 @@ export const novidades = [
     tag: 'TFA',
     titulo: 'TFA: a Guiana Francesa no Marajó',
     texto:
-      'A primeira competição internacional de handebol do Marajó. A TFA recebeu a participação de uma delegação da Guiana Francesa, colocando o handebol marajoara em contato com o cenário internacional.\n\nUm marco para a região: o esporte formado na base da APHAM cruzando fronteiras e mostrando a força do handebol do Marajó para além do Brasil.\n\n(Texto provisório — aguardando a foto oficial do jogo da Guiana Francesa.)',
+      'A primeira competição internacional de handebol do Marajó. A TFA recebeu a participação de uma delegação da Guiana Francesa, colocando o handebol marajoara em contato com o cenário internacional.\n\nUm marco para a região: o esporte formado na base da APHAM cruzando fronteiras e mostrando a força do handebol do Marajó para além do Brasil.',
     img: '/midia/eventos/tfa-logo.webp',
   },
   {
@@ -281,7 +279,7 @@ export const novidades = [
     tag: 'TFA',
     titulo: 'TFA: a grande final — APHAM x APHAM',
     texto:
-      'A grande final da TFA foi decidida entre dois times formados dentro da própria APHAM — a prova viva da força do trabalho de base da associação.\n\nCom a taça ficando em casa, a decisão coroou atletas revelados pelo projeto e mostrou que o handebol do Marajó tem estrutura para formar campeões.\n\n(Texto provisório — aguardando a foto dos times da APHAM com o troféu.)',
+      'A grande final da TFA foi decidida entre dois times formados dentro da própria APHAM — a prova viva da força do trabalho de base da associação.\n\nCom a taça ficando em casa, a decisão coroou atletas revelados pelo projeto e mostrou que o handebol do Marajó tem estrutura para formar campeões.',
     img: '/midia/eventos/tfa-logo.webp',
   },
   {
@@ -289,7 +287,7 @@ export const novidades = [
     tag: 'Escola de Esportes',
     titulo: 'Lançamento do Projeto Escola de Esportes',
     texto:
-      'Lançamento oficial do Projeto Escola de Esportes, que leva o handebol às escolas e comunidades do Marajó.\n\nO projeto abre portas para crianças e adolescentes por meio do esporte, unindo formação esportiva, inclusão social e cidadania — a base do trabalho da APHAM na região.\n\n(Texto provisório — aguardando as fotos e a data do lançamento.)',
+      'Lançamento oficial do Projeto Escola de Esportes, que leva o handebol às escolas e comunidades do Marajó.\n\nO projeto abre portas para crianças e adolescentes por meio do esporte, unindo formação esportiva, inclusão social e cidadania — a base do trabalho da APHAM na região.',
     img: '/midia/marca/logo-escola-esportes.jpg',
   },
   {
@@ -297,7 +295,7 @@ export const novidades = [
     tag: 'Escola de Esportes',
     titulo: 'O dia a dia dos treinamentos',
     texto:
-      'No dia a dia dos treinamentos, crianças e jovens aprendem os fundamentos do handebol com disciplina, cooperação e alegria.\n\nMais do que técnica, cada treino é um espaço de convivência e formação de valores — onde se formam atletas e cidadãos.\n\n(Texto provisório — aguardando as fotos dos treinos.)',
+      'No dia a dia dos treinamentos, crianças e jovens aprendem os fundamentos do handebol com disciplina, cooperação e alegria.\n\nMais do que técnica, cada treino é um espaço de convivência e formação de valores — onde se formam atletas e cidadãos.',
     img: '/midia/marca/logo-escola-esportes.jpg',
   },
   {
@@ -305,7 +303,7 @@ export const novidades = [
     tag: 'Escola de Esportes',
     titulo: 'Gincanas pedagógicas',
     texto:
-      'As gincanas pedagógicas unem esporte, educação e valores: atividades lúdicas que ensinam dentro e fora da quadra.\n\nBrincando e competindo de forma saudável, os participantes desenvolvem corpo e mente e reforçam o papel social do projeto na comunidade marajoara.\n\n(Texto provisório — aguardando as fotos das gincanas.)',
+      'As gincanas pedagógicas unem esporte, educação e valores: atividades lúdicas que ensinam dentro e fora da quadra.\n\nBrincando e competindo de forma saudável, os participantes desenvolvem corpo e mente e reforçam o papel social do projeto na comunidade marajoara.',
     img: '/midia/marca/logo-escola-esportes.jpg',
   },
 ]
@@ -375,7 +373,7 @@ export const eventos = [
     img: '/midia/fotos/foto6.jpeg',
     resumo: 'Iniciação e especialização no handebol: regras, fundamentos e quadra.',
     historia:
-      'Oficinas que levam o handebol às escolas e comunidades, ensinando desde "conhecer o jogo e a quadra" até os fundamentos técnicos — formando novos atletas e multiplicadores do esporte no Marajó. (Conteúdo provisório.)',
+      'Oficinas que levam o handebol às escolas e comunidades, ensinando desde "conhecer o jogo e a quadra" até os fundamentos técnicos — formando novos atletas e multiplicadores do esporte no Marajó.',
   },
 ]
 
@@ -388,34 +386,34 @@ export const equipes = [
 ]
 
 // CLUBES/EQUIPES DO CAMPEONATO — escudo + história + títulos.
-// escudo: troque pelo escudo oficial quando o cliente enviar (Huniv e Primatas
-// estão com o logo da APHAM como provisório). titulos/historia são provisórios.
+// escudo: troque pelo escudo oficial quando chegar (Huniv e Primatas estão com
+// o logo da APHAM). historia vazia = o card não mostra texto.
 export const clubes = [
   {
     nome: 'Canibal',
     escudo: '/midia/equipes/canibal.jpg',
-    historia: 'Conteúdo provisório — a história do time será enviada pela associação.',
+    historia: '',
     titulos: [],
     foto: '',
   },
   {
     nome: 'Huniv',
     escudo: '/midia/equipes/huniv.jpg',
-    historia: 'Conteúdo provisório — a história do time será enviada pela associação.',
+    historia: '',
     titulos: [],
     foto: '',
   },
   {
     nome: 'Bulls',
     escudo: '/midia/equipes/bulls.jpg',
-    historia: 'Conteúdo provisório — a história do time será enviada pela associação.',
+    historia: '',
     titulos: [],
     foto: '',
   },
   {
     nome: 'Primatas',
     escudo: '/midia/equipes/primatas.jpg',
-    historia: 'Conteúdo provisório — a história do time será enviada pela associação.',
+    historia: '',
     titulos: [],
     foto: '',
   },
@@ -589,8 +587,8 @@ export const participar = {
   titulo: 'Venha fazer parte da APHAM',
   descricao:
     'As portas da APHAM estão abertas para crianças, adolescentes e jovens que queiram praticar handebol. Não é preciso experiência — só vontade de aprender e fazer parte da nossa família marajoara.',
-  // Mostra um aviso de que os horários ainda serão confirmados.
-  provisorio: true,
+  // true mostra um aviso de que os horários ainda serão confirmados.
+  provisorio: false,
   horarios: [
     { turma: 'Categorias de Base (mirim/infantil)', dias: 'Seg · Qua · Sex', horario: '08h – 10h', local: 'Ginásio Municipal — Breves/PA' },
     { turma: 'Categoria Feminina', dias: 'Ter · Qui', horario: '15h – 17h', local: 'Ginásio Municipal — Breves/PA' },

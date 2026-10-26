@@ -51,7 +51,7 @@ function usePersistent(key, seed) {
 // lives), limpamos o cache antigo dessas coleções no navegador para o site
 // voltar a mostrar o conteúdo novo. O banco (Supabase), quando tem dados,
 // continua com prioridade na hidratação. Roda uma vez por navegador.
-const SEED_VERSION = '2026-10-22a'
+const SEED_VERSION = '2026-10-26a'
 try {
   if (localStorage.getItem(PREFIX + 'seedVersion') !== SEED_VERSION) {
     ;['novidades', 'stories', 'lives'].forEach((k) => localStorage.removeItem(PREFIX + k))
