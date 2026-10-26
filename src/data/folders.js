@@ -7,7 +7,7 @@
 //    eyebrow, titulo, descricao  → cabeçalho da página
 //    capa { img, alt, cheia }    → imagem da apresentação (cheia = foto ocupando o card)
 //    lema, resumo                → texto ao lado da capa
-//    doc, rotuloDoc              → PDF (botões "Ver"/"Baixar")
+//    doc, rotuloDoc              → PDF (botão "Ver"; o site não oferece download)
 //    links [{ to, rotulo }]      → botões para outras páginas do site (ex.: galeria)
 //    numeros [{ valor, label }]  → destaques em números
 //    blocos [...]                → seções (tipos: colunas, texto, cards, datas, artigos, memoria, imagem, destaque, dados)

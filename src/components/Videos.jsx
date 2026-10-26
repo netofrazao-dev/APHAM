@@ -36,6 +36,8 @@ function VideoModal({ video, onClose }) {
             src={video.arquivo}
             poster={video.poster}
             controls
+            controlsList="nodownload"
+            onContextMenu={(e) => e.preventDefault()}
             autoPlay
             onError={() => setFailed(true)}
             className="aspect-video w-full rounded-xl bg-black shadow-lift"

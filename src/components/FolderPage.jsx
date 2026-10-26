@@ -1,6 +1,5 @@
 import {
   FileText,
-  Download,
   CalendarDays,
   HeartHandshake,
   Users,
@@ -302,6 +301,10 @@ function Secao({ alt, children }) {
   )
 }
 
+// Abre o PDF só para ver, escondendo a barra do leitor (onde fica o "baixar")
+// nos navegadores que aceitam esse ajuste (Chrome, Edge).
+const verPdf = (url) => (url && !url.includes('#') ? `${url}#toolbar=0&navpanes=0` : url)
+
 export default function FolderPage({ dados: d, extra, depois }) {
   const blocos = d.blocos || []
   const numCols = d.numeros?.length === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
@@ -347,13 +350,9 @@ export default function FolderPage({ dados: d, extra, depois }) {
                 ))}
                 {d.doc && (
                   <>
-                    <a href={d.doc} target="_blank" rel="noopener noreferrer" className="btn-accent">
+                    <a href={verPdf(d.doc)} target="_blank" rel="noopener noreferrer" className="btn-accent">
                       <FileText className="h-4 w-4" />
                       {rotuloDoc}
-                    </a>
-                    <a href={d.doc} download className="btn border border-navy-200 bg-white text-navy-800 hover:bg-navy-50">
-                      <Download className="h-4 w-4" />
-                      Baixar PDF
                     </a>
                   </>
                 )}
@@ -413,7 +412,7 @@ export default function FolderPage({ dados: d, extra, depois }) {
                     <p className="mt-2 text-ink/70">Clique nas páginas para abrir o documento completo em PDF.</p>
                   </div>
                   {d.doc && (
-                    <a href={d.doc} target="_blank" rel="noopener noreferrer" className="btn-accent w-fit">
+                    <a href={verPdf(d.doc)} target="_blank" rel="noopener noreferrer" className="btn-accent w-fit">
                       <FileText className="h-4 w-4" />
                       Abrir PDF
                     </a>
@@ -427,7 +426,7 @@ export default function FolderPage({ dados: d, extra, depois }) {
                   {d.paginas.map((src, i) => (
                     <Reveal key={src} delay={0.06 * i}>
                       <a
-                        href={d.doc}
+                        href={verPdf(d.doc)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="block overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-lift transition-transform duration-300 hover:-translate-y-1"
@@ -445,7 +444,7 @@ export default function FolderPage({ dados: d, extra, depois }) {
                 {d.outrosDocs.map((o) => (
                   <a
                     key={o.href}
-                    href={o.href}
+                    href={verPdf(o.href)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn border border-navy-200 bg-white text-navy-800 hover:bg-navy-50"
