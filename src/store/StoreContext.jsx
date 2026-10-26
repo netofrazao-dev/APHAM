@@ -10,6 +10,7 @@ import {
 } from './seed'
 import { isSupabaseEnabled, supabase } from '../lib/supabaseClient'
 import * as sb from './sync'
+import { limparNovidade, limparSettings } from './limpeza'
 
 // ============================================================================
 //  CONTEXTO DA LOJA
@@ -135,10 +136,10 @@ export function StoreProvider({ children }) {
       if (cat && cat.length) setCategorias(cat)
       if (cup) setCupons(cup)
       // Só troca pelo banco se houver conteúdo lá (senão mantém o seed do site).
-      if (nov && nov.length) setNovidades(nov)
+      if (nov && nov.length) setNovidades(nov.map(limparNovidade))
       if (sto && sto.length) setStories(sto)
       if (liv && liv.length) setLives(liv)
-      if (setg) setSettings((s) => ({ ...s, ...setg }))
+      if (setg) setSettings((s) => limparSettings({ ...s, ...setg }))
     })()
     return () => {
       alive = false
@@ -169,7 +170,17 @@ export function StoreProvider({ children }) {
       if (!prod || prod.length === 0) {
         // Primeira vez: envia os dados atuais para o banco.
         await sb.sbSeedAll({ produtos, categorias, cupons, novidades, stories, settings })
+        return
       }
+      // Corrige no banco os avisos de "conteúdo provisório" que ficaram salvos lá.
+      const [nov, setg] = await Promise.all([sb.sbSelect('novidades', 'created_at'), sb.sbSelectSettings()])
+      if (!alive) return
+      for (const n of nov || []) {
+        const limpa = limparNovidade(n)
+        if (limpa !== n) await sb.sbUpsert('novidades', limpa)
+      }
+      const setgLimpo = limparSettings(setg)
+      if (setg && setgLimpo !== setg) await sb.sbUpsertSettings(setgLimpo)
     })()
     return () => {
       alive = false
