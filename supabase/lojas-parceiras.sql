@@ -4,6 +4,7 @@
 --  Pode rodar de novo sem problema (o script não duplica nada).
 --
 --  O que este script faz:
+--  0. Cria as tabelas básicas que estiverem faltando (ex.: Lives).
 --  1. Cria a lista de ADMINS. Antes, qualquer pessoa com login no Supabase podia
 --     alterar tudo; agora só quem está nessa lista. Quem já tem login hoje
 --     (a equipe da APHAM) entra automaticamente como admin.
@@ -12,6 +13,40 @@
 --  4. Deixa o lojista ver os pedidos que têm produtos dele.
 --  5. Cria o registro de REPASSES (o que a APHAM já pagou a cada lojista).
 -- ============================================================================
+
+-- 0) Tabelas básicas do site ---------------------------------------------------
+-- Cria as que faltarem (bancos criados com versões antigas do schema.sql não
+-- tinham, por exemplo, a tabela das Lives). As que já existem não mudam.
+create table if not exists produtos   (id text primary key, data jsonb not null, updated_at timestamptz not null default now());
+create table if not exists categorias (id text primary key, data jsonb not null);
+create table if not exists cupons     (id text primary key, data jsonb not null);
+create table if not exists novidades  (id text primary key, data jsonb not null, created_at timestamptz not null default now());
+create table if not exists stories    (id text primary key, data jsonb not null, created_at timestamptz not null default now());
+create table if not exists lives      (id text primary key, data jsonb not null, created_at timestamptz not null default now());
+create table if not exists pedidos    (id text primary key, numero text, status text not null default 'recebido', data jsonb not null, created_at timestamptz not null default now());
+create table if not exists mensagens  (id text primary key, lida boolean not null default false, data jsonb not null, created_at timestamptz not null default now());
+create table if not exists settings   (id int primary key default 1, data jsonb not null, constraint settings_single_row check (id = 1));
+
+alter table produtos   enable row level security;
+alter table categorias enable row level security;
+alter table cupons     enable row level security;
+alter table novidades  enable row level security;
+alter table stories    enable row level security;
+alter table lives      enable row level security;
+alter table pedidos    enable row level security;
+alter table mensagens  enable row level security;
+alter table settings   enable row level security;
+
+-- Leitura pública e criação de pedido/mensagem pelos visitantes (recria igual).
+drop policy if exists "ler produtos"   on produtos;   create policy "ler produtos"   on produtos   for select using (true);
+drop policy if exists "ler categorias" on categorias; create policy "ler categorias" on categorias for select using (true);
+drop policy if exists "ler cupons"     on cupons;     create policy "ler cupons"     on cupons     for select using (true);
+drop policy if exists "ler novidades"  on novidades;  create policy "ler novidades"  on novidades  for select using (true);
+drop policy if exists "ler stories"    on stories;    create policy "ler stories"    on stories    for select using (true);
+drop policy if exists "ler lives"      on lives;      create policy "ler lives"      on lives      for select using (true);
+drop policy if exists "ler settings"   on settings;   create policy "ler settings"   on settings   for select using (true);
+drop policy if exists "criar pedido"   on pedidos;    create policy "criar pedido"   on pedidos    for insert with check (true);
+drop policy if exists "criar mensagem" on mensagens;  create policy "criar mensagem" on mensagens  for insert with check (true);
 
 -- 1) Admins -------------------------------------------------------------------
 create table if not exists admins (
