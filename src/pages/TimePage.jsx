@@ -6,6 +6,7 @@ import Footer from '../components/Footer'
 import BackToTop from '../components/BackToTop'
 import PageShell from '../components/PageShell'
 import Reveal from '../components/Reveal'
+import Escudo from '../components/Escudo'
 import { useStore } from '../store/StoreContext'
 import { listarClubes, jogosDoTime } from '../lib/clubes'
 import { youtubeEmbed } from '../lib/youtube'
@@ -113,10 +114,10 @@ export default function TimePage() {
 
           <Reveal delay={0.05}>
             <div
-              className="mx-auto mt-8 h-48 w-48 overflow-hidden rounded-[2rem] p-2 shadow-lift ring-4 sm:h-56 sm:w-56"
-              style={{ backgroundColor: time.fundoEscudo || '#ffffff', '--tw-ring-color': `${destaque}66`, boxShadow: `0 30px 80px -20px ${destaque}55` }}
+              className="mx-auto mt-8 h-48 w-48 overflow-hidden rounded-[2rem] shadow-lift ring-4 sm:h-56 sm:w-56"
+              style={{ '--tw-ring-color': `${destaque}66`, boxShadow: `0 30px 80px -20px ${destaque}55` }}
             >
-              <img src={time.escudo} alt={`Escudo ${time.nome}`} className="h-full w-full object-contain" />
+              <Escudo src={time.escudo} alt={`Escudo ${time.nome}`} fundo={time.fundoEscudo} className="h-full w-full" />
             </div>
           </Reveal>
 
@@ -200,9 +201,7 @@ export default function TimePage() {
           <section className="section-pad py-16 lg:py-20">
             <Reveal className="container-x max-w-4xl">
               <div className="grid grid-cols-1 items-center gap-8 rounded-3xl bg-white p-6 shadow-lift ring-1 ring-navy-100 sm:p-10 md:grid-cols-[200px_1fr]">
-                <div className="mx-auto aspect-square w-40 overflow-hidden rounded-2xl md:w-full" style={{ backgroundColor: time.fundoEscudo || '#ffffff' }}>
-                  <img src={time.escudo} alt="" className="h-full w-full object-contain p-2" />
-                </div>
+                <Escudo src={time.escudo} fundo={time.fundoEscudo} className="mx-auto aspect-square w-40 rounded-2xl md:w-full" />
                 <div className="text-center md:text-left">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">Sobre o time</p>
                   <h2 className="mt-2 font-display text-2xl font-extrabold text-navy-900 sm:text-3xl">{time.nomeCompleto || time.nome}</h2>
@@ -322,9 +321,7 @@ export default function TimePage() {
                 {outros.map((c, i) => (
                   <Reveal key={c.slug} delay={0.05 * i} className="w-[calc(50%-0.5rem)] sm:w-52">
                     <Link to={`/equipes/${c.slug}`} className="group block overflow-hidden rounded-2xl bg-white shadow-soft ring-1 ring-navy-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-lift">
-                      <div className="aspect-square" style={{ backgroundColor: c.fundoEscudo || '#ffffff' }}>
-                        <img src={c.escudo} alt={`Escudo ${c.nome}`} loading="lazy" className="h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105" />
-                      </div>
+                      <Escudo src={c.escudo} alt={`Escudo ${c.nome}`} fundo={c.fundoEscudo} className="aspect-square" imgClassName="transition-transform duration-500 group-hover:scale-105" />
                       <div className="flex h-1">
                         <span className="flex-1" style={{ backgroundColor: c.cores?.primaria || '#0b2a52' }} />
                         <span className="flex-1" style={{ backgroundColor: c.cores?.secundaria || '#22d3ee' }} />

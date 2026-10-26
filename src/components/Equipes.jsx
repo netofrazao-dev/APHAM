@@ -4,6 +4,7 @@ import { equipes } from '../data/content'
 import { useStore } from '../store/StoreContext'
 import { listarClubes, jogosDoTime } from '../lib/clubes'
 import Reveal from './Reveal'
+import Escudo from './Escudo'
 
 export default function Equipes() {
   const { settings, lives } = useStore()
@@ -41,16 +42,13 @@ export default function Equipes() {
                   to={`/equipes/${c.slug}`}
                   className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-navy-900 shadow-lift ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1.5 hover:ring-white/30"
                 >
-                  <div
-                    className="relative aspect-square overflow-hidden"
-                    style={{ backgroundColor: c.fundoEscudo || '#ffffff' }}
-                  >
-                    <img
+                  <div className="relative aspect-square overflow-hidden">
+                    <Escudo
                       src={c.escudo}
                       alt={`Escudo ${c.nome}`}
-                      loading="lazy"
-                      decoding="async"
-                      className="h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.06]"
+                      fundo={c.fundoEscudo}
+                      className="h-full w-full"
+                      imgClassName="transition-transform duration-500 group-hover:scale-[1.06]"
                     />
                     {c.titulos?.length > 0 && (
                       <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-navy-950/80 px-2.5 py-1 text-xs font-bold text-amber-300 backdrop-blur">

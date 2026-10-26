@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Plus, Pencil, Trash2, X, Upload, ChevronUp, ChevronDown, Square, SquareStack } from 'lucide-react'
+import { Plus, Pencil, Trash2, X, Upload, ChevronUp, ChevronDown, Square, SquareStack, ExternalLink } from 'lucide-react'
 import { useStore, novoId } from '../../store/StoreContext'
 import { novidadesSeed } from '../../store/seed'
 import { fileToOptimizedDataURL } from '../../store/images'
 import { PageTitle, Card, Field, inputCls, btnAccent, btnGhost, btnPrimary } from './ui'
+import EditorBlocos, { limparBlocos } from './EditorBlocos'
 
 function Upload1({ value, onChange }) {
   const [carregando, setCarregando] = useState(false)
@@ -64,7 +65,9 @@ export default function NewsAdmin() {
       data: post.data || '',
       tag: post.tag || '',
       titulo: post.titulo || '',
+      resumo: post.resumo?.trim() || '',
       texto: post.texto || '',
+      blocos: limparBlocos(post.blocos),
       img: foto1,
       // Efeito de 2 fotos: se houver segunda foto, guarda as duas em `imgs`.
       imgs: foto2 ? [foto1, foto2].filter(Boolean) : undefined,
@@ -113,7 +116,7 @@ export default function NewsAdmin() {
           <h2 className="font-display text-lg font-bold text-navy-900">Posts</h2>
           <p className="text-xs text-navy-500">Use as setas ↑ ↓ para a ordem. O botão de sombra liga/desliga o sombreado de cada card.</p>
         </div>
-        <button type="button" onClick={() => setPost({ data: '', tag: '', titulo: '', texto: '', img: '', img2: '' })} className={btnAccent}>
+        <button type="button" onClick={() => setPost({ data: '', tag: '', titulo: '', resumo: '', texto: '', img: '', img2: '', blocos: [] })} className={btnAccent}>
           <Plus className="h-4 w-4" />
           Novo post
         </button>
@@ -175,7 +178,8 @@ export default function NewsAdmin() {
               >
                 <SquareStack className="h-4 w-4" />
               </button>
-              <button type="button" onClick={() => setPost({ ...n, img2: n.imgs?.[1] || '' })} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-700 hover:bg-navy-50" aria-label="Editar"><Pencil className="h-4 w-4" /></button>
+              <a href={`/novidades/${encodeURIComponent(n.id)}`} target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-700 hover:bg-navy-50" aria-label="Ver a página da notícia" title="Ver a página da notícia"><ExternalLink className="h-4 w-4" /></a>
+              <button type="button" onClick={() => setPost({ ...n, resumo: n.resumo || '', img2: n.imgs?.[1] || '', blocos: n.blocos || [] })} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-700 hover:bg-navy-50" aria-label="Editar"><Pencil className="h-4 w-4" /></button>
               <button type="button" onClick={() => window.confirm('Excluir este post?') && deleteNovidade(n.id)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-red-200 text-red-600 hover:bg-red-50" aria-label="Excluir"><Trash2 className="h-4 w-4" /></button>
             </div>
           </Card>
@@ -186,7 +190,7 @@ export default function NewsAdmin() {
       {/* Modal post */}
       {post && (
         <div className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto bg-navy-950/60 p-4 backdrop-blur-sm">
-          <form onSubmit={salvarPost} className="my-8 w-full max-w-lg rounded-2xl bg-paper p-6 shadow-lift">
+          <form onSubmit={salvarPost} className="my-8 w-full max-w-2xl rounded-2xl bg-paper p-6 shadow-lift">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="font-display text-lg font-extrabold text-navy-900">{post.id ? 'Editar post' : 'Novo post'}</h2>
               <button type="button" onClick={() => setPost(null)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-navy-500 hover:bg-navy-100"><X className="h-5 w-5" /></button>
@@ -197,10 +201,13 @@ export default function NewsAdmin() {
                 <Field label="Etiqueta"><input value={post.tag} onChange={(e) => setPost((p) => ({ ...p, tag: e.target.value }))} className={inputCls} placeholder="Conquista" /></Field>
               </div>
               <Field label="Título *"><input required value={post.titulo} onChange={(e) => setPost((p) => ({ ...p, titulo: e.target.value }))} className={inputCls} /></Field>
-              <Field label="Matéria (texto completo)" hint="Aparece inteira no 'Saiba mais'. No card, mostramos as primeiras linhas. Pule uma linha para separar parágrafos.">
+              <Field label="Linha fina (opcional)" hint="Frase de resumo que aparece abaixo do título na página e no card.">
+                <input value={post.resumo} onChange={(e) => setPost((p) => ({ ...p, resumo: e.target.value }))} className={inputCls} placeholder="Ex.: Equipes de 6 cidades disputaram a taça em Breves" />
+              </Field>
+              <Field label="Matéria (texto principal)" hint="Abre a página da notícia (o 1º parágrafo fica em destaque). Pule uma linha para separar parágrafos.">
                 <textarea rows={8} value={post.texto} onChange={(e) => setPost((p) => ({ ...p, texto: e.target.value }))} className={`${inputCls} resize-y`} placeholder="Escreva a matéria completa aqui..." />
               </Field>
-              <Field label="Imagem"><Upload1 value={post.img} onChange={(v) => setPost((p) => ({ ...p, img: v }))} /></Field>
+              <Field label="Imagem de capa" hint="Aparece no card e no topo da página."><Upload1 value={post.img} onChange={(v) => setPost((p) => ({ ...p, img: v }))} /></Field>
               <Field label="Segunda foto (opcional — efeito de 2 fotos)">
                 <Upload1 value={post.img2} onChange={(v) => setPost((p) => ({ ...p, img2: v }))} />
                 <p className="mt-1.5 text-xs text-navy-500">
@@ -208,6 +215,7 @@ export default function NewsAdmin() {
                   transição. Deixe em branco para usar só uma foto.
                 </p>
               </Field>
+              <EditorBlocos blocos={post.blocos || []} onChange={(blocos) => setPost((p) => ({ ...p, blocos }))} />
             </div>
             <div className="mt-6 flex justify-end gap-3">
               <button type="button" onClick={() => setPost(null)} className={btnGhost}>Cancelar</button>
