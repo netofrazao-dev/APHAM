@@ -522,7 +522,7 @@ export const patrocinadores = [
     nome: 'Chilli Beans',
     logo: '/midia/patrocinadores/chilli-beans.webp',
     altura: 'h-20 sm:h-24',
-    endereco: 'Abmael Albuquerque, 2053 — Centro',
+    endereco: 'Abmael Albuquerque, 2053 — Centro, Breves — PA',
     referencia: 'Em frente ao Banco Bradesco',
   },
 ]
