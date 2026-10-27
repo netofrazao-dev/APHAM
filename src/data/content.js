@@ -504,12 +504,24 @@ export const documentario = {
   ],
 }
 
-// PATROCINADORES — faixa acima do rodapé (todas as páginas do site).
-// Cada um: nome, logo e, se for uma unidade específica, endereço e referência.
+// PATROCINADORES — no rodapé (parte azul) de todas as páginas do site.
+// Cada um: nome, logo (sem fundo, para ficar sobre o azul), altura do logo e,
+// se for uma unidade específica, endereço e referência.
 export const patrocinadores = [
+  {
+    nome: 'Prefeitura Municipal de Breves',
+    logo: '/midia/patrocinadores/prefeitura-breves.webp',
+    altura: 'h-14 sm:h-16',
+  },
+  {
+    nome: 'SEMEL — Secretaria Municipal da Juventude, Esporte e Lazer',
+    logo: '/midia/patrocinadores/semel.webp',
+    altura: 'h-20 sm:h-24',
+  },
   {
     nome: 'Chilli Beans',
     logo: '/midia/patrocinadores/chilli-beans.webp',
+    altura: 'h-20 sm:h-24',
     endereco: 'Abmael Albuquerque, 2053 — Centro',
     referencia: 'Em frente ao Banco Bradesco',
   },
