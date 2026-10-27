@@ -11,6 +11,7 @@
 //    links [{ to, rotulo }]      → botões para outras páginas do site (ex.: galeria)
 //    numeros [{ valor, label }]  → destaques em números
 //    blocos [...]                → seções (tipos: colunas, texto, cards, datas, artigos, memoria, imagem, destaque, dados)
+//                                  (o bloco dados aceita doc + rotuloDoc para um botão de PDF)
 //    citacao { texto, autor }    → frase do folder
 //    paginas [...]               → imagens das páginas do PDF (prévia clicável)
 //    ficha [{ nome | nomes, cargo }]
@@ -72,6 +73,20 @@ export const marajoSolidario = {
           { titulo: 'Organizações sociais e instituições filantrópicas do Marajó Ocidental', texto: '2ª quinzena de dezembro de 2020' },
         ],
       },
+    },
+    {
+      tipo: 'dados',
+      titulo: 'Nota fiscal da doação',
+      intro:
+        'Os alimentos da ação chegaram à APHAM por doação da Pampeano Alimentos S.A., registrada na Nota Fiscal Eletrônica nº 23.134 (natureza: remessa em doação): carne bovina em conserva e arroz cozido pronto.',
+      itens: [
+        { rotulo: 'Doador', valor: 'Pampeano Alimentos S.A.' },
+        { rotulo: 'Emissão', valor: '28/11/2020' },
+        { rotulo: 'Volume', valor: '3.785 caixas · 19,5 t' },
+        { rotulo: 'Valor da doação', valor: 'R$ 338.925,00' },
+      ],
+      doc: '/midia/documentos/nota-fiscal-doacao-marajo-solidario.pdf',
+      rotuloDoc: 'Ver a nota fiscal',
     },
     {
       tipo: 'destaque',

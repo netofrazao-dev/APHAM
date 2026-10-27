@@ -217,6 +217,12 @@ function Bloco({ b }) {
           </div>
         </Reveal>
         {b.nota && <p className="mx-auto mt-4 max-w-2xl text-sm text-ink/60">{b.nota}</p>}
+        {b.doc && (
+          <a href={verPdf(b.doc)} target="_blank" rel="noopener noreferrer" className="btn-accent mt-6">
+            <FileText className="h-4 w-4" />
+            {b.rotuloDoc || 'Ver o documento'}
+          </a>
+        )}
       </div>
     )
   }
