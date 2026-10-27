@@ -1,14 +1,14 @@
 import { MapPin } from 'lucide-react'
 import { patrocinadores } from '../data/content'
 
-// Patrocinadores no rodapé (parte azul), entre os links e a linha de copyright.
+// Apoiadores no rodapé (parte azul), entre os links e a linha de copyright.
 export default function Patrocinadores() {
   if (!patrocinadores.length) return null
   return (
     <div className="mt-12 border-t border-white/10 pt-10">
       <p className="eyebrow flex justify-center text-cyan-300">
         <span className="h-px w-6 bg-cyan-400" />
-        Patrocinadores
+        Apoiadores
         <span className="h-px w-6 bg-cyan-400" />
       </p>
       <ul className="mt-8 flex flex-wrap items-center justify-center gap-x-12 gap-y-8">

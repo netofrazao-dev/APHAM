@@ -504,7 +504,7 @@ export const documentario = {
   ],
 }
 
-// PATROCINADORES — no rodapé (parte azul) de todas as páginas do site.
+// APOIADORES (patrocinadores) — no rodapé (parte azul) de todas as páginas do site.
 // Cada um: nome, logo (sem fundo, para ficar sobre o azul), altura do logo e,
 // se for uma unidade específica, endereço e referência.
 export const patrocinadores = [
@@ -512,6 +512,11 @@ export const patrocinadores = [
     nome: 'Prefeitura Municipal de Breves',
     logo: '/midia/patrocinadores/prefeitura-breves.webp',
     altura: 'h-14 sm:h-16',
+  },
+  {
+    nome: 'SEMED — Secretaria Municipal de Educação',
+    logo: '/midia/patrocinadores/semed.webp',
+    altura: 'h-20 sm:h-24',
   },
   {
     nome: 'SEMEL — Secretaria Municipal da Juventude, Esporte e Lazer',
