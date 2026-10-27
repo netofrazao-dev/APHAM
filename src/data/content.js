@@ -504,6 +504,17 @@ export const documentario = {
   ],
 }
 
+// PATROCINADORES — faixa acima do rodapé (todas as páginas do site).
+// Cada um: nome, logo e, se for uma unidade específica, endereço e referência.
+export const patrocinadores = [
+  {
+    nome: 'Chilli Beans',
+    logo: '/midia/patrocinadores/chilli-beans.webp',
+    endereco: 'Abmael Albuquerque, 2053 — Centro',
+    referencia: 'Em frente ao Banco Bradesco',
+  },
+]
+
 // Apoio institucional (logos).
 export const apoios = [
   { nome: 'Lei de Incentivo ao Esporte', logo: '/midia/marca/lei-incentivo-esporte.jpg' },
