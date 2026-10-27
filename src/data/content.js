@@ -652,9 +652,20 @@ export const apoio = {
     'Alguns dos mais desafiadores problemas sociais só são possíveis de resolver com o apoio que recebemos. Entre em contato e junte-se à nossa causa — cause um impacto duradouro.',
   formas: [
     { icone: 'HandHeart', titulo: 'Seja um voluntário', texto: 'Dê seu apoio e contribua para um futuro melhor. Cada gesto conta.' },
-    { icone: 'HandCoins', titulo: 'Faça uma doação', texto: 'Uma das formas mais simples de contribuir com a nossa causa.' },
+    { icone: 'HandCoins', titulo: 'Faça uma doação', texto: 'Uma das formas mais simples de contribuir com a nossa causa. Os dados da conta estão logo abaixo.', href: '#doacao' },
     { icone: 'Handshake', titulo: 'Vire um parceiro', texto: 'Empresas, escolas e órgãos públicos podem somar conosco.' },
   ],
+}
+
+// CONTA PARA DOAÇÕES (página Apoie). A conta da Lei de Incentivo ao Esporte é
+// outra (Banco do Brasil), na página /incentivo.
+export const doacao = {
+  banco: 'Caixa Econômica Federal',
+  agencia: '3194',
+  conta: '569056663-9',
+  tipo: 'Conta corrente — Pessoa Jurídica',
+  titular: 'APHAM — Associação de Praticantes de Handebol do Marajó',
+  cnpj: '11.089.865/0001-92',
 }
 
 export const contato = {
@@ -737,7 +748,7 @@ export const faq = [
   {
     pergunta: 'Como faço uma doação ou viro parceiro?',
     resposta:
-      'Você pode doar, ser voluntário ou firmar parceria. Veja as formas na seção “Apoie” ou fale conosco pelo formulário de contato e WhatsApp.',
+      'Você pode doar, ser voluntário ou firmar parceria. Para doar, use a conta da APHAM na Caixa Econômica Federal (agência 3194, conta corrente 569056663-9), que está na página “Apoie”. Para parcerias, fale conosco pelo formulário de contato ou WhatsApp.',
   },
   {
     pergunta: 'A APHAM tem uma loja oficial?',
