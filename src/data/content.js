@@ -511,7 +511,7 @@ export const patrocinadores = [
   {
     nome: 'Prefeitura Municipal de Breves',
     logo: '/midia/patrocinadores/prefeitura-breves.webp',
-    altura: 'h-auto max-h-16 sm:max-h-20',
+    altura: 'h-auto max-h-16 sm:max-h-20 translate-y-1.5 sm:translate-y-2.5',
   },
   {
     nome: 'SEMED — Secretaria Municipal de Educação',
