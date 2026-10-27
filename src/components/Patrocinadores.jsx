@@ -11,12 +11,16 @@ export default function Patrocinadores() {
         Apoiadores
         <span className="h-px w-6 bg-cyan-400" />
       </p>
-      <ul className="mt-8 flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
+      {/* Colunas iguais: todos os logos na mesma faixa de altura, centralizados;
+          o endereço (quando há) fica embaixo, sem desalinhar a linha dos logos. */}
+      <ul className="mx-auto mt-8 grid max-w-5xl grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
         {patrocinadores.map((p) => (
           <li key={p.nome} className="flex flex-col items-center text-center">
-            <img src={p.logo} alt={p.nome} title={p.nome} loading="lazy" className={`${p.altura || 'h-16'} w-auto object-contain`} />
+            <div className="flex h-24 w-full items-center justify-center sm:h-28">
+              <img src={p.logo} alt={p.nome} title={p.nome} loading="lazy" className={`${p.altura || 'h-20'} w-auto max-w-full object-contain`} />
+            </div>
             {p.endereco && (
-              <p className="mt-3 flex items-start gap-1.5 text-xs text-white/60">
+              <p className="mt-3 flex max-w-[15rem] items-start justify-center gap-1.5 text-xs text-white/60">
                 <MapPin className="mt-px h-3.5 w-3.5 shrink-0 text-cyan-400" />
                 <span>
                   {p.endereco}
