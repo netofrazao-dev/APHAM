@@ -12,6 +12,7 @@
 //    numeros [{ valor, label }]  → destaques em números
 //    blocos [...]                → seções (tipos: colunas, texto, cards, datas, artigos, memoria, imagem, destaque, dados)
 //                                  (o bloco dados aceita doc + rotuloDoc para um botão de PDF)
+//                                  distribuicao → tabela por município; totais somados das linhas
 //    citacao { texto, autor }    → frase do folder
 //    paginas [...]               → imagens das páginas do PDF (prévia clicável)
 //    ficha [{ nome | nomes, cargo }]
@@ -87,6 +88,48 @@ export const marajoSolidario = {
       ],
       doc: '/midia/documentos/nota-fiscal-doacao-marajo-solidario.pdf',
       rotuloDoc: 'Ver a nota fiscal',
+    },
+    {
+      tipo: 'distribuicao',
+      titulo: 'Para onde foram os alimentos',
+      intro:
+        'Espelho da distribuição: cada instituição parceira recebeu sua parte e fez a entrega a famílias de baixa renda do seu município.',
+      linhas: [
+        { municipio: 'Afuá', instituicao: 'Paróquia Nossa Senhora da Conceição', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'Anajás', instituicao: 'Paróquia Menino Deus', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'Bagre', instituicao: 'Paróquia Santa Maria', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'Breves', instituicao: 'Paróquia de Sant’Anna', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'Breves', instituicao: 'Paróquia de São José', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'Breves', instituicao: 'Assembleia de Deus de Breves', pessoas: 400, kg: 446.94, unidades: 1690 },
+        { municipio: 'Breves', instituicao: 'Associação Boleiros do Circuito (ABC)', pessoas: 300, kg: 343.8, unidades: 1300 },
+        { municipio: 'Breves', instituicao: 'Associação Desportiva e Cultural do Marajó (ADECEM)', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'Breves', instituicao: 'Associação dos Surdos de Breves (ASBRE)', pessoas: 200, kg: 275.04, unidades: 1040 },
+        { municipio: 'Breves', instituicao: 'APAE Breves', pessoas: 500, kg: 570.024, unidades: 2880 },
+        { municipio: 'Breves', instituicao: 'Centro Espírita Boa Nova', pessoas: 300, kg: 343.8, unidades: 1300 },
+        { municipio: 'Breves', instituicao: 'Comunidade Evangélica Restauração', pessoas: 150, kg: 171.9, unidades: 650 },
+        { municipio: 'Breves', instituicao: 'Cruz do Sul', pessoas: 300, kg: 343.8, unidades: 1300 },
+        { municipio: 'Breves', instituicao: 'Hospital Regional Público do Marajó (HRPM)', pessoas: 1000, kg: 1031.4, unidades: 3900 },
+        { municipio: 'Breves', instituicao: 'Igreja do Evangelho Quadrangular', pessoas: 1200, kg: 1203.3, unidades: 4550 },
+        { municipio: 'Breves', instituicao: 'Igreja Paixão por Almas', pessoas: 500, kg: 542.088, unidades: 1440 },
+        { municipio: 'Breves', instituicao: 'Instituto Federal do Pará (IFPA — campus Breves)', pessoas: 400, kg: 475.02, unidades: 2400 },
+        { municipio: 'Breves', instituicao: 'Irmãs de Notre Dame', pessoas: 150, kg: 171.9, unidades: 650 },
+        { municipio: 'Breves', instituicao: 'Movimento pela Inclusão no Marajó (MIM)', pessoas: 300, kg: 343.8, unidades: 1300 },
+        { municipio: 'Cachoeira do Arari', instituicao: 'Irmandade do Glorioso São Sebastião', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'Chaves', instituicao: 'Paróquia de Santo Antônio', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'Curralinho', instituicao: 'Sindicato dos Trabalhadores e Trabalhadoras Rurais (STTR)', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'Gurupá', instituicao: 'Sindicato dos Trabalhadores e Trabalhadoras Rurais (STTR)', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'Melgaço', instituicao: 'Assembleia de Deus de Melgaço', pessoas: 300, kg: 343.8, unidades: 1300 },
+        { municipio: 'Melgaço', instituicao: 'Paróquia de São Miguel Arcanjo', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'Muaná', instituicao: 'Paróquia de São Francisco de Paula', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'Ponta de Pedras', instituicao: 'Irmandade do Glorioso São Sebastião', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'Portel', instituicao: 'Associação Desportiva dos Deficientes do Marajó (ADDEFIM)', pessoas: 1200, kg: 1203.3, unidades: 4550 },
+        { municipio: 'Portel', instituicao: 'Associação Haren Alde Brasil', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'Santa Cruz do Arari', instituicao: 'Irmandade do Glorioso São Sebastião', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'São Sebastião da Boa Vista', instituicao: 'Paróquia de São Sebastião', pessoas: 500, kg: 503.712, unidades: 2544 },
+        { municipio: 'Marajó', instituicao: 'APHAM — famílias cadastradas pela associação', pessoas: 3600, kg: 3648.58, unidades: 10310 },
+      ],
+      doc: '/midia/documentos/espelho-distribuicao-marajo-solidario.pdf',
+      rotuloDoc: 'Ver o espelho da distribuição',
     },
     {
       tipo: 'destaque',

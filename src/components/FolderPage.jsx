@@ -16,7 +16,9 @@ import {
   Flower2,
   School,
   ArrowUpRight,
+  ChevronDown,
 } from 'lucide-react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageShell from './PageShell'
 import Reveal from './Reveal'
@@ -104,6 +106,105 @@ function Datas({ titulo, itens }) {
         ))}
       </div>
     </>
+  )
+}
+
+// Espelho de distribuição: tabela agrupada por município, na ordem em que aparecem;
+// os totais saem das próprias linhas. Começa recolhida (a lista é longa).
+function Distribuicao({ b }) {
+  const [aberta, setAberta] = useState(false)
+  const grupos = []
+  b.linhas.forEach((l) => {
+    const g = grupos.find((x) => x.municipio === l.municipio)
+    g ? g.linhas.push(l) : grupos.push({ municipio: l.municipio, linhas: [l] })
+  })
+  const soma = (k) => b.linhas.reduce((t, l) => t + l[k], 0)
+  const num = (n) => n.toLocaleString('pt-BR')
+  const kg = (n) => `${n.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} kg`
+  const resumo = [
+    { valor: num(b.linhas.length), label: 'instituições' },
+    { valor: num(soma('pessoas')), label: 'pessoas atendidas' },
+    { valor: kg(soma('kg')), label: 'de alimentos' },
+    { valor: num(soma('unidades')), label: 'unidades' },
+  ]
+  return (
+    <div className="container-x max-w-5xl">
+      <Reveal className="text-center">
+        <Titulo>{b.titulo}</Titulo>
+        {b.intro && <p className="mx-auto mt-3 max-w-2xl leading-relaxed text-ink/70">{b.intro}</p>}
+      </Reveal>
+      <Reveal delay={0.05}>
+        <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {resumo.map((r) => (
+            <div key={r.label} className="rounded-2xl bg-navy-50 p-4 text-center">
+              <p className="font-display text-xl font-extrabold text-navy-900 sm:text-2xl">{r.valor}</p>
+              <p className="mt-0.5 text-xs font-medium text-ink/60">{r.label}</p>
+            </div>
+          ))}
+        </div>
+      </Reveal>
+      <Reveal delay={0.1}>
+        <div
+          className={`relative mt-6 overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-soft ${aberta ? '' : 'max-h-[28rem]'}`}
+        >
+          <table className="w-full text-left text-sm">
+            <thead className="bg-navy-950 text-xs uppercase tracking-wide text-white/80">
+              <tr>
+                <th className="px-4 py-3 font-semibold">Instituição</th>
+                <th className="px-3 py-3 text-right font-semibold">Pessoas</th>
+                <th className="px-3 py-3 text-right font-semibold">Alimentos</th>
+                <th className="hidden px-4 py-3 text-right font-semibold sm:table-cell">Unidades</th>
+              </tr>
+            </thead>
+            {grupos.map((g) => (
+              <tbody key={g.municipio}>
+                <tr className="bg-cyan-50">
+                  <th colSpan={4} className="px-4 py-2 text-xs font-bold uppercase tracking-wide text-cyan-800">
+                    {g.municipio}
+                  </th>
+                </tr>
+                {g.linhas.map((l, i) => (
+                  <tr key={i} className="border-t border-navy-50">
+                    <td className="px-4 py-2.5 text-navy-900">{l.instituicao}</td>
+                    <td className="whitespace-nowrap px-3 py-2.5 text-right tabular-nums text-ink/80">{num(l.pessoas)}</td>
+                    <td className="whitespace-nowrap px-3 py-2.5 text-right tabular-nums text-ink/80">{kg(l.kg)}</td>
+                    <td className="hidden whitespace-nowrap px-4 py-2.5 text-right tabular-nums text-ink/80 sm:table-cell">{num(l.unidades)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            ))}
+            <tfoot className="border-t-2 border-navy-100 bg-navy-50 font-bold text-navy-900">
+              <tr>
+                <td className="px-4 py-3">Total</td>
+                <td className="whitespace-nowrap px-3 py-3 text-right tabular-nums">{num(soma('pessoas'))}</td>
+                <td className="whitespace-nowrap px-3 py-3 text-right tabular-nums">{kg(soma('kg'))}</td>
+                <td className="hidden whitespace-nowrap px-4 py-3 text-right tabular-nums sm:table-cell">{num(soma('unidades'))}</td>
+              </tr>
+            </tfoot>
+          </table>
+          {!aberta && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-white to-white/0" />}
+        </div>
+        <div className="mt-4 text-center">
+          <button
+            type="button"
+            onClick={() => setAberta((v) => !v)}
+            aria-expanded={aberta}
+            className="btn border border-navy-200 bg-white text-navy-800 hover:bg-navy-50"
+          >
+            {aberta ? 'Recolher a lista' : `Ver a lista completa (${b.linhas.length} instituições)`}
+            <ChevronDown className={`h-4 w-4 transition-transform ${aberta ? 'rotate-180' : ''}`} />
+          </button>
+        </div>
+      </Reveal>
+      {b.doc && (
+        <div className="mt-6 text-center">
+          <a href={verPdf(b.doc)} target="_blank" rel="noopener noreferrer" className="btn-accent">
+            <FileText className="h-4 w-4" />
+            {b.rotuloDoc || 'Ver o documento'}
+          </a>
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -226,6 +327,8 @@ function Bloco({ b }) {
       </div>
     )
   }
+
+  if (b.tipo === 'distribuicao') return <Distribuicao b={b} />
 
   if (b.tipo === 'imagem') {
     return (
