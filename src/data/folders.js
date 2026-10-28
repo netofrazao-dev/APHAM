@@ -8,6 +8,7 @@
 //    capa { img, alt, cheia }    → imagem da apresentação (cheia = foto ocupando o card)
 //    lema, resumo                → texto ao lado da capa
 //    doc, rotuloDoc              → PDF (botão "Ver"; o site não oferece download)
+//    docNoTopo: false            → não repete o botão do PDF no topo (só na seção do documento)
 //    links [{ to, rotulo }]      → botões para outras páginas do site (ex.: galeria)
 //    numeros [{ valor, label }]  → destaques em números
 //    blocos [...]                → seções (tipos: colunas, texto, cards, datas, artigos, memoria, imagem, destaque, dados)
@@ -866,11 +867,8 @@ export const incentivoFolder = {
     'Pessoas e empresas podem destinar parte do Imposto de Renda devido diretamente para o projeto: o valor que iria para o governo passa a financiar esporte, educação e cidadania para a juventude do Marajó.',
   ],
   doc: '/midia/documentos/oficio-autorizacao-captacao.pdf',
-  rotuloDoc: 'Ver o ofício de aprovação',
-  links: [
-    { to: '/contato', rotulo: 'Quero apoiar' },
-    { to: '/projetos/escola-de-esportes', rotulo: 'Conheça o projeto' },
-  ],
+  docNoTopo: false, // o ofício aparece só na seção "Ofício de aprovação do projeto", no fim
+  links: [{ to: '/contato', rotulo: 'Quero apoiar' }],
   numeros: [
     { valor: 'Até 7%', label: 'do IR devido — pessoa física' },
     { valor: 'Até 2%', label: 'do IR devido — empresas no Lucro Real' },
@@ -981,7 +979,7 @@ export const incentivoFolder = {
     {
       tipo: 'apresentacao',
       rotulo: 'Apresentação',
-      titulo: 'Conheça a Escola de Esportes em slides',
+      titulo: 'Briefing Escola de Esportes',
       intro:
         'A apresentação do projeto para empresas e apoiadores: o que é, para quem, como funciona, o impacto esperado e as cotas de patrocínio.',
       slides: slidesEscola,

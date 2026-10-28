@@ -120,6 +120,19 @@ export default function Footer() {
           </p>
           <p>Entidade de utilidade pública · Lei Estadual nº 10.594/2024</p>
         </div>
+
+        {/* Crédito do desenvolvedor, discreto. */}
+        <p className="mt-4 text-center text-[11px] text-white/30">
+          Site desenvolvido por{' '}
+          <a
+            href="https://netofrazao.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-cyan-400"
+          >
+            Neto Frazão
+          </a>
+        </p>
       </div>
     </footer>
   )

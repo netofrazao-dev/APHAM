@@ -520,6 +520,7 @@ export default function FolderPage({ dados: d, extra, depois }) {
   const blocos = d.blocos || []
   const numCols = d.numeros?.length === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
   const rotuloDoc = d.rotuloDoc || 'Ver o folder'
+  const docNoTopo = d.doc && d.docNoTopo !== false // docNoTopo: false → PDF só na seção do documento
   const tituloPaginas = d.tituloPaginas || 'Folder'
   // A seção do folder alterna o fundo com o último bloco.
   const altFinal = blocos.length % 2 === 0
@@ -551,7 +552,7 @@ export default function FolderPage({ dados: d, extra, depois }) {
               </span>
             )}
             <Paragrafos itens={d.resumo} className="mt-4 text-lg" />
-            {(d.doc || d.links?.length > 0) && (
+            {(docNoTopo || d.links?.length > 0) && (
               <div className="mt-8 flex flex-wrap gap-3">
                 {d.links?.map((l) => (
                   <Link key={l.to} to={l.to} className="btn-primary">
@@ -559,7 +560,7 @@ export default function FolderPage({ dados: d, extra, depois }) {
                     <ArrowUpRight className="h-4 w-4" />
                   </Link>
                 ))}
-                {d.doc && (
+                {docNoTopo && (
                   <>
                     <a href={verPdf(d.doc)} target="_blank" rel="noopener noreferrer" className="btn-accent">
                       <FileText className="h-4 w-4" />
