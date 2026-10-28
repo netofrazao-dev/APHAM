@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ShoppingBag, Clock } from 'lucide-react'
+import { ShoppingBag, Clock, Code2, ArrowUpRight } from 'lucide-react'
 import { site, nav, contato } from '../data/content'
 import { useStore } from '../store/StoreContext'
 import Logo from './Logo'
@@ -121,18 +121,20 @@ export default function Footer() {
           <p>Entidade de utilidade pública · Lei Estadual nº 10.594/2024</p>
         </div>
 
-        {/* Crédito do desenvolvedor, discreto. */}
-        <p className="mt-4 text-center text-[11px] text-white/30">
-          Site desenvolvido por{' '}
+        {/* Crédito do desenvolvedor. */}
+        <div className="mt-6 flex justify-center">
           <a
             href="https://netofrazao.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
-            className="transition-colors hover:text-cyan-400"
+            className="group inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs text-white/60 transition-colors hover:border-cyan-400/60 hover:bg-white/10 hover:text-white"
           >
-            Neto Frazão
+            <Code2 className="h-4 w-4 text-cyan-400" />
+            Site desenvolvido por
+            <span className="font-semibold text-white group-hover:text-cyan-300">Neto Frazão</span>
+            <ArrowUpRight className="h-3.5 w-3.5 text-white/40 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-cyan-300" />
           </a>
-        </p>
+        </div>
       </div>
     </footer>
   )
