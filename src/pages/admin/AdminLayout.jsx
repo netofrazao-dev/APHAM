@@ -14,6 +14,7 @@ import {
   Ticket,
   Mail,
   Store,
+  HandHeart,
 } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
 
@@ -27,6 +28,7 @@ const links = [
   { to: '/admin/mensagens', label: 'Mensagens', icon: Mail },
   { to: '/admin/novidades', label: 'Novidades', icon: Newspaper },
   { to: '/admin/lives', label: 'Lives APHAM', icon: Radio },
+  { to: '/admin/doacoes', label: 'Doações', icon: HandHeart },
   { to: '/admin/calendario', label: 'Calendário', icon: CalendarDays },
   { to: '/admin/equipes', label: 'Equipes', icon: Users },
   { to: '/admin/config', label: 'Configurações', icon: Settings },

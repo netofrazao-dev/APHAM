@@ -12,6 +12,7 @@ import { isSupabaseEnabled, supabase } from '../lib/supabaseClient'
 import * as sb from './sync'
 import { limparNovidade, limparSettings } from './limpeza'
 import { comissaoPct, slugLoja } from './lojas'
+import { resumoPublico, hojeISO } from '../lib/doacoes'
 
 // ============================================================================
 //  CONTEXTO DA LOJA
@@ -110,6 +111,11 @@ export function StoreProvider({ children }) {
   // Lojas parceiras (marketplace) e repasses da APHAM para os lojistas.
   const [lojas, setLojas] = usePersistent('lojas', [])
   const [repasses, setRepasses] = usePersistent('repasses', [])
+  // Doações da Lei de Incentivo: a lista completa é só do admin; o painel público
+  // usa o resumo do Supabase, que esconde o nome de quem pediu anonimato.
+  const [doacoes, setDoacoes] = usePersistent('doacoes', [])
+  const [doacoesRemoto, setDoacoesRemoto] = useState(null)
+  const [doacoesOk, setDoacoesOk] = useState(!isSupabaseEnabled) // false = falta rodar supabase/doacoes.sql
   const [usuario, setUsuario] = useState(null) // { id, email, meta } de quem está logado
   // Sem Supabase (testes locais) as lojas funcionam no navegador; com Supabase,
   // só depois de rodar o script supabase/lojas-parceiras.sql.
@@ -137,6 +143,7 @@ export function StoreProvider({ children }) {
     if (!isSupabaseEnabled) return
     let alive = true
     ;(async () => {
+      sb.sbDoacoesPublicas().then((r) => alive && r && setDoacoesRemoto(r))
       const lj = await sb.sbSelectLojas()
       if (!alive) return
       setMarketplaceOk(!!lj)
@@ -424,6 +431,47 @@ export function StoreProvider({ children }) {
     [setLives]
   )
 
+  // ----- Doações (Lei de Incentivo) -----
+  useEffect(() => {
+    if (!isSupabaseEnabled || !isAdmin) return
+    let alive = true
+    sb.sbSelect('doacoes', 'created_at').then((l) => {
+      if (!alive) return
+      setDoacoesOk(!!l)
+      if (l) setDoacoes(l)
+    })
+    return () => {
+      alive = false
+    }
+  }, [isAdmin, setDoacoes])
+  const atualizarPainelDoacoes = useCallback(() => {
+    sb.sbDoacoesPublicas().then((r) => r && setDoacoesRemoto(r))
+  }, [])
+  const saveDoacao = useCallback(
+    async (d) => {
+      const item = { ...d, atualizadoEm: hojeISO() }
+      if (isSupabaseEnabled) {
+        if (!(await sb.sbUpsert('doacoes', item))) return false
+        atualizarPainelDoacoes()
+      }
+      setDoacoes((l) => upsert(l, item))
+      return true
+    },
+    [setDoacoes, atualizarPainelDoacoes]
+  )
+  const deleteDoacao = useCallback(
+    async (id) => {
+      setDoacoes((l) => l.filter((x) => x.id !== id))
+      await sb.sbDelete('doacoes', id)
+      if (isSupabaseEnabled) atualizarPainelDoacoes()
+    },
+    [setDoacoes, atualizarPainelDoacoes]
+  )
+  const painelDoacoes = useMemo(
+    () => (isSupabaseEnabled ? doacoesRemoto : resumoPublico(doacoes)),
+    [doacoesRemoto, doacoes]
+  )
+
   // ----- Pedidos -----
   const addOrder = useCallback(
     (o) => {
@@ -706,8 +754,8 @@ export function StoreProvider({ children }) {
 
   // ----- Export / Import / Reset -----
   const exportData = useCallback(
-    () => ({ versao: 2, produtos, categorias, settings, novidades, stories, lives, orders, cupons, mensagens }),
-    [produtos, categorias, settings, novidades, stories, lives, orders, cupons, mensagens]
+    () => ({ versao: 2, produtos, categorias, settings, novidades, stories, lives, orders, cupons, mensagens, doacoes }),
+    [produtos, categorias, settings, novidades, stories, lives, orders, cupons, mensagens, doacoes]
   )
   const importData = useCallback(
     (data) => {
@@ -721,9 +769,10 @@ export function StoreProvider({ children }) {
       if (data.orders) setOrders(data.orders)
       if (data.cupons) setCupons(data.cupons)
       if (data.mensagens) setMensagens(data.mensagens)
+      if (data.doacoes) setDoacoes(data.doacoes)
       return true
     },
-    [setProdutos, setCategorias, setSettings, setNovidades, setStories, setLives, setOrders, setCupons, setMensagens]
+    [setProdutos, setCategorias, setSettings, setNovidades, setStories, setLives, setOrders, setCupons, setMensagens, setDoacoes]
   )
   const resetData = useCallback(() => {
     setProdutos(produtosSeed)
@@ -738,7 +787,8 @@ export function StoreProvider({ children }) {
     setFavoritos([])
     setRecentes([])
     setCart([])
-  }, [setProdutos, setCategorias, setSettings, setNovidades, setStories, setLives, setOrders, setCupons, setMensagens, setFavoritos, setRecentes, setCart])
+    setDoacoes([])
+  }, [setProdutos, setCategorias, setSettings, setNovidades, setStories, setLives, setOrders, setCupons, setMensagens, setFavoritos, setRecentes, setCart, setDoacoes])
 
   const cartCount = useMemo(() => cart.reduce((s, i) => s + i.qtd, 0), [cart])
   const cartTotal = useMemo(() => cart.reduce((s, i) => s + i.preco * i.qtd, 0), [cart])
@@ -777,6 +827,12 @@ export function StoreProvider({ children }) {
     salvarMinhaLoja,
     definirStatusLoja,
     registrarRepasse,
+    // Doações (Lei de Incentivo)
+    doacoes,
+    doacoesOk,
+    painelDoacoes,
+    saveDoacao,
+    deleteDoacao,
     addToCart,
     updateQtd,
     removeFromCart,

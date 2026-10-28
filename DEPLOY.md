@@ -96,6 +96,18 @@ pedido é confirmado, o valor do lojista entra em "A repassar" e a APHAM registr
 > Antes de rodar o script, o cadastro de lojas fica fechado ("abre em breve") e o resto do
 > site funciona normalmente.
 
+## 2.2) Painel de doações — Lei de Incentivo (rodar uma vez)
+
+1. Depois do 2.1, abra **SQL Editor → New query**, cole TODO o conteúdo de
+   [`supabase/doacoes.sql`](supabase/doacoes.sql) e clique em **Run**.
+2. Cadastre as doações em **/admin → Doações** (uma vez por semana). O painel aparece na
+   página **/incentivo** assim que a primeira doação é cadastrada, com o total arrecadado,
+   a barra até a meta (R$ 528.636,55) e a lista de doadores.
+
+Privacidade: a tabela só é lida pelo admin. O site lê só o resumo público, em que doações
+marcadas como **anônimas** aparecem como "Doador anônimo" e o valor de quem pediu sigilo
+não aparece (mas entra no total).
+
 ---
 
 ## 3) E-mail automático (Resend)

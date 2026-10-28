@@ -163,3 +163,16 @@ export async function sbInsertRepasse(r) {
   if (error) throw error
   return { ...(data.data || {}), id: data.id, lojaId: data.loja_id, valor: Number(data.valor), criadoEm: data.created_at }
 }
+
+// Painel de doações: o que o site pode mostrar (função do supabase/doacoes.sql).
+// null = Supabase desligado ou script ainda não rodado.
+export async function sbDoacoesPublicas() {
+  if (!on()) return null
+  try {
+    const { data, error } = await supabase.rpc('doacoes_publicas')
+    if (error || !data) return null
+    return { ...data, total: Number(data.total) || 0 }
+  } catch {
+    return null
+  }
+}

@@ -814,21 +814,27 @@ export const projetosDetalhes = {
   },
 }
 
-// LEI DE INCENTIVO AO ESPORTE — a partir do Ofício nº 2463/2026/MESP/SE/DPPIE/CGLIE-CAP
-// (Ministério do Esporte, 07/07/2026), que abriu as contas do projeto no Banco do
-// Brasil. O ofício NÃO é publicado no site (traz e-mails e um formulário de
-// autorização bancária); só os dados que o próprio ofício manda informar aos doadores.
+// LEI DE INCENTIVO AO ESPORTE — a partir de dois ofícios do Ministério do Esporte:
+//  • Ofício nº 01509/2026/MESP/DPPIE/CGLIE-CTLIE/SLI (21/05/2026): autorização de
+//    captação de R$ 528.636,55 até 21/05/2028. Este É publicado (página em imagem + PDF).
+//  • Ofício nº 2463/2026/MESP/SE/DPPIE/CGLIE-CAP (07/07/2026), que abriu as contas do
+//    projeto no Banco do Brasil. Este NÃO é publicado (traz e-mails e um formulário de
+//    autorização bancária); só os dados que o próprio ofício manda informar aos doadores.
+// O painel de doações (src/components/PainelDoacoes.jsx) entra logo depois dos números.
 // Limites de dedução: Decreto nº 12.861/2026.
 export const incentivoFolder = {
   eyebrow: 'Imposto de Renda',
   titulo: 'Lei de Incentivo ao Esporte',
+  metaCaptacao: 528636.55, // valor autorizado (meta do painel de doações)
   descricao: 'Apoie a Escola de Esportes com parte do seu Imposto de Renda — sem custo extra para você.',
   capa: { img: '/midia/marca/lei-incentivo-esporte.jpg', alt: 'Lei de Incentivo ao Esporte' },
   lema: 'Projeto aprovado pelo Ministério do Esporte',
   resumo: [
-    'O Projeto Escola de Esportes — Aprendendo com Valores: Educação e Promoção para a Juventude! está apto a captar recursos pela Lei de Incentivo ao Esporte. O Ministério do Esporte abriu, em nome da APHAM, a conta oficial do projeto no Banco do Brasil.',
+    'O Projeto Escola de Esportes — Aprendendo com Valores: Educação e Promoção para a Juventude! foi aprovado pela Comissão Técnica da Lei de Incentivo ao Esporte em 21 de maio de 2026, com autorização integral para captar R$ 528.636,55 até 21 de maio de 2028. O Ministério do Esporte abriu, em nome da APHAM, a conta oficial do projeto no Banco do Brasil.',
     'Pessoas e empresas podem destinar parte do Imposto de Renda devido diretamente para o projeto: o valor que iria para o governo passa a financiar esporte, educação e cidadania para a juventude do Marajó.',
   ],
+  doc: '/midia/documentos/oficio-autorizacao-captacao.pdf',
+  rotuloDoc: 'Ver o ofício de aprovação',
   links: [
     { to: '/contato', rotulo: 'Quero apoiar' },
     { to: '/projetos/escola-de-esportes', rotulo: 'Conheça o projeto' },
@@ -857,9 +863,44 @@ export const incentivoFolder = {
             'O dinheiro fica na conta do projeto, acompanhada pelo Ministério do Esporte, e só é movimentado para a execução do projeto aprovado.',
           ],
           caixas: [
-            { rotulo: 'Processo', texto: 'Nº 71000.019450/2026-61 — Ministério do Esporte' },
-            { rotulo: 'Situação', texto: 'Em captação de recursos (Ofício nº 2463/2026, de 07/07/2026)' },
+            { rotulo: 'Processo', texto: 'Nº 71000.019450/2026-61 · SLI 2600287 — Ministério do Esporte' },
+            { rotulo: 'Situação', texto: 'Em captação de recursos até 21/05/2028' },
           ],
+        },
+      ],
+    },
+    {
+      tipo: 'dados',
+      titulo: 'Autorização de captação',
+      intro:
+        'Aprovação da 208ª Reunião Ordinária da Comissão Técnica da Lei de Incentivo ao Esporte, comunicada à APHAM pelo Ofício nº 01509/2026 do Ministério do Esporte.',
+      itens: [
+        { rotulo: 'Valor autorizado', valor: 'R$ 528.636,55' },
+        { rotulo: 'Aprovado em', valor: '21/05/2026' },
+        { rotulo: 'Captação até', valor: '21/05/2028' },
+        { rotulo: 'Nº no SLI', valor: '2600287' },
+      ],
+      nota: 'A autorização foi concedida integralmente, ou seja, pelo valor total pedido no projeto (Portaria nº 424/2020).',
+    },
+    {
+      tipo: 'datas',
+      titulo: 'Etapas do projeto',
+      itens: [
+        {
+          titulo: '21 de maio de 2026 — Projeto aprovado',
+          texto: 'A Comissão Técnica autorizou a captação de R$ 528.636,55. Para liberar a captação, a aprovação é publicada no Diário Oficial da União, depois que a APHAM apresenta suas certidões de regularidade (FGTS, tributos federais, estaduais e municipais e débitos trabalhistas).',
+        },
+        {
+          titulo: '7 de julho de 2026 — Conta do projeto aberta',
+          texto: 'O Ministério do Esporte abriu a Conta Captação do projeto no Banco do Brasil, em nome da APHAM: é nela que entram as doações e os patrocínios.',
+        },
+        {
+          titulo: 'Até 21 de maio de 2028 — Captação',
+          texto: 'Período em que pessoas e empresas podem destinar parte do Imposto de Renda ao projeto. Cada doação aparece no painel de doações desta página.',
+        },
+        {
+          titulo: 'Depois da captação — Execução',
+          texto: 'O Ministério do Esporte faz a análise técnica e orçamentária do projeto (art. 34 da Portaria nº 424/2020) e libera os recursos para a Escola de Esportes sair do papel.',
         },
       ],
     },
@@ -907,4 +948,6 @@ export const incentivoFolder = {
     },
   ],
   citacao: { texto: 'A boa educação da juventude é a prenda mais segura da felicidade de um Estado!', autor: 'Axel Oxenstierna' },
+  tituloPaginas: 'Ofício de aprovação do projeto',
+  paginas: ['/midia/folders/oficio-autorizacao-captacao.jpg'],
 }

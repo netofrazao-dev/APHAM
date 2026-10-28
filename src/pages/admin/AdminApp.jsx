@@ -8,6 +8,7 @@ import CategoriesAdmin from './CategoriesAdmin'
 import OrdersAdmin from './OrdersAdmin'
 import NewsAdmin from './NewsAdmin'
 import LivesAdmin from './LivesAdmin'
+import DoacoesAdmin from './DoacoesAdmin'
 import CalendarAdmin from './CalendarAdmin'
 import EquipesAdmin from './EquipesAdmin'
 import SettingsAdmin from './SettingsAdmin'
@@ -30,6 +31,7 @@ export default function AdminApp() {
         <Route path="mensagens" element={<MessagesAdmin />} />
         <Route path="novidades" element={<NewsAdmin />} />
         <Route path="lives" element={<LivesAdmin />} />
+        <Route path="doacoes" element={<DoacoesAdmin />} />
         <Route path="calendario" element={<CalendarAdmin />} />
         <Route path="equipes" element={<EquipesAdmin />} />
         <Route path="config" element={<SettingsAdmin />} />
