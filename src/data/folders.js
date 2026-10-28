@@ -13,6 +13,7 @@
 //    blocos [...]                → seções (tipos: colunas, texto, cards, datas, artigos, memoria, imagem, destaque, dados)
 //                                  (o bloco dados aceita doc + rotuloDoc para um botão de PDF)
 //                                  distribuicao → tabela por município; totais somados das linhas
+//                                  apresentacao → slides { titulo, src, mini } com setas e miniaturas
 //    citacao { texto, autor }    → frase do folder
 //    paginas [...]               → imagens das páginas do PDF (prévia clicável)
 //    ficha [{ nome | nomes, cargo }]
@@ -822,6 +823,37 @@ export const projetosDetalhes = {
 //    autorização bancária); só os dados que o próprio ofício manda informar aos doadores.
 // O painel de doações (src/components/PainelDoacoes.jsx) entra logo depois dos números.
 // Limites de dedução: Decreto nº 12.861/2026.
+// Apresentação da Escola de Esportes para patrocinadores (Briefing, 23 slides).
+// As imagens ficam em public/midia/apresentacao-escola (slide-NN.webp e mini-NN.webp).
+const slidesEscola = [
+  'Escola de Esportes — Aprendendo com Valores',
+  'Esporte no contraturno para proteger, educar e formar cidadãos no Marajó',
+  'No Marajó, a infância precisa de proteção ativa',
+  'Na quadra, muitos alunos treinam descalços',
+  'Um objetivo, quatro frentes de trabalho',
+  'Treino, conversa e escola: a rotina do projeto',
+  'Um ano pedagógico em quatro eixos',
+  'Quem faz: a APHAM, em quadra desde 2009',
+  'Não é promessa: o projeto já está em quadra',
+  'Impacto que se mede',
+  'A quadra vira sala de aula de cidadania',
+  'Cinco motivos para sua empresa entrar em quadra',
+  'O imposto que sua empresa já pagaria vira esporte no Marajó',
+  'Escolha como sua marca entra em quadra',
+  'Vamos entrar em quadra juntos?',
+  'Book de fotos — o projeto em imagens',
+  'Em quadra, de segunda a sexta',
+  'Turmas mistas: meninas e meninos no mesmo time',
+  'Cada turma, um time',
+  'Equipe e reconhecimento',
+  'Convivência além da quadra',
+  'Trajetória: esporte e cidadania no Marajó desde 2009',
+  'Escola de Esportes — Nós Acreditamos… Com Fé, Esperança & Amor!',
+].map((titulo, i) => {
+  const n = String(i + 1).padStart(2, '0')
+  return { titulo, src: `/midia/apresentacao-escola/slide-${n}.webp`, mini: `/midia/apresentacao-escola/mini-${n}.webp` }
+})
+
 export const incentivoFolder = {
   eyebrow: 'Imposto de Renda',
   titulo: 'Lei de Incentivo ao Esporte',
@@ -945,6 +977,16 @@ export const incentivoFolder = {
         'Proposta piloto de educação em tempo integral no Marajó: esporte, reforço escolar, educação cidadã e acompanhamento das famílias, com uma Proposta Político-Pedagógica própria.',
       ],
       link: { to: '/projetos/escola-de-esportes', rotulo: 'Conheça o projeto' },
+    },
+    {
+      tipo: 'apresentacao',
+      rotulo: 'Apresentação',
+      titulo: 'Conheça a Escola de Esportes em slides',
+      intro:
+        'A apresentação do projeto para empresas e apoiadores: o que é, para quem, como funciona, o impacto esperado e as cotas de patrocínio.',
+      slides: slidesEscola,
+      doc: '/midia/documentos/apresentacao-escola-de-esportes.pdf',
+      rotuloDoc: 'Ver a apresentação em PDF',
     },
   ],
   citacao: { texto: 'A boa educação da juventude é a prenda mais segura da felicidade de um Estado!', autor: 'Axel Oxenstierna' },

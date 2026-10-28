@@ -17,8 +17,10 @@ import {
   School,
   ArrowUpRight,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageShell from './PageShell'
 import Reveal from './Reveal'
@@ -208,6 +210,105 @@ function Distribuicao({ b }) {
   )
 }
 
+// Apresentação em slides (imagens das páginas do PDF): setas, deslizar no celular,
+// teclado (← →) e miniaturas. Só o slide atual e os vizinhos ficam carregados.
+function Apresentacao({ b }) {
+  const [i, setI] = useState(0)
+  const toque = useRef(null)
+  const faixa = useRef(null)
+  const total = b.slides.length
+  const ir = (n) => setI((n + total) % total)
+
+  // Mantém a miniatura do slide atual visível na faixa (sem rolar a página).
+  useEffect(() => {
+    const el = faixa.current?.children[i]
+    if (el) faixa.current.scrollTo({ left: el.offsetLeft - faixa.current.clientWidth / 2 + el.clientWidth / 2, behavior: 'smooth' })
+  }, [i])
+
+  const teclas = (e) => {
+    if (e.key === 'ArrowRight') ir(i + 1)
+    if (e.key === 'ArrowLeft') ir(i - 1)
+  }
+  const fimToque = (e) => {
+    const dx = e.changedTouches[0].clientX - (toque.current ?? 0)
+    if (Math.abs(dx) > 40) ir(dx < 0 ? i + 1 : i - 1)
+  }
+  const seta =
+    'absolute top-1/2 z-10 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-navy-900 shadow-soft transition hover:bg-white sm:h-12 sm:w-12'
+
+  return (
+    <div className="container-x max-w-5xl">
+      <Reveal className="text-center">
+        {b.rotulo && <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">{b.rotulo}</p>}
+        <Titulo className="mt-2">{b.titulo}</Titulo>
+        {b.intro && <p className="mx-auto mt-3 max-w-2xl leading-relaxed text-ink/70">{b.intro}</p>}
+      </Reveal>
+      <Reveal delay={0.05}>
+        <div
+          role="region"
+          aria-roledescription="carrossel"
+          aria-label={b.titulo}
+          tabIndex={0}
+          onKeyDown={teclas}
+          onTouchStart={(e) => (toque.current = e.touches[0].clientX)}
+          onTouchEnd={fimToque}
+          className="relative mt-8 aspect-video overflow-hidden rounded-2xl bg-navy-950 shadow-lift outline-none ring-cyan-400 focus-visible:ring-2"
+        >
+          {b.slides.map((sl, n) =>
+            Math.abs(n - i) <= 1 || Math.abs(n - i) === total - 1 ? (
+              <img
+                key={sl.src}
+                src={sl.src}
+                alt={n === i ? `Slide ${n + 1}: ${sl.titulo}` : ''}
+                aria-hidden={n !== i}
+                className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-300 ${
+                  n === i ? 'opacity-100' : 'opacity-0'
+                }`}
+              />
+            ) : null
+          )}
+          <button type="button" onClick={() => ir(i - 1)} className={`${seta} left-2 sm:left-4`} aria-label="Slide anterior">
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button type="button" onClick={() => ir(i + 1)} className={`${seta} right-2 sm:right-4`} aria-label="Próximo slide">
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
+        <p className="mt-3 text-center text-sm text-navy-800" aria-live="polite">
+          <span className="mr-2 rounded-full bg-navy-100 px-2 py-0.5 text-xs font-bold text-navy-700">
+            {i + 1} / {total}
+          </span>
+          <span className="font-semibold">{b.slides[i].titulo}</span>
+        </p>
+        <div ref={faixa} className="mt-4 flex snap-x gap-2 overflow-x-auto pb-2">
+          {b.slides.map((sl, n) => (
+            <button
+              key={sl.mini}
+              type="button"
+              onClick={() => setI(n)}
+              aria-label={`Ir para o slide ${n + 1}: ${sl.titulo}`}
+              aria-current={n === i}
+              className={`w-24 shrink-0 snap-start overflow-hidden rounded-lg ring-2 transition sm:w-28 ${
+                n === i ? 'ring-cyan-500' : 'opacity-60 ring-transparent hover:opacity-100'
+              }`}
+            >
+              <img src={sl.mini} alt="" loading="lazy" className="aspect-video w-full object-cover" />
+            </button>
+          ))}
+        </div>
+      </Reveal>
+      {b.doc && (
+        <div className="mt-6 text-center">
+          <a href={verPdf(b.doc)} target="_blank" rel="noopener noreferrer" className="btn-accent">
+            <FileText className="h-4 w-4" />
+            {b.rotuloDoc || 'Ver em PDF'}
+          </a>
+        </div>
+      )}
+    </div>
+  )
+}
+
 function Bloco({ b }) {
   if (b.tipo === 'colunas') {
     return (
@@ -329,6 +430,7 @@ function Bloco({ b }) {
   }
 
   if (b.tipo === 'distribuicao') return <Distribuicao b={b} />
+  if (b.tipo === 'apresentacao') return <Apresentacao b={b} />
 
   if (b.tipo === 'imagem') {
     return (
