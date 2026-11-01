@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { MessageCircle, Check, ShoppingBag, Tag, X } from 'lucide-react'
+import { MessageCircle, Check, ShoppingBag, Tag, X, CreditCard, Loader2, ArrowLeft, ShieldCheck } from 'lucide-react'
 import { useStore, novoId } from '../store/StoreContext'
 import { site } from '../data/content'
 import { useToast } from '../components/Toast'
@@ -10,9 +10,12 @@ import StoreHeader from '../components/store/StoreHeader'
 import StoreFooter from '../components/store/StoreFooter'
 import OrderTimeline from '../components/store/OrderTimeline'
 import PixBox from '../components/store/PixBox'
+import PagamentoOnline from '../components/store/PagamentoOnline'
+import { pagamentoOnlineAtivo, criarPedidoOnline } from '../lib/mercadopago'
 
 export default function Checkout() {
-  const { cart, cartTotal, settings, addOrder, clearCart, aplicarCupom, baixarEstoque } = useStore()
+  const { cart, cartTotal, settings, addOrder, clearCart, aplicarCupom, baixarEstoque, registrarPedidoLocal, atualizarPedidoLocal } =
+    useStore()
   const toast = useToast()
   const [form, setForm] = useState({
     nome: '',
@@ -20,12 +23,14 @@ export default function Checkout() {
     email: '',
     entrega: 'retirada',
     endereco: '',
-    pagamento: settings.pixChave ? 'pix' : 'whatsapp',
+    pagamento: pagamentoOnlineAtivo ? 'online' : settings.pixChave ? 'pix' : 'whatsapp',
     obs: '',
   })
   const [cupomInput, setCupomInput] = useState('')
   const [cupom, setCupom] = useState(null) // { codigo, desconto }
   const [pedido, setPedido] = useState(null)
+  const [online, setOnline] = useState(null) // pedido criado no servidor, aguardando o pagamento
+  const [enviando, setEnviando] = useState(false)
 
   const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
 
@@ -84,10 +89,43 @@ export default function Checkout() {
   const numeroPedido = (site.whatsappNumero || settings.whatsapp || '').replace(/\D/g, '')
   const linkWhatsApp = (order) => `https://wa.me/${numeroPedido}?text=${encodeURIComponent(montarTexto(order))}`
 
+  // Pagamento automático (Mercado Pago): o servidor registra o pedido e refaz os
+  // valores; depois o cliente paga na própria página.
+  const iniciarPagamentoOnline = async () => {
+    setEnviando(true)
+    try {
+      const { pedido: p } = await criarPedidoOnline({
+        itens: cart.map(({ id, qtd, tamanho, cor }) => ({ id, qtd, tamanho, cor })),
+        cliente: { nome: form.nome, telefone: form.telefone, email: form.email },
+        entrega: form.entrega,
+        endereco: form.endereco,
+        obs: form.obs,
+        cupom: cupom?.codigo || '',
+        totalEsperado: total,
+      })
+      registrarPedidoLocal(p)
+      setOnline(p)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } catch (err) {
+      toast(err.message, 'erro')
+    } finally {
+      setEnviando(false)
+    }
+  }
+
+  const pagamentoAprovado = (r) => {
+    atualizarPedidoLocal(online.id, { status: r.status, pagamentoOnline: { status: 'aprovado' } })
+    clearCart()
+    setPedido({ ...online, status: r.status, pago: true })
+    setOnline(null)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
     if (e.target.website && e.target.website.value) return // honeypot anti-spam
     if (!cart.length) return
+    if (form.pagamento === 'online') return iniciarPagamentoOnline()
     const order = {
       id: novoId('order'),
       numero: 'APHAM-' + Date.now().toString().slice(-6),
@@ -125,14 +163,24 @@ export default function Checkout() {
               <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-cyan-100 text-cyan-600">
                 <Check className="h-8 w-8" />
               </span>
-              <h1 className="mt-6 font-display text-2xl font-extrabold text-navy-900">Pedido recebido!</h1>
+              <h1 className="mt-6 font-display text-2xl font-extrabold text-navy-900">
+                {pedido.pago ? 'Pagamento aprovado!' : 'Pedido recebido!'}
+              </h1>
               <p className="mt-2 text-navy-600">
                 Pedido <strong>{pedido.numero}</strong> · Total {formatBRL(pedido.total)}
               </p>
-              <a href={pedido.url} target="_blank" rel="noopener noreferrer" className="btn-accent mt-6">
-                <MessageCircle className="h-4 w-4" />
-                Enviar pedido no WhatsApp
-              </a>
+              {pedido.pago && (
+                <p className="mt-2 max-w-md text-sm text-navy-500">
+                  A APHAM já recebeu a confirmação do pagamento e vai separar o seu pedido.
+                  {pedido.cliente.email && ' O comprovante do Mercado Pago foi enviado para o seu e-mail.'}
+                </p>
+              )}
+              {pedido.url && (
+                <a href={pedido.url} target="_blank" rel="noopener noreferrer" className="btn-accent mt-6">
+                  <MessageCircle className="h-4 w-4" />
+                  Enviar pedido no WhatsApp
+                </a>
+              )}
             </div>
 
             {pedido.pagamento === 'pix' && settings.pixChave && (
@@ -152,6 +200,43 @@ export default function Checkout() {
             <Link to="/loja" className="mt-6 block text-center text-sm font-medium text-navy-600 hover:text-cyan-700">
               Voltar à loja
             </Link>
+          </div>
+        </div>
+        <StoreFooter />
+      </div>
+    )
+  }
+
+  // ----- Pagamento pelo Mercado Pago -----
+  if (online) {
+    return (
+      <div className="flex min-h-screen flex-col bg-paper">
+        <StoreHeader />
+        <div className="container-x section-pad flex-1 py-10">
+          <div className="mx-auto max-w-2xl">
+            <button
+              type="button"
+              onClick={() => setOnline(null)}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-navy-600 hover:text-cyan-700"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Voltar e editar o pedido
+            </button>
+            <h1 className="mt-4 font-display text-2xl font-extrabold text-navy-900 sm:text-3xl">Pagamento</h1>
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-navy-100 bg-white px-5 py-4">
+              <p className="text-sm text-navy-600">
+                Pedido <strong className="text-navy-900">{online.numero}</strong> · {online.itens.reduce((s, i) => s + i.qtd, 0)}{' '}
+                {online.itens.reduce((s, i) => s + i.qtd, 0) === 1 ? 'item' : 'itens'}
+              </p>
+              <p className="font-display text-xl font-extrabold text-navy-900">{formatBRL(online.total)}</p>
+            </div>
+            <div className="mt-6">
+              <PagamentoOnline pedido={online} onAprovado={pagamentoAprovado} onPixGerado={clearCart} />
+            </div>
+            <p className="mt-4 inline-flex items-center gap-1.5 text-xs text-navy-500">
+              <ShieldCheck className="h-4 w-4 text-emerald-600" />
+              Pagamento processado pelo Mercado Pago. Os dados do cartão não passam pelo site da APHAM.
+            </p>
           </div>
         </div>
         <StoreFooter />
@@ -197,8 +282,11 @@ export default function Checkout() {
                   <input name="telefone" required value={form.telefone} onChange={onChange} className={inputCls} placeholder="(91) 9....." />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="mb-1.5 block text-sm font-semibold text-navy-800">E-mail (opcional)</label>
-                  <input name="email" type="email" value={form.email} onChange={onChange} className={inputCls} placeholder="voce@email.com" />
+                  <label className="mb-1.5 block text-sm font-semibold text-navy-800">
+                    E-mail {form.pagamento === 'online' ? '*' : '(opcional)'}
+                  </label>
+                  <input name="email" type="email" required={form.pagamento === 'online'} value={form.email} onChange={onChange} className={inputCls} placeholder="voce@email.com" />
+                  {form.pagamento === 'online' && <p className="mt-1 text-xs text-navy-500">Para o comprovante do pagamento.</p>}
                 </div>
               </div>
             </div>
@@ -228,6 +316,15 @@ export default function Checkout() {
             <div className="rounded-2xl border border-navy-100 bg-white p-6">
               <h2 className="font-display font-bold text-navy-900">Pagamento</h2>
               <div className="mt-4 flex flex-wrap gap-3">
+                {pagamentoOnlineAtivo && (
+                  <label className={`cursor-pointer rounded-xl border px-4 py-3 text-sm font-medium ${form.pagamento === 'online' ? 'border-cyan-500 bg-cyan-50 text-cyan-700' : 'border-navy-200 text-navy-700'}`}>
+                    <input type="radio" name="pagamento" value="online" checked={form.pagamento === 'online'} onChange={onChange} className="sr-only" />
+                    <span className="inline-flex items-center gap-2">
+                      <CreditCard className="h-4 w-4" />
+                      Pix ou cartão — pagamento automático
+                    </span>
+                  </label>
+                )}
                 {settings.pixChave && (
                   <label className={`cursor-pointer rounded-xl border px-4 py-3 text-sm font-medium ${form.pagamento === 'pix' ? 'border-cyan-500 bg-cyan-50 text-cyan-700' : 'border-navy-200 text-navy-700'}`}>
                     <input type="radio" name="pagamento" value="pix" checked={form.pagamento === 'pix'} onChange={onChange} className="sr-only" />
@@ -287,12 +384,20 @@ export default function Checkout() {
                 <span className="font-display text-xl font-extrabold text-navy-900">{formatBRL(total)}</span>
               </div>
 
-              <button type="submit" className="btn-accent mt-6 w-full">
-                <MessageCircle className="h-4 w-4" />
-                Finalizar pedido
+              <button type="submit" disabled={enviando} className="btn-accent mt-6 w-full disabled:opacity-60">
+                {enviando ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : form.pagamento === 'online' ? (
+                  <CreditCard className="h-4 w-4" />
+                ) : (
+                  <MessageCircle className="h-4 w-4" />
+                )}
+                {form.pagamento === 'online' ? 'Ir para o pagamento' : 'Finalizar pedido'}
               </button>
               <p className="mt-3 text-center text-xs text-navy-500">
-                O pedido é registrado e enviado pelo WhatsApp para confirmar.
+                {form.pagamento === 'online'
+                  ? 'Pague com Pix ou cartão pelo Mercado Pago. A confirmação é automática.'
+                  : 'O pedido é registrado e enviado pelo WhatsApp para confirmar.'}
               </p>
             </div>
           </div>

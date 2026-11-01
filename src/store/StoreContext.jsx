@@ -482,6 +482,16 @@ export function StoreProvider({ children }) {
     },
     [setOrders]
   )
+  // Pedido pago pelo site: já foi gravado no banco pelo servidor (/api/pedido),
+  // aqui só fica salvo no navegador para o cliente acompanhar.
+  const registrarPedidoLocal = useCallback(
+    (o) => setOrders((l) => [o, ...l.filter((x) => x.id !== o.id)]),
+    [setOrders]
+  )
+  const atualizarPedidoLocal = useCallback(
+    (id, patch) => setOrders((l) => l.map((o) => (o.id === id ? { ...o, ...patch } : o))),
+    [setOrders]
+  )
   const updateOrder = useCallback(
     (id, patch) =>
       setOrders((l) =>
@@ -850,6 +860,8 @@ export function StoreProvider({ children }) {
     saveLive,
     deleteLive,
     addOrder,
+    registrarPedidoLocal,
+    atualizarPedidoLocal,
     updateOrder,
     deleteOrder,
     updateSettings,

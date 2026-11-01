@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Search, PackageSearch } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
@@ -7,14 +7,26 @@ import { statusInfo } from '../store/constants'
 import StoreHeader from '../components/store/StoreHeader'
 import StoreFooter from '../components/store/StoreFooter'
 import OrderTimeline from '../components/store/OrderTimeline'
+import { statusPedido } from '../lib/mercadopago'
 
 export default function OrderTracking() {
   const { numero } = useParams()
   const navigate = useNavigate()
-  const { orders } = useStore()
+  const { orders, atualizarPedidoLocal } = useStore()
   const [busca, setBusca] = useState('')
 
   const order = numero ? orders.find((o) => o.numero.toLowerCase() === numero.toLowerCase()) : null
+
+  // Pedido salvo neste aparelho: busca o status atual no servidor (a APHAM ou o
+  // Mercado Pago podem ter atualizado). Sem servidor configurado, fica o local.
+  const orderId = order?.id
+  const orderNumero = order?.numero
+  useEffect(() => {
+    if (!orderId) return
+    statusPedido(orderId, orderNumero)
+      .then((r) => atualizarPedidoLocal(orderId, { status: r.status, ...(r.pagamento ? { pagamentoOnline: { status: r.pagamento } } : {}) }))
+      .catch(() => {})
+  }, [orderId, orderNumero, atualizarPedidoLocal])
 
   const buscar = (e) => {
     e.preventDefault()
@@ -61,9 +73,16 @@ export default function OrderTracking() {
                     <p className="font-display text-lg font-extrabold text-navy-900">{order.numero}</p>
                     <p className="text-xs text-navy-500">{new Date(order.data).toLocaleString('pt-BR')}</p>
                   </div>
-                  <span className="rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold text-cyan-700">
-                    {statusInfo(order.status).label}
-                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {order.pagamento === 'online' && order.status === 'recebido' && (
+                      <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
+                        Aguardando pagamento
+                      </span>
+                    )}
+                    <span className="rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold text-cyan-700">
+                      {statusInfo(order.status).label}
+                    </span>
+                  </div>
                 </div>
                 <div className="mt-6">
                   <OrderTimeline status={order.status} />

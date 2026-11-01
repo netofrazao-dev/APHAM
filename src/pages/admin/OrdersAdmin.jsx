@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Trash2, ChevronDown, MessageCircle } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
 import { formatBRL } from '../../store/format'
-import { ORDER_STATUSES, statusInfo, statusCor } from '../../store/constants'
+import { ORDER_STATUSES, statusInfo, statusCor, PAGAMENTO_ONLINE } from '../../store/constants'
 import { PageTitle, Card } from './ui'
 
 const STATUS_IDS = [...ORDER_STATUSES.map((s) => s.id), 'cancelado']
@@ -101,7 +101,7 @@ export default function OrdersAdmin() {
                       <p>{o.cliente?.telefone}</p>
                       {o.cliente?.email && <p>{o.cliente.email}</p>}
                       <p className="mt-2"><span className="text-navy-400">Entrega:</span> {o.entrega === 'entrega' ? 'Entrega' : 'Retirada'}{o.entrega === 'entrega' && o.endereco ? ` — ${o.endereco}` : ''}</p>
-                      <p><span className="text-navy-400">Pagamento:</span> {o.pagamento === 'pix' ? 'PIX' : 'A combinar'}</p>
+                      <p><span className="text-navy-400">Pagamento:</span> {o.pagamento === 'online' ? `Mercado Pago — ${PAGAMENTO_ONLINE[o.pagamentoOnline?.status] || 'aguardando'}` : o.pagamento === 'pix' ? 'PIX' : 'A combinar'}</p>
                       {o.obs && <p className="mt-1"><span className="text-navy-400">Obs:</span> {o.obs}</p>}
                     </div>
                   </div>

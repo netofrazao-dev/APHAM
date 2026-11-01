@@ -22,3 +22,13 @@ export const statusCor = {
   entregue: 'bg-emerald-100 text-emerald-700',
   cancelado: 'bg-red-100 text-red-700',
 }
+
+// Status do pagamento automático (Mercado Pago), mostrado no painel.
+export const PAGAMENTO_ONLINE = {
+  aguardando: 'aguardando pagamento',
+  em_analise: 'em análise',
+  aprovado: 'pago ✓',
+  recusado: 'recusado',
+  cancelado: 'cancelado/expirado',
+  estornado: 'estornado',
+}

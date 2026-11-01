@@ -110,6 +110,35 @@ não aparece (mas entra no total).
 
 ---
 
+## 2.3) Pagamento automático na loja — Mercado Pago
+
+O cliente paga **dentro do site** (Pix, cartão de crédito em até 12x ou débito) pelo
+formulário oficial do Mercado Pago. Quando o pagamento é aprovado, o pedido vira
+**Confirmado** sozinho, o estoque baixa e a APHAM recebe um e-mail (se o Resend estiver
+configurado). O servidor recalcula preço, cupom e entrega a partir do banco: ninguém
+consegue mudar o valor pelo navegador. Os dados do cartão vão direto para o Mercado Pago.
+
+1. Crie (ou use) a conta **Mercado Pago da APHAM** (de preferência no CNPJ) e entre em
+   **mercadopago.com.br/developers → Suas integrações → Criar aplicação**
+   (tipo: pagamentos online / Checkout Transparente).
+2. Em **Credenciais de produção**, copie a **Public Key** e o **Access Token**.
+3. No **Vercel → Settings → Environment Variables**, cadastre:
+   - `VITE_MP_PUBLIC_KEY` = Public Key (pública, pode ir no navegador)
+   - `MP_ACCESS_TOKEN` = Access Token (**secreta**)
+   - `SUPABASE_SERVICE_ROLE_KEY` = Supabase → Settings → API → service_role (**secreta**)
+   - `SUPABASE_URL` (se ainda não tiver) = mesma URL do Supabase
+4. No Mercado Pago, **Webhooks → Configurar notificações**: URL
+   `https://www.handebolmarajo.org/api/mp-webhook`, evento **Pagamentos**. Copie a
+   **assinatura secreta** e cadastre no Vercel como `MP_WEBHOOK_SECRET` (**secreta**).
+5. Faça um **redeploy**. No checkout aparece a opção **"Pix ou cartão — pagamento automático"**.
+
+Para testar antes de valer: use as **credenciais de teste** do Mercado Pago nas mesmas
+variáveis (e os cartões de teste da documentação); depois troque pelas de produção.
+
+> Sem essas variáveis, o checkout continua como antes (PIX manual / WhatsApp).
+> O dinheiro cai na conta Mercado Pago da APHAM; os repasses às lojas parceiras
+> continuam registrados em **/admin → Lojas parceiras**.
+
 ## 3) E-mail automático (Resend)
 
 1. Crie conta em **resend.com** e gere uma **API Key**.
@@ -148,6 +177,10 @@ não aparece (mas entra no total).
 | `RESEND_API_KEY` | **secreta** | Resend → API Keys |
 | `NOTIFY_EMAIL` | config | e-mail da APHAM |
 | `NOTIFY_FROM` | config | remetente |
+| `VITE_MP_PUBLIC_KEY` | pública | Mercado Pago → Credenciais |
+| `MP_ACCESS_TOKEN` | **secreta** | Mercado Pago → Credenciais |
+| `MP_WEBHOOK_SECRET` | **secreta** | Mercado Pago → Webhooks |
+| `SUPABASE_SERVICE_ROLE_KEY` | **secreta** | Supabase → Settings → API (service_role) |
 | `INSTAGRAM_TOKEN` | **secreta** | Meta for Developers |
 | `INSTAGRAM_USER_ID` | config | Meta for Developers |
 
