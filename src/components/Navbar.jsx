@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, ShoppingBag, Youtube, Facebook, Instagram } from 'lucide-react'
+import { Menu, X, ShoppingBag, Youtube, Facebook, Instagram, Linkedin } from 'lucide-react'
 import { nav, sumario, hero, site, redesHeader } from '../data/content'
 import { useStore } from '../store/StoreContext'
 import Logo from './Logo'
 
-const SOCIAL_ICONS = { Youtube, Facebook, Instagram }
+const SOCIAL_ICONS = { Youtube, Facebook, Instagram, Linkedin }
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)

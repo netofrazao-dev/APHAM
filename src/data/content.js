@@ -24,6 +24,7 @@ export const site = {
   instagram: 'https://www.instagram.com/handebolmarajo/',
   facebook: 'https://www.facebook.com/Apham2009',
   youtube: 'https://www.youtube.com/@handebolmarajo',
+  linkedin: 'https://www.linkedin.com/in/apham-handebolmarajo-8a7721448/',
   // Link da futura loja — por enquanto aponta para o bloco "Loja em breve".
   lojaUrl: '#loja',
   // Loja pausada até ficar pronta: esconde o botão/bloco da loja e mostra "em breve".
@@ -60,6 +61,7 @@ export const redesHeader = [
   { nome: 'YouTube', icone: 'Youtube', url: 'youtube' },
   { nome: 'Facebook', icone: 'Facebook', url: 'facebook' },
   { nome: 'Instagram', icone: 'Instagram', url: 'instagram' },
+  { nome: 'LinkedIn', icone: 'Linkedin', url: 'linkedin' },
 ]
 
 export const hero = {
