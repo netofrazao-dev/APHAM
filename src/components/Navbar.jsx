@@ -56,6 +56,7 @@ export default function Navbar() {
         <div className="hidden items-center gap-1.5 xl:flex">
           {redes.map((r) => {
             const Ic = SOCIAL_ICONS[r.icone]
+            if (!Ic) return null
             return (
               <a
                 key={r.nome}
@@ -166,6 +167,7 @@ export default function Navbar() {
             <div className="mt-3 flex items-center justify-center gap-3 border-t border-navy-100 pt-4">
               {redes.map((r) => {
                 const Ic = SOCIAL_ICONS[r.icone]
+                if (!Ic) return null
                 return (
                   <a
                     key={r.nome}

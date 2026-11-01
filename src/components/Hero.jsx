@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { HeartHandshake, ChevronDown, Youtube, Facebook, Instagram } from 'lucide-react'
+import { HeartHandshake, ChevronDown, Youtube, Facebook, Instagram, Linkedin } from 'lucide-react'
 import { hero, assinaturaSocialPlay, site, redesHeader } from '../data/content'
 import { useStore } from '../store/StoreContext'
 import HeroFeed from './HeroFeed'
 
-const SOCIAL_ICONS = { Youtube, Facebook, Instagram }
+const SOCIAL_ICONS = { Youtube, Facebook, Instagram, Linkedin }
 
 // Camadas de fundo (sem pessoas) que vão alternando no topo do site.
 const frames = [
@@ -79,6 +79,7 @@ export default function Hero() {
           <div className="mb-4 flex justify-end gap-2.5 lg:hidden">
             {redes.map((r) => {
               const Ic = SOCIAL_ICONS[r.icone]
+              if (!Ic) return null // rede sem ícone aqui: não derruba a página
               return (
                 <a
                   key={r.nome}
