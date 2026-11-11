@@ -1,4 +1,5 @@
 import QRCode from 'qrcode'
+import { doacao } from '../data/content'
 
 // ============================================================================
 //  PIX — gera o código "copia e cola" (BR Code / EMV) e o QR Code, tudo no
@@ -65,3 +66,11 @@ export async function pixQrDataUrl(payload) {
     return ''
   }
 }
+
+// Pix da loja: a chave das Configurações ou, se estiver vazia, o CNPJ da APHAM
+// (a mesma chave Pix das doações, conta da Caixa).
+export const pixDaLoja = (s) => ({
+  chave: (s?.pixChave || '').trim() || doacao.cnpj.replace(/\D/g, ''),
+  nome: s?.pixNome || 'APHAM',
+  cidade: s?.pixCidade || 'BREVES',
+})

@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Plus, Pencil, Trash2, X, Upload, ChevronUp, ChevronDown, Square, SquareStack, ExternalLink } from 'lucide-react'
+import { Plus, Pencil, Trash2, X, Upload, ChevronUp, ChevronDown, Square, SquareStack, ExternalLink, Archive, ArchiveRestore } from 'lucide-react'
 import { useStore, novoId } from '../../store/StoreContext'
 import { novidadesSeed } from '../../store/seed'
 import { fileToOptimizedDataURL } from '../../store/images'
 import { PageTitle, Card, Field, inputCls, btnAccent, btnGhost, btnPrimary } from './ui'
 import EditorBlocos, { limparBlocos } from './EditorBlocos'
+import { qtdNews } from '../../lib/novidades'
 
 function Upload1({ value, onChange }) {
   const [carregando, setCarregando] = useState(false)
@@ -40,12 +41,18 @@ function Upload1({ value, onChange }) {
 }
 
 export default function NewsAdmin() {
-  const { novidades, stories, saveNovidade, deleteNovidade, moveNovidade, setSombraTodos, saveStory, deleteStory } = useStore()
+  const { novidades, stories, saveNovidade, deleteNovidade, moveNovidade, setSombraTodos, saveStory, deleteStory, newsAntigas, settings, updateSettings } =
+    useStore()
   const [post, setPost] = useState(null)
   const [story, setStory] = useState(null)
 
   // Lista de posts na ordem que aparece no site (campo `ordem`).
   const posts = [...novidades].sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0))
+  // Topo da lista = mais recente. Quem passa da quantidade do News (ou foi
+  // arquivado) aparece em "Mais Antigas".
+  const ordemDoTopo = () => Math.min(0, ...novidades.map((n) => n.ordem ?? 0)) - 1
+  const antigas = new Set(newsAntigas.map((n) => n.id))
+  const qtd = qtdNews(settings)
 
   // Cards de exemplo (do código) que não estão cadastrados — ex.: o card da taça
   // com o efeito de 2 fotos. Permite recriá-los com um clique.
@@ -58,8 +65,9 @@ export default function NewsAdmin() {
     const foto2 = post.img2 || ''
     saveNovidade({
       id: post.id || novoId('nov'),
-      // Mantém a ordem ao editar; novo post vai para o fim da lista.
-      ordem: post.ordem ?? novidades.length,
+      // Mantém a ordem ao editar; post novo entra no topo do APHAM News.
+      ordem: post.ordem ?? ordemDoTopo(),
+      arquivada: post.arquivada || undefined,
       // Mantém o estado da sombra do card (ligada por padrão).
       sombra: post.sombra,
       data: post.data || '',
@@ -114,7 +122,10 @@ export default function NewsAdmin() {
       <div className="mb-3 flex items-center justify-between">
         <div>
           <h2 className="font-display text-lg font-bold text-navy-900">Posts</h2>
-          <p className="text-xs text-navy-500">Use as setas ↑ ↓ para a ordem. O botão de sombra liga/desliga o sombreado de cada card.</p>
+          <p className="text-xs text-navy-500">
+            Post novo entra no topo. O APHAM News mostra os {qtd} primeiros; os de baixo vão sozinhos para “Mais Antigas”. Use as setas ↑ ↓
+            para a ordem.
+          </p>
         </div>
         <button type="button" onClick={() => setPost({ data: '', tag: '', titulo: '', resumo: '', texto: '', img: '', img2: '', blocos: [] })} className={btnAccent}>
           <Plus className="h-4 w-4" />
@@ -136,6 +147,26 @@ export default function NewsAdmin() {
           </button>
         </div>
       )}
+
+      {/* Quantos posts aparecem no APHAM News */}
+      <div className="mb-3 flex flex-wrap items-center gap-2 rounded-xl border border-navy-100 bg-navy-50/60 px-3 py-2">
+        <label htmlFor="news-qtd" className="text-sm font-semibold text-navy-700">
+          Posts no APHAM News:
+        </label>
+        <input
+          id="news-qtd"
+          type="number"
+          min={1}
+          max={30}
+          value={qtd}
+          onChange={(e) => {
+            const v = Math.floor(Number(e.target.value))
+            if (v >= 1 && v <= 30) updateSettings({ newsQuantidade: v })
+          }}
+          className="w-20 rounded-lg border border-navy-200 bg-white px-2 py-1.5 text-sm"
+        />
+        <span className="text-xs text-navy-500">Os demais ficam em “Mais Antigas”.</span>
+      </div>
 
       {/* Sombra dos cards — todos de uma vez */}
       {posts.length > 0 && (
@@ -163,7 +194,14 @@ export default function NewsAdmin() {
               {n.img && <img src={n.img} alt="" className="h-full w-full object-cover" />}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold text-cyan-600">{n.tag} · {n.data}</p>
+              <p className="text-xs font-semibold text-cyan-600">
+                {n.tag} · {n.data}
+                {antigas.has(n.id) ? (
+                  <span className="ml-2 rounded-full bg-navy-100 px-2 py-0.5 text-[11px] font-semibold text-navy-600">Em Mais Antigas</span>
+                ) : (
+                  <span className="ml-2 rounded-full bg-cyan-100 px-2 py-0.5 text-[11px] font-semibold text-cyan-800">No APHAM News</span>
+                )}
+              </p>
               <h3 className="truncate font-display text-sm font-bold text-navy-900">{n.titulo}</h3>
             </div>
             <div className="flex gap-1.5">
@@ -178,6 +216,27 @@ export default function NewsAdmin() {
               >
                 <SquareStack className="h-4 w-4" />
               </button>
+              {n.arquivada ? (
+                <button
+                  type="button"
+                  onClick={() => saveNovidade({ ...n, arquivada: undefined, ordem: ordemDoTopo() })}
+                  title="Voltar para o topo do APHAM News"
+                  aria-label="Voltar para o APHAM News"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-cyan-300 text-cyan-700 hover:bg-cyan-50"
+                >
+                  <ArchiveRestore className="h-4 w-4" />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => saveNovidade({ ...n, arquivada: true })}
+                  title="Tirar do APHAM News e mandar para Mais Antigas"
+                  aria-label="Mandar para Mais Antigas"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-700 hover:bg-navy-50"
+                >
+                  <Archive className="h-4 w-4" />
+                </button>
+              )}
               <a href={`/novidades/${encodeURIComponent(n.id)}`} target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-700 hover:bg-navy-50" aria-label="Ver a página da notícia" title="Ver a página da notícia"><ExternalLink className="h-4 w-4" /></a>
               <button type="button" onClick={() => setPost({ ...n, resumo: n.resumo || '', img2: n.imgs?.[1] || '', blocos: n.blocos || [] })} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-700 hover:bg-navy-50" aria-label="Editar"><Pencil className="h-4 w-4" /></button>
               <button type="button" onClick={() => window.confirm('Excluir este post?') && deleteNovidade(n.id)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-red-200 text-red-600 hover:bg-red-50" aria-label="Excluir"><Trash2 className="h-4 w-4" /></button>

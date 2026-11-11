@@ -153,7 +153,7 @@ export default function SettingsAdmin() {
         <Card>
           <h2 className="mb-4 font-display font-bold text-navy-900">Pagamento via PIX</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Field label="Chave PIX" hint="Deixe em branco para não oferecer PIX."><input value={form.pixChave} onChange={(e) => set('pixChave', e.target.value)} className={inputCls} /></Field>
+            <Field label="Chave PIX" hint="Em branco: usa o CNPJ da APHAM (a mesma chave Pix das doações)."><input value={form.pixChave} onChange={(e) => set('pixChave', e.target.value)} className={inputCls} /></Field>
             <Field label="Nome do recebedor" hint="Máx. 25 caracteres, sem acento"><input value={form.pixNome} onChange={(e) => set('pixNome', e.target.value)} className={inputCls} /></Field>
             <Field label="Cidade (PIX)" hint="Como no cadastro da chave"><input value={form.pixCidade || ''} onChange={(e) => set('pixCidade', e.target.value)} className={inputCls} /></Field>
           </div>

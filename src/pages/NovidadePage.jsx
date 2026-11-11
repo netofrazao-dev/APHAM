@@ -132,8 +132,9 @@ function Bloco({ b, abrirFoto }) {
 
 export default function NovidadePage() {
   const { id } = useParams()
-  const { novidades } = useStore()
+  const { novidades, newsAntigas } = useStore()
   const n = novidades.find((x) => String(x.id) === id)
+  const antiga = newsAntigas.some((x) => String(x.id) === id) // já saiu do APHAM News
   const [foto, setFoto] = useState(null)
   const [copiado, setCopiado] = useState(false)
 
@@ -192,9 +193,9 @@ export default function NovidadePage() {
         {n.img && <img src={n.img} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-105 object-cover opacity-45 blur-[2px]" />}
         <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/75 to-navy-950/40" />
         <div className="section-pad container-x relative max-w-4xl text-center">
-          <Link to="/#novidades" className="inline-flex items-center gap-1.5 text-sm font-semibold text-white/70 hover:text-white">
+          <Link to={antiga ? '/posts-anteriores' : '/#novidades'} className="inline-flex items-center gap-1.5 text-sm font-semibold text-white/70 hover:text-white">
             <ArrowLeft className="h-4 w-4" />
-            APHAM News
+            {antiga ? 'Mais Antigas' : 'APHAM News'}
           </Link>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
             {n.tag && <span className="rounded-full bg-cyan-500 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-white">{n.tag}</span>}

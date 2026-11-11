@@ -43,7 +43,7 @@ function CardMedia({ item }) {
 }
 
 export default function News() {
-  const { novidades, settings } = useStore()
+  const { newsAtuais, settings } = useStore()
   const aoVivo = settings?.aoVivoAtivo && settings?.aoVivoUrl
   const [igPosts, setIgPosts] = useState([])
 
@@ -73,7 +73,7 @@ export default function News() {
         texto: (p.caption || '').slice(0, 160),
         link: p.permalink,
       }))
-    : [...novidades].sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0)).map((n) => ({ ...n, link: null }))
+    : newsAtuais.map((n) => ({ ...n, link: null })) // as mais antigas vão para "Mais Antigas"
 
   return (
     <section id="novidades" className="section-pad py-24 lg:py-28">

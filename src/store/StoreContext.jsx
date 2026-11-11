@@ -13,6 +13,7 @@ import * as sb from './sync'
 import { limparNovidade, limparSettings } from './limpeza'
 import { comissaoPct, slugLoja } from './lojas'
 import { resumoPublico, hojeISO } from '../lib/doacoes'
+import { dividirNovidades, qtdNews } from '../lib/novidades'
 
 // ============================================================================
 //  CONTEXTO DA LOJA
@@ -467,6 +468,12 @@ export function StoreProvider({ children }) {
     },
     [setDoacoes, atualizarPainelDoacoes]
   )
+  // APHAM News (as mais recentes) e Mais Antigas (o resto + as arquivadas).
+  const { noNews: newsAtuais, antigas: newsAntigas } = useMemo(
+    () => dividirNovidades(novidades, qtdNews(settings)),
+    [novidades, settings]
+  )
+
   const painelDoacoes = useMemo(
     () => (isSupabaseEnabled ? doacoesRemoto : resumoPublico(doacoes)),
     [doacoesRemoto, doacoes]
@@ -852,6 +859,8 @@ export function StoreProvider({ children }) {
     saveCategoria,
     deleteCategoria,
     saveNovidade,
+    newsAtuais,
+    newsAntigas,
     deleteNovidade,
     moveNovidade,
     setSombraTodos,

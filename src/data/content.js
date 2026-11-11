@@ -28,7 +28,10 @@ export const site = {
   // Link da futura loja — por enquanto aponta para o bloco "Loja em breve".
   lojaUrl: '#loja',
   // Loja pausada até ficar pronta: esconde o botão/bloco da loja e mostra "em breve".
-  lojaPausada: true,
+  lojaPausada: false,
+  // Pagamento automático (Mercado Pago). Desligado até terminar a configuração no
+  // Mercado Pago e no Vercel (DEPLOY.md, 2.3); enquanto isso a loja recebe por Pix.
+  pagamentoAutomatico: false,
 }
 
 // Sumário do site — cada item abre uma subpágina própria (conteúdo mais fixo).

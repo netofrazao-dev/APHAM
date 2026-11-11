@@ -113,7 +113,7 @@ function LiveSlide({ titulo }) {
 }
 
 export default function HeroFeed({ compact = false }) {
-  const { settings, novidades, lives } = useStore()
+  const { settings, newsAtuais: novidades, lives } = useStore()
   const aoVivo =
     settings?.aoVivoAtivo && settings?.aoVivoUrl
       ? { titulo: settings.aoVivoTitulo || 'APHAM ao vivo' }

@@ -1,19 +1,25 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ArrowUpRight } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
 import StoryViewer from './StoryViewer'
 import Reveal from './Reveal'
 
-// Bolinhas (stories) que abrem em tela cheia. Bloco sem seção própria — o pai
-// cuida do espaçamento. Usado na home como "Mais Antigas".
+// Bolinhas "Mais Antigas": primeiro as notícias que saíram do APHAM News (abrem a
+// página da notícia), depois os stories (abrem em tela cheia). Bloco sem seção
+// própria — o pai cuida do espaçamento.
 export default function Stories({ titulo = 'Mais Antigas', subtitulo = 'Toque para ver em tela cheia.' }) {
-  const { stories } = useStore()
+  const { stories, newsAntigas } = useStore()
+  const navigate = useNavigate()
   const [storyIdx, setStoryIdx] = useState(null)
   const nav = (dir) =>
     setStoryIdx((i) => (i === null ? i : (i + dir + stories.length) % stories.length))
 
-  if (!stories.length) return null
+  const itens = [
+    ...newsAntigas.map((n) => ({ chave: `n-${n.id}`, img: n.img || n.imgs?.[0], titulo: n.titulo, abrir: () => navigate(`/novidades/${encodeURIComponent(n.id)}`) })),
+    ...stories.map((s, i) => ({ chave: `s-${i}`, img: s.img, titulo: s.titulo, abrir: () => setStoryIdx(i) })),
+  ]
+  if (!itens.length) return null
 
   return (
     <div>
@@ -28,11 +34,11 @@ export default function Stories({ titulo = 'Mais Antigas', subtitulo = 'Toque pa
       </Reveal>
       <Reveal>
         <div className="mt-8 flex gap-5 overflow-x-auto pb-3">
-          {stories.map((s, i) => (
+          {itens.map((s) => (
             <button
-              key={i}
+              key={s.chave}
               type="button"
-              onClick={() => setStoryIdx(i)}
+              onClick={s.abrir}
               className="group flex shrink-0 flex-col items-center gap-2"
             >
               <span className="rounded-full bg-gradient-to-tr from-cyan-500 to-navy-500 p-[3px]">

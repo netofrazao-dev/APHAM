@@ -12,6 +12,7 @@ import OrderTimeline from '../components/store/OrderTimeline'
 import PixBox from '../components/store/PixBox'
 import PagamentoOnline from '../components/store/PagamentoOnline'
 import { pagamentoOnlineAtivo, criarPedidoOnline } from '../lib/mercadopago'
+import { pixDaLoja } from '../store/pix'
 
 export default function Checkout() {
   const { cart, cartTotal, settings, addOrder, clearCart, aplicarCupom, baixarEstoque, registrarPedidoLocal, atualizarPedidoLocal } =
@@ -23,9 +24,10 @@ export default function Checkout() {
     email: '',
     entrega: 'retirada',
     endereco: '',
-    pagamento: pagamentoOnlineAtivo ? 'online' : settings.pixChave ? 'pix' : 'whatsapp',
+    pagamento: pagamentoOnlineAtivo ? 'online' : 'pix',
     obs: '',
   })
+  const pix = pixDaLoja(settings)
   const [cupomInput, setCupomInput] = useState('')
   const [cupom, setCupom] = useState(null) // { codigo, desconto }
   const [pedido, setPedido] = useState(null)
@@ -78,7 +80,7 @@ export default function Checkout() {
       order.cliente.email ? `*E-mail:* ${order.cliente.email}` : '',
       `*Entrega:* ${order.entrega === 'entrega' ? 'Entrega' : 'Retirada'}`,
       order.entrega === 'entrega' && order.endereco ? `*Endereço:* ${order.endereco}` : '',
-      `*Pagamento:* ${order.pagamento === 'pix' ? 'PIX' : 'A combinar'}`,
+      `*Pagamento:* ${order.pagamento === 'pix' ? 'Pix (segue o comprovante)' : 'A combinar'}`,
       order.obs ? `*Obs:* ${order.obs}` : '',
     ]
       .filter(Boolean)
@@ -149,7 +151,8 @@ export default function Checkout() {
     const url = linkWhatsApp(order)
     setPedido({ ...order, url })
     clearCart()
-    window.open(url, '_blank', 'noopener')
+    // No Pix, o cliente paga primeiro e depois manda o comprovante pelo botão.
+    if (order.pagamento !== 'pix') window.open(url, '_blank', 'noopener')
   }
 
   // ----- Confirmação -----
@@ -175,7 +178,12 @@ export default function Checkout() {
                   {pedido.cliente.email && ' O comprovante do Mercado Pago foi enviado para o seu e-mail.'}
                 </p>
               )}
-              {pedido.url && (
+              {pedido.pagamento === 'pix' && (
+                <p className="mt-2 max-w-md text-sm text-navy-500">
+                  Pague com o Pix abaixo e depois envie o comprovante pelo WhatsApp. A APHAM confirma o pedido e combina a retirada ou a entrega.
+                </p>
+              )}
+              {pedido.url && pedido.pagamento !== 'pix' && (
                 <a href={pedido.url} target="_blank" rel="noopener noreferrer" className="btn-accent mt-6">
                   <MessageCircle className="h-4 w-4" />
                   Enviar pedido no WhatsApp
@@ -183,9 +191,13 @@ export default function Checkout() {
               )}
             </div>
 
-            {pedido.pagamento === 'pix' && settings.pixChave && (
+            {pedido.pagamento === 'pix' && (
               <div className="mt-8">
-                <PixBox chave={settings.pixChave} nome={settings.pixNome} cidade={settings.pixCidade} valor={pedido.total} txid={pedido.numero} />
+                <PixBox chave={pix.chave} nome={pix.nome} cidade={pix.cidade} valor={pedido.total} txid={pedido.numero} />
+                <a href={pedido.url} target="_blank" rel="noopener noreferrer" className="btn mt-4 w-full bg-[#25d366] text-white hover:bg-[#1ebe5b]">
+                  <MessageCircle className="h-4 w-4" />
+                  Já paguei: enviar pedido e comprovante no WhatsApp
+                </a>
               </div>
             )}
 
@@ -325,17 +337,16 @@ export default function Checkout() {
                     </span>
                   </label>
                 )}
-                {settings.pixChave && (
-                  <label className={`cursor-pointer rounded-xl border px-4 py-3 text-sm font-medium ${form.pagamento === 'pix' ? 'border-cyan-500 bg-cyan-50 text-cyan-700' : 'border-navy-200 text-navy-700'}`}>
-                    <input type="radio" name="pagamento" value="pix" checked={form.pagamento === 'pix'} onChange={onChange} className="sr-only" />
-                    PIX (na hora, pelo site)
-                  </label>
-                )}
-                <label className={`cursor-pointer rounded-xl border px-4 py-3 text-sm font-medium ${form.pagamento === 'whatsapp' ? 'border-cyan-500 bg-cyan-50 text-cyan-700' : 'border-navy-200 text-navy-700'}`}>
-                  <input type="radio" name="pagamento" value="whatsapp" checked={form.pagamento === 'whatsapp'} onChange={onChange} className="sr-only" />
-                  Combinar no WhatsApp
+                <label className={`cursor-pointer rounded-xl border px-4 py-3 text-sm font-medium ${form.pagamento === 'pix' ? 'border-cyan-500 bg-cyan-50 text-cyan-700' : 'border-navy-200 text-navy-700'}`}>
+                  <input type="radio" name="pagamento" value="pix" checked={form.pagamento === 'pix'} onChange={onChange} className="sr-only" />
+                  Pix
                 </label>
               </div>
+              {form.pagamento === 'pix' && (
+                <p className="mt-3 text-xs text-navy-500">
+                  Ao finalizar, aparecem o QR Code e o Pix copia e cola. Depois de pagar, envie o comprovante pelo WhatsApp e a APHAM confirma o pedido.
+                </p>
+              )}
               <div className="mt-4">
                 <label className="mb-1.5 block text-sm font-semibold text-navy-800">Observações (opcional)</label>
                 <textarea name="obs" rows={3} value={form.obs} onChange={onChange} className={`${inputCls} resize-none`} placeholder="Alguma observação sobre o pedido?" />
@@ -397,7 +408,7 @@ export default function Checkout() {
               <p className="mt-3 text-center text-xs text-navy-500">
                 {form.pagamento === 'online'
                   ? 'Pague com Pix ou cartão pelo Mercado Pago. A confirmação é automática.'
-                  : 'O pedido é registrado e enviado pelo WhatsApp para confirmar.'}
+                  : 'O pedido é registrado e, na próxima tela, aparece o Pix para pagar.'}
               </p>
             </div>
           </div>

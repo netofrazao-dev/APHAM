@@ -1,8 +1,11 @@
+import { site } from '../data/content'
+
 // Pagamento automático pelo Mercado Pago (Checkout Transparente / Payment Brick).
 // Só a Public Key fica no navegador; o Access Token fica no servidor (Vercel).
 // Sem VITE_MP_PUBLIC_KEY o checkout continua com as opções de antes (PIX/WhatsApp).
 export const MP_PUBLIC_KEY = import.meta.env.VITE_MP_PUBLIC_KEY || ''
-export const pagamentoOnlineAtivo = Boolean(MP_PUBLIC_KEY)
+// Precisa da chave E de ligar em content.js (site.pagamentoAutomatico).
+export const pagamentoOnlineAtivo = Boolean(MP_PUBLIC_KEY) && site.pagamentoAutomatico === true
 
 let carregando = null
 export function carregarMercadoPago() {
