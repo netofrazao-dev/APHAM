@@ -18,6 +18,9 @@ export default function StoreFooter() {
           <Link to="/pedido" className="transition-colors hover:text-cyan-600">
             Acompanhar pedido
           </Link>
+          <Link to="/loja/trocas" className="transition-colors hover:text-cyan-600">
+            Trocas e entregas
+          </Link>
           <Link to="/admin" className="text-navy-400 transition-colors hover:text-cyan-600">
             Admin
           </Link>

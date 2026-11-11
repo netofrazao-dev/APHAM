@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ChevronRight, Minus, Plus, ShoppingCart, Check, Heart, Store as StoreIcon } from 'lucide-react'
+import { ChevronRight, Minus, Plus, ShoppingCart, Check, Heart, Store as StoreIcon, BadgeCheck, Truck, RotateCcw } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
 import { useToast } from '../components/Toast'
 import { formatBRL } from '../store/format'
@@ -138,6 +138,13 @@ export default function Product() {
               </Link>
             )}
 
+            {!loja && (
+              <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-cyan-50 px-3 py-1.5 text-sm font-medium text-cyan-800">
+                <BadgeCheck className="h-4 w-4" />
+                Produto oficial · vendido e entregue pela APHAM
+              </p>
+            )}
+
             {produto.descricao && <p className="mt-5 leading-relaxed text-ink/75">{produto.descricao}</p>}
 
             {temTam && (
@@ -188,6 +195,22 @@ export default function Product() {
               </button>
             </div>
             {semEstoque && <p className="mt-3 text-sm font-medium text-cyan-700">Produto esgotado no momento.</p>}
+
+            <ul className="mt-6 space-y-2 rounded-2xl border border-navy-100 bg-white p-4 text-sm text-navy-700">
+              <li className="flex items-start gap-2.5">
+                <Truck className="mt-0.5 h-4 w-4 shrink-0 text-cyan-600" />
+                Pronta entrega: retirada com a APHAM ou entrega em Breves (PA).
+              </li>
+              <li className="flex items-start gap-2.5">
+                <RotateCcw className="mt-0.5 h-4 w-4 shrink-0 text-cyan-600" />
+                <span>
+                  Troca ou desistência em até 7 dias após receber.{' '}
+                  <Link to="/loja/trocas" className="font-semibold text-cyan-700 hover:underline">
+                    Ver as regras
+                  </Link>
+                </span>
+              </li>
+            </ul>
             {!semEstoque && faltaEscolher && (
               <p className="mt-3 text-sm text-navy-500">Selecione {temTam && !tamanho ? 'o tamanho' : ''}{temTam && !tamanho && temCor && !cor ? ' e ' : ''}{temCor && !cor ? 'a cor' : ''}.</p>
             )}

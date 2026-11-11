@@ -50,6 +50,15 @@ export default function VenderPage() {
     { Icone: Package, titulo: 'Cadastre seus produtos', texto: 'Você coloca fotos, preços e estoque pelo seu painel.' },
     { Icone: Wallet, titulo: 'Venda e receba', texto: 'O cliente paga a APHAM e a APHAM repassa o seu valor.' },
   ]
+  // Regras da parceria: a loja da APHAM só vende o que já está em estoque.
+  const regras = [
+    'Só produtos à pronta entrega, que você já tem em mãos. Não vale revender sob encomenda de outros sites.',
+    'Você mantém o preço e o estoque sempre atualizados no seu painel. Acabou? Zere o estoque e o produto aparece como esgotado.',
+    'O valor vendido é o que está no seu painel na hora da compra, mesmo que o seu custo tenha mudado depois.',
+    'Pedido pago: você separa e entrega o produto para a APHAM (ou ao cliente, como combinado) em até 3 dias.',
+    'Trocas e devoluções seguem as regras da loja: até 7 dias por desistência ou tamanho e até 90 dias por defeito.',
+    'Fotos e descrições reais do produto. A APHAM pode pausar produtos ou lojas fora das regras.',
+  ]
 
   const enviar = async (e) => {
     e.preventDefault()
@@ -117,6 +126,38 @@ export default function VenderPage() {
                 ))}
               </div>
             </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Regras */}
+      <section className="section-pad border-t border-navy-100 py-16 lg:py-20">
+        <div className="container-x max-w-3xl">
+          <Reveal className="text-center">
+            <span className="eyebrow flex justify-center">
+              <span className="h-px w-6 bg-cyan-400" />
+              Regras da parceria
+              <span className="h-px w-6 bg-cyan-400" />
+            </span>
+            <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-navy-900">O combinado</h2>
+            <p className="mt-3 text-ink/70">Para quem compra ter sempre a mesma experiência, em qualquer loja.</p>
+          </Reveal>
+          <Reveal delay={0.05}>
+            <ul className="mt-8 space-y-3">
+              {regras.map((r) => (
+                <li key={r} className="flex gap-3 rounded-2xl border border-navy-100 bg-white p-4 text-sm leading-relaxed text-ink/80">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-cyan-600" />
+                  {r}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 text-center text-sm text-navy-500">
+              Veja também as{' '}
+              <Link to="/loja/trocas" className="font-semibold text-cyan-700 hover:underline">
+                regras de trocas e entregas da loja
+              </Link>
+              .
+            </p>
           </Reveal>
         </div>
       </section>
@@ -217,7 +258,8 @@ export default function VenderPage() {
                 <input type="checkbox" checked={f.aceite} onChange={set('aceite')} className="mt-0.5 h-4 w-4 rounded border-navy-300 text-cyan-500" />
                 <span>
                   Concordo que os produtos aparecem na loja com o meu preço + {comissao}% para a APHAM, que o cliente paga a APHAM e que a APHAM me repassa o
-                  meu valor pela chave PIX informada.
+                  meu valor pela chave PIX informada. Concordo também com as regras da parceria acima: só produtos à pronta entrega, com preço e estoque
+                  sempre atualizados por mim.
                 </span>
               </label>
 

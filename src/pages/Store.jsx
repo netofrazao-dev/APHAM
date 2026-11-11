@@ -1,12 +1,33 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Search, SlidersHorizontal, ShoppingBag, Store as StoreIcon, ArrowUpRight } from 'lucide-react'
+import { Search, SlidersHorizontal, ShoppingBag, Store as StoreIcon, ArrowUpRight, BadgeCheck, Truck } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
 import { precoVitrine, urlLoja } from '../store/lojas'
 import { lojaConceito, assinaturaSocialPlay, site } from '../data/content'
 import StoreHeader from '../components/store/StoreHeader'
 import StoreFooter from '../components/store/StoreFooter'
 import ProductCard from '../components/store/ProductCard'
+
+function Grupo({ icone: Icone, titulo, texto, produtos }) {
+  return (
+    <div>
+      <div className="mb-5 flex items-start gap-3">
+        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-100 text-cyan-700">
+          <Icone className="h-5 w-5" />
+        </span>
+        <div>
+          <h2 className="font-display text-xl font-extrabold text-navy-900">{titulo}</h2>
+          <p className="text-sm text-navy-500">{texto}</p>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
+        {produtos.map((p) => (
+          <ProductCard key={p.id} produto={p} />
+        ))}
+      </div>
+    </div>
+  )
+}
 
 export default function Store() {
   const { produtosVitrine: produtos, categorias, settings, recentes, comissao, lojasAprovadas, isAdmin, minhaLoja } = useStore()
@@ -29,8 +50,15 @@ export default function Store() {
     else if (ordem === 'maior') l.sort((a, b) => precoVitrine(b, comissao) - precoVitrine(a, comissao))
     else if (ordem === 'nome') l.sort((a, b) => a.nome.localeCompare(b.nome))
     else l.sort((a, b) => (b.destaque === true) - (a.destaque === true))
+    // Esgotados sempre no fim (a ordem acima se mantém entre os demais).
+    l.sort((a, b) => (Number(a.estoque) <= 0) - (Number(b.estoque) <= 0))
     return l
   }, [produtos, cat, busca, ordem, lojaSel, comissao])
+
+  // Sem filtro nem busca, a vitrine separa os produtos oficiais da APHAM dos das lojas parceiras.
+  const separar = cat === 'todas' && lojaSel === 'todas' && !busca.trim()
+  const oficiais = lista.filter((p) => !p.lojaId)
+  const deParceiros = lista.filter((p) => p.lojaId)
 
   const lojaFechada = settings.lojaAtiva === false
 
@@ -183,6 +211,27 @@ export default function Store() {
             <div className="rounded-2xl border border-dashed border-navy-200 py-20 text-center text-navy-500">
               Nenhum produto encontrado.
             </div>
+          ) : separar ? (
+            <>
+              {oficiais.length > 0 && (
+                <Grupo
+                  icone={BadgeCheck}
+                  titulo="Produtos oficiais da APHAM"
+                  texto="Vendidos e entregues pela APHAM. Cada compra ajuda a manter os projetos."
+                  produtos={oficiais}
+                />
+              )}
+              {deParceiros.length > 0 && (
+                <div className={oficiais.length ? 'mt-14' : ''}>
+                  <Grupo
+                    icone={StoreIcon}
+                    titulo="Das lojas parceiras"
+                    texto="Lojas de Breves que vendem com a APHAM. Pagamento e atendimento pela APHAM."
+                    produtos={deParceiros}
+                  />
+                </div>
+              )}
+            </>
           ) : (
             <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
               {lista.map((p) => (
@@ -190,6 +239,13 @@ export default function Store() {
               ))}
             </div>
           )}
+          <p className="mt-10 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-sm text-navy-500">
+            <Truck className="h-4 w-4 text-cyan-600" />
+            Produtos à pronta entrega · retirada ou entrega em Breves · troca em até 7 dias.
+            <Link to="/loja/trocas" className="font-semibold text-cyan-700 hover:underline">
+              Ver as regras
+            </Link>
+          </p>
         </div>
       </section>
 

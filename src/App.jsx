@@ -35,6 +35,7 @@ const AdminApp = lazy(() => import('./pages/admin/AdminApp'))
 const VenderPage = lazy(() => import('./pages/VenderPage'))
 const LojistaApp = lazy(() => import('./pages/lojista/LojistaApp'))
 const LojaParceiraPage = lazy(() => import('./pages/LojaParceiraPage'))
+const TrocasPage = lazy(() => import('./pages/TrocasPage'))
 
 function Loader() {
   return (
@@ -73,6 +74,7 @@ export default function App() {
           <Route path="/quem-somos" element={<QuemSomosPage />} />
           <Route path="/loja" element={<Store />} />
           <Route path="/loja/produto/:id" element={<Product />} />
+          <Route path="/loja/trocas" element={<TrocasPage />} />
           <Route path="/carrinho" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/pedido" element={<OrderTracking />} />

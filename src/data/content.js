@@ -719,6 +719,57 @@ export const lojaConceito = {
   assinatura: '/midia/marca/assinatura-socialplay.png',
 }
 
+// Política da loja (página /loja/trocas). Modelo: só produtos à pronta entrega —
+// itens próprios da APHAM e das lojas parceiras, que já estão em estoque.
+// Prazos de arrependimento e defeito seguem o Código de Defesa do Consumidor.
+export const politicaLoja = {
+  titulo: 'Trocas, devoluções e entregas',
+  resumo:
+    'Tudo o que aparece na loja está à pronta entrega: são produtos da APHAM e das lojas parceiras, já em estoque. O pagamento e o atendimento são sempre pela APHAM.',
+  secoes: [
+    {
+      icone: 'Truck',
+      titulo: 'Entrega e retirada',
+      itens: [
+        'Retirada com a APHAM, em Breves (PA), ou entrega em casa em Breves, com a taxa mostrada no checkout.',
+        'Assim que o pagamento é confirmado, o pedido é separado e a APHAM combina a retirada ou a entrega pelo WhatsApp.',
+        'Para outras cidades do Marajó, o envio é combinado caso a caso, antes da compra.',
+      ],
+    },
+    {
+      icone: 'RotateCcw',
+      titulo: 'Desistência (arrependimento)',
+      itens: [
+        'Comprou pela internet e mudou de ideia? Você tem até 7 dias depois de receber o produto para desistir da compra.',
+        'O produto deve estar sem uso, com etiqueta e na embalagem. O valor é devolvido integralmente, pelo mesmo meio de pagamento.',
+      ],
+    },
+    {
+      icone: 'Shirt',
+      titulo: 'Troca de tamanho ou cor',
+      itens: [
+        'Até 7 dias depois de receber, com a peça sem uso e com etiqueta, trocamos por outro tamanho ou cor do mesmo produto, se houver em estoque.',
+      ],
+    },
+    {
+      icone: 'ShieldCheck',
+      titulo: 'Produto com defeito',
+      itens: [
+        'Até 90 dias depois de receber (produtos duráveis, como roupas, bolas e acessórios), a APHAM troca o produto, conserta ou devolve o valor.',
+      ],
+    },
+    {
+      icone: 'Store',
+      titulo: 'Produtos de lojas parceiras',
+      itens: [
+        'As mesmas regras valem para os produtos das lojas parceiras. Você fala só com a APHAM, que resolve a troca ou a devolução junto com a loja.',
+      ],
+    },
+  ],
+  comoPedir:
+    'Para trocar, devolver ou tirar dúvidas, chame a APHAM no WhatsApp com o número do pedido (ex.: APHAM-123456).',
+}
+
 // Assinatura da Social Play (dourada, fundo transparente) — usada como marca d'água.
 export const assinaturaSocialPlay = '/midia/marca/assinatura-socialplay.png'
 

@@ -155,9 +155,16 @@ function MinhaLoja() {
 }
 
 function Resumo({ irPara }) {
-  const { minhaLoja, pedidosDaMinhaLoja, repasses, comissao } = useStore()
+  const { minhaLoja, pedidosDaMinhaLoja, repasses, comissao, produtos } = useStore()
   const s = useMemo(() => saldoDaLoja(pedidosDaMinhaLoja, repasses, minhaLoja.id), [pedidosDaMinhaLoja, repasses, minhaLoja.id])
   const meus = repasses.filter((r) => r.lojaId === minhaLoja.id)
+  // Lembretes do combinado: separar o que foi pago e manter o estoque em dia.
+  const meusProdutos = produtos.filter((p) => p.lojaId === minhaLoja.id && p.ativo !== false)
+  const lembretes = [
+    [s.pedidos.filter((x) => x.pedido.status === 'confirmado').length, 'pedido(s) pago(s) para separar e entregar', 'pedidos'],
+    [meusProdutos.filter((p) => Number(p.estoque) <= 0).length, 'produto(s) esgotado(s): reponha ou deixe inativo', 'produtos'],
+    [meusProdutos.filter((p) => Number(p.estoque) > 0 && Number(p.estoque) <= 3).length, 'produto(s) com estoque baixo (até 3)', 'produtos'],
+  ].filter(([n]) => n > 0)
   return (
     <div>
       <PageTitle title={`Olá, ${minhaLoja.responsavel || minhaLoja.nome}!`} subtitle="O resumo da sua loja na loja da APHAM">
@@ -179,6 +186,20 @@ function Resumo({ irPara }) {
           </Card>
         ))}
       </div>
+      {lembretes.length > 0 && (
+        <Card className="mt-5 border-amber-200 bg-amber-50">
+          <p className="text-sm font-bold text-amber-900">Precisa de atenção</p>
+          <ul className="mt-2 space-y-1.5">
+            {lembretes.map(([n, texto, aba]) => (
+              <li key={texto}>
+                <button type="button" onClick={() => irPara(aba)} className="text-left text-sm text-amber-900 hover:underline">
+                  <strong>{n}</strong> {texto}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
       <Card className="mt-5 text-sm leading-relaxed text-navy-700">
         <p>
           Os clientes pagam a APHAM. Quando o pagamento de um pedido é confirmado, o seu valor entra em <strong>A receber</strong>, e a APHAM faz o
