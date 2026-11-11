@@ -38,12 +38,12 @@ export default function Navbar() {
         solid ? 'bg-paper/95 backdrop-blur-md shadow-[0_1px_0_rgba(16,29,57,0.08)]' : 'bg-transparent'
       }`}
     >
-      <nav className="container-x section-pad flex h-20 items-center justify-between gap-2">
+      <nav className="container-x section-pad flex h-20 items-center justify-between gap-2 xl:px-8 2xl:px-12">
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <Link to="/" aria-label="Ir para o início" className="flex items-center gap-2 sm:gap-3">
             <Logo className="h-10 sm:h-11" light={!solid} />
             <span
-              className={`shrink-0 whitespace-nowrap font-script text-base leading-none sm:text-lg lg:text-lg xl:text-xl ${
+              className={`shrink-0 whitespace-nowrap font-script text-base leading-none sm:text-lg lg:text-lg 2xl:text-xl ${
                 solid ? 'text-navy-700' : 'text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)]'
               }`}
             >
@@ -53,7 +53,7 @@ export default function Navbar() {
         </div>
 
         {/* Redes sociais no header — entre a assinatura e o menu */}
-        <div className="hidden items-center gap-1.5 xl:flex">
+        <div className="hidden items-center gap-1 xl:flex 2xl:gap-1.5">
           {redes.map((r) => {
             const Ic = SOCIAL_ICONS[r.icone]
             if (!Ic) return null
@@ -64,7 +64,7 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={r.nome}
-                className={`inline-flex h-8 w-8 items-center justify-center rounded-full border transition-colors ${
+                className={`inline-flex h-7 w-7 items-center justify-center rounded-full border transition-colors 2xl:h-8 2xl:w-8 ${
                   solid
                     ? 'border-navy-200 text-navy-700 hover:bg-navy-100'
                     : 'border-white/30 text-white hover:bg-white/15'
@@ -85,7 +85,7 @@ export default function Navbar() {
                 key={item.to}
                 to={item.to}
                 aria-current={isActive ? 'page' : undefined}
-                className={`whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-medium transition-colors ${
+                className={`whitespace-nowrap rounded-full px-2 py-2 text-sm font-medium transition-colors 2xl:px-2.5 ${
                   solid
                     ? isActive
                       ? 'bg-navy-100 text-navy-900'
@@ -103,7 +103,7 @@ export default function Navbar() {
 
         {!site.lojaPausada && (
           <div className="hidden shrink-0 items-center gap-3 xl:flex">
-            <Link to="/loja" className="btn-primary whitespace-nowrap ring-1 ring-white/25">
+            <Link to="/loja" className="btn-primary whitespace-nowrap px-4 ring-1 ring-white/25 2xl:px-6">
               <ShoppingBag className="h-4 w-4" />
               Loja SocialPlay
             </Link>

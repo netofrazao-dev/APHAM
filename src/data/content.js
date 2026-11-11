@@ -43,8 +43,9 @@ export const nav = [
   { label: 'Competições e Eventos', to: '/competicoes' },
   { label: 'Marajó Solidário', to: '/marajo-solidario' },
   { label: 'Galeria', to: '/galeria' },
-  { label: 'Fale Conosco', to: '/contato' },
 ]
+// "Fale Conosco" saiu da barra do computador (para caber o botão da loja); continua
+// no menu do celular (sumario) e no rodapé.
 
 // Sumário do MENU MOBILE (hambúrguer) — lista mais completa que a barra do desktop.
 // Itens com '#' levam a uma âncora na home; os demais abrem subpáginas.

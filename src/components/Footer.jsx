@@ -53,7 +53,7 @@ export default function Footer() {
               Navegação
             </h4>
             <ul className="mt-4 space-y-2.5">
-              {nav.map((item) => (
+              {[...nav, { label: 'Fale Conosco', to: '/contato' }].map((item) => (
                 <li key={item.to}>
                   <Link
                     to={item.to}
