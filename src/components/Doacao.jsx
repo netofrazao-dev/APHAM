@@ -1,21 +1,59 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Check, Copy, Landmark, MessageCircle, ArrowUpRight } from 'lucide-react'
+import { Check, Copy, Landmark, MessageCircle, ArrowUpRight, Zap } from 'lucide-react'
 import { doacao, site } from '../data/content'
 import Reveal from './Reveal'
 
 // Dados da conta para doações (página Apoie), com botão de copiar cada dado.
-function Dado({ rotulo, valor, copiar }) {
+function useCopiar(texto) {
   const [ok, setOk] = useState(false)
-  const copiarValor = async () => {
+  const copiar = async () => {
     try {
-      await navigator.clipboard.writeText(copiar ?? valor)
+      await navigator.clipboard.writeText(texto)
       setOk(true)
       setTimeout(() => setOk(false), 1600)
     } catch {
       /* sem permissão: ignora */
     }
   }
+  return [ok, copiar]
+}
+
+// Chave Pix em destaque: o CNPJ da APHAM é a chave Pix da conta da Caixa.
+function ChavePix() {
+  const [ok, copiar] = useCopiar(doacao.cnpj.replace(/\D/g, ''))
+  return (
+    <div className="rounded-2xl bg-[#32bcad]/15 p-5 ring-1 ring-[#32bcad]/50 sm:col-span-2">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#32bcad] text-white">
+            <Zap className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-[#6ee7d8]">Chave Pix · CNPJ</p>
+            <p className="mt-0.5 select-all whitespace-nowrap font-display text-xl font-extrabold text-white sm:text-2xl">{doacao.cnpj}</p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={copiar}
+          aria-label="Copiar chave Pix"
+          className="inline-flex h-11 shrink-0 items-center gap-2 rounded-xl bg-[#32bcad] px-4 text-sm font-bold text-white transition-colors hover:bg-[#2aa395]"
+        >
+          {ok ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          {ok ? 'Chave copiada' : 'Copiar chave Pix'}
+        </button>
+      </div>
+      <p className="mt-3 text-sm text-white/75">
+        O CNPJ da APHAM é a chave Pix da conta: no app do banco, escolha <strong className="text-white">Pix → CNPJ</strong> e cole a chave. A
+        doação cai direto nesta conta da Caixa.
+      </p>
+    </div>
+  )
+}
+
+function Dado({ rotulo, valor, copiar }) {
+  const [ok, copiarValor] = useCopiar(copiar ?? valor)
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10">
       <div>
@@ -47,7 +85,8 @@ export default function Doacao() {
           </span>
           <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-navy-900 sm:text-4xl">Faça sua doação</h2>
           <p className="mt-4 text-ink/70">
-            Qualquer valor ajuda a manter os treinos, os projetos e as ações sociais da APHAM. Faça uma transferência para a conta oficial da associação:
+            Qualquer valor ajuda a manter os treinos, os projetos e as ações sociais da APHAM. Faça um <strong className="text-navy-900">Pix</strong> ou uma
+            transferência para a conta oficial da associação:
           </p>
         </Reveal>
 
@@ -63,10 +102,10 @@ export default function Doacao() {
               </div>
             </div>
             <div className="grid grid-cols-1 gap-3 p-6 sm:grid-cols-2 sm:p-8">
+              <ChavePix />
               <Dado rotulo="Agência" valor={doacao.agencia} />
               <Dado rotulo="Conta corrente" valor={doacao.conta} />
-              <Dado rotulo="CNPJ" valor={doacao.cnpj} copiar={doacao.cnpj.replace(/\D/g, '')} />
-              <div className="rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10">
+              <div className="rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10 sm:col-span-2">
                 <p className="text-xs font-semibold uppercase tracking-wide text-cyan-300">Titular</p>
                 <p className="mt-1 font-display text-base font-extrabold leading-snug text-white">{doacao.titular}</p>
               </div>

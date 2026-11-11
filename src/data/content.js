@@ -682,7 +682,7 @@ export const apoio = {
     'Alguns dos mais desafiadores problemas sociais só são possíveis de resolver com o apoio que recebemos. Entre em contato e junte-se à nossa causa — cause um impacto duradouro.',
   formas: [
     { icone: 'HandHeart', titulo: 'Seja um voluntário', texto: 'Dê seu apoio e contribua para um futuro melhor. Cada gesto conta.' },
-    { icone: 'HandCoins', titulo: 'Faça uma doação', texto: 'Uma das formas mais simples de contribuir com a nossa causa. Os dados da conta estão logo abaixo.', href: '#doacao' },
+    { icone: 'HandCoins', titulo: 'Faça uma doação', texto: 'Uma das formas mais simples de contribuir com a nossa causa: Pix pelo CNPJ da APHAM ou transferência. Os dados estão logo abaixo.', href: '#doacao' },
     { icone: 'Handshake', titulo: 'Vire um parceiro', texto: 'Empresas, escolas e órgãos públicos podem somar conosco.' },
   ],
 }
@@ -695,7 +695,7 @@ export const doacao = {
   conta: '569056663-9',
   tipo: 'Conta corrente — Pessoa Jurídica',
   titular: 'APHAM — Associação de Praticantes de Handebol do Marajó',
-  cnpj: '11.089.865/0001-92',
+  cnpj: '11.089.865/0001-92', // também é a chave Pix da conta
 }
 
 export const contato = {
