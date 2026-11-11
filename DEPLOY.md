@@ -125,7 +125,7 @@ consegue mudar o valor pelo navegador. Os dados do cartão vão direto para o Me
 3. No **Vercel → Settings → Environment Variables**, cadastre:
    - `VITE_MP_PUBLIC_KEY` = Public Key (pública, pode ir no navegador)
    - `MP_ACCESS_TOKEN` = Access Token (**secreta**)
-   - `SUPABASE_SERVICE_ROLE_KEY` = Supabase → Settings → API → service_role (**secreta**)
+   - `SUPABASE_SERVICE_ROLE_KEY` = Supabase → Project Settings → API Keys → chave **secret** (`sb_secret_...`) ou a antiga **service_role** (`eyJ...`, aba Legacy) (**secreta**)
    - `SUPABASE_URL` (se ainda não tiver) = mesma URL do Supabase
 4. No Mercado Pago, **Webhooks → Configurar notificações**: URL
    `https://www.handebolmarajo.org/api/mp-webhook`, evento **Pagamentos**. Copie a

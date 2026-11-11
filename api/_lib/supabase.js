@@ -10,7 +10,9 @@ export async function sb(caminho, { method = 'GET', body, prefer } = {}) {
     method,
     headers: {
       apikey: chave(),
-      Authorization: `Bearer ${chave()}`,
+      // Chave antiga (JWT "eyJ...") vai também no Authorization; a nova
+      // ("sb_secret_...") vale só no apikey.
+      ...(chave().startsWith('sb_') ? {} : { Authorization: `Bearer ${chave()}` }),
       'Content-Type': 'application/json',
       ...(prefer ? { Prefer: prefer } : {}),
     },
