@@ -35,17 +35,20 @@ export const pagarPedido = (dados) => post('/api/pagar', dados)
 export const statusPedido = (id, numero) =>
   api(`/api/pedido-status?id=${encodeURIComponent(id)}&numero=${encodeURIComponent(numero)}`)
 
-// Motivos de recusa do cartão mais comuns, em português simples.
+// Motivos de recusa do cartão mais comuns, em português simples. Aceita o código
+// com ou sem o prefixo "cc_rejected_" (API de Orders e API antiga).
 const RECUSAS = {
-  cc_rejected_insufficient_amount: 'O cartão não tem limite suficiente.',
-  cc_rejected_bad_filled_security_code: 'O código de segurança (CVV) está incorreto.',
-  cc_rejected_bad_filled_date: 'A data de validade está incorreta.',
-  cc_rejected_bad_filled_card_number: 'O número do cartão está incorreto.',
-  cc_rejected_bad_filled_other: 'Algum dado do cartão está incorreto.',
-  cc_rejected_call_for_authorize: 'O banco pediu autorização: ligue para o seu banco e tente de novo.',
-  cc_rejected_card_disabled: 'O cartão está bloqueado. Fale com o seu banco.',
-  cc_rejected_duplicated_payment: 'Você já fez um pagamento igual. Confira antes de tentar de novo.',
-  cc_rejected_high_risk: 'O pagamento foi recusado por segurança. Tente outro cartão ou o Pix.',
-  cc_rejected_max_attempts: 'Limite de tentativas atingido. Tente outro cartão ou o Pix.',
+  insufficient_amount: 'O cartão não tem limite suficiente.',
+  bad_filled_security_code: 'O código de segurança (CVV) está incorreto.',
+  bad_filled_date: 'A data de validade está incorreta.',
+  bad_filled_card_number: 'O número do cartão está incorreto.',
+  bad_filled_other: 'Algum dado do cartão está incorreto.',
+  call_for_authorize: 'O banco pediu autorização: ligue para o seu banco e tente de novo.',
+  card_disabled: 'O cartão está bloqueado. Fale com o seu banco.',
+  duplicated_payment: 'Você já fez um pagamento igual. Confira antes de tentar de novo.',
+  high_risk: 'O pagamento foi recusado por segurança. Tente outro cartão ou o Pix.',
+  max_attempts: 'Limite de tentativas atingido. Tente outro cartão ou o Pix.',
+  rejected_by_issuer: 'O banco do cartão recusou o pagamento. Tente outro cartão ou o Pix.',
 }
-export const motivoRecusa = (detalhe) => RECUSAS[detalhe] || 'O pagamento foi recusado. Tente outro cartão ou pague com Pix.'
+export const motivoRecusa = (detalhe) =>
+  RECUSAS[String(detalhe || '').replace(/^cc_rejected_/, '')] || 'O pagamento foi recusado. Tente outro cartão ou pague com Pix.'

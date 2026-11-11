@@ -120,7 +120,7 @@ consegue mudar o valor pelo navegador. Os dados do cartão vão direto para o Me
 
 1. Crie (ou use) a conta **Mercado Pago da APHAM** (de preferência no CNPJ) e entre em
    **mercadopago.com.br/developers → Suas integrações → Criar aplicação**
-   (tipo: pagamentos online / Checkout Transparente).
+   (solução **Checkout Transparente**, tipo de API **API de Orders**).
 2. Em **Credenciais de produção**, copie a **Public Key** e o **Access Token**.
 3. No **Vercel → Settings → Environment Variables**, cadastre:
    - `VITE_MP_PUBLIC_KEY` = Public Key (pública, pode ir no navegador)
@@ -128,7 +128,7 @@ consegue mudar o valor pelo navegador. Os dados do cartão vão direto para o Me
    - `SUPABASE_SERVICE_ROLE_KEY` = Supabase → Project Settings → API Keys → chave **secret** (`sb_secret_...`) ou a antiga **service_role** (`eyJ...`, aba Legacy) (**secreta**)
    - `SUPABASE_URL` (se ainda não tiver) = mesma URL do Supabase
 4. No Mercado Pago, **Webhooks → Configurar notificações**: URL
-   `https://www.handebolmarajo.org/api/mp-webhook`, evento **Pagamentos**. Copie a
+   `https://www.handebolmarajo.org/api/mp-webhook`, evento **Order (Mercado Pago)**. Copie a
    **assinatura secreta** e cadastre no Vercel como `MP_WEBHOOK_SECRET` (**secreta**).
 5. Faça um **redeploy**. No checkout aparece a opção **"Pix ou cartão — pagamento automático"**.
 

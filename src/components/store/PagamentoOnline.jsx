@@ -34,10 +34,10 @@ export default function PagamentoOnline({ pedido, onAprovado, onPixGerado }) {
           callbacks: {
             onReady: () => !cancelado && setCarregado(true),
             onError: (e) => console.warn('Mercado Pago', e),
-            onSubmit: async ({ formData }) => {
+            onSubmit: async ({ selectedPaymentMethod, formData }) => {
               setErro('')
               try {
-                const r = await pagarPedido({ pedidoId: pedido.id, numero: pedido.numero, formData })
+                const r = await pagarPedido({ pedidoId: pedido.id, numero: pedido.numero, formData, tipo: selectedPaymentMethod })
                 if (r.pagamento === 'aprovado') return aprovadoRef.current(r)
                 if (r.pix) {
                   setPix(r.pix)

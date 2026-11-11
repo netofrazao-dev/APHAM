@@ -17,19 +17,6 @@ const comissaoPct = (s) => {
 }
 const texto = (v, max) => String(v ?? '').trim().slice(0, max)
 
-// Pagamento aprovado → pedido "confirmado" (a mesma etapa que a APHAM marcava à mão).
-export const STATUS_PAGAMENTO = {
-  approved: 'aprovado',
-  authorized: 'aprovado',
-  pending: 'aguardando',
-  in_process: 'em_analise',
-  in_mediation: 'em_analise',
-  rejected: 'recusado',
-  cancelled: 'cancelado',
-  refunded: 'estornado',
-  charged_back: 'estornado',
-}
-
 export async function montarPedido(entrada) {
   const itensIn = Array.isArray(entrada.itens) ? entrada.itens.slice(0, 50) : []
   if (!itensIn.length) return { erro: 'Carrinho vazio.' }
@@ -133,27 +120,29 @@ export async function salvarPedido(pedido, lojaIds = []) {
   })
 }
 
-// Aplica um pagamento do Mercado Pago ao pedido (usado ao pagar, no aviso do
-// Mercado Pago e na consulta de status). Idempotente: o estoque só baixa uma vez.
-export async function aplicarPagamento(row, pagamento) {
+// Aplica uma order do Mercado Pago (já resumida por normalizarOrder) ao pedido.
+// Usado ao pagar, no aviso do Mercado Pago e na consulta de status.
+// Pagamento aprovado → pedido "confirmado" (a mesma etapa que a APHAM marcava à
+// mão). Idempotente: o estoque só baixa uma vez.
+export async function aplicarPagamento(row, mp) {
   const pedido = row.data
-  if (pagamento.external_reference !== row.id) return row
-  const status = STATUS_PAGAMENTO[pagamento.status] || 'aguardando'
+  if (mp.referencia !== row.id) return row
+  const status = mp.status
   const anterior = pedido.pagamentoOnline || {}
-  // Não deixa um pagamento recusado/antigo sobrescrever um já aprovado.
-  if (anterior.status === 'aprovado' && String(anterior.id) !== String(pagamento.id)) return row
-  const valorOk = Number(pagamento.transaction_amount) >= Number(pedido.total) - 0.01
+  // Não deixa uma tentativa recusada/antiga sobrescrever uma já aprovada.
+  if (anterior.status === 'aprovado' && String(anterior.id) !== String(mp.id)) return row
+  const valorOk = mp.valor >= Number(pedido.total) - 0.01
   const aprovado = status === 'aprovado' && valorOk
 
   const novo = {
     ...pedido,
     pagamentoOnline: {
       ...anterior,
-      id: pagamento.id,
+      id: mp.id,
       status: aprovado || status !== 'aprovado' ? status : 'em_analise',
-      metodo: pagamento.payment_method_id,
-      tipo: pagamento.payment_type_id,
-      parcelas: pagamento.installments,
+      metodo: mp.metodo,
+      tipo: mp.tipo,
+      parcelas: mp.parcelas,
       atualizadoEm: new Date().toISOString(),
     },
   }
