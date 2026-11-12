@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, ArrowUpRight, CalendarDays, ChevronLeft, ChevronRight, Link2, Quote, Share2, X } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, CalendarDays, ChevronLeft, ChevronRight, Link2, Quote, Share2, ShoppingBag, X } from 'lucide-react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import BackToTop from '../components/BackToTop'
@@ -9,6 +9,8 @@ import Reveal from '../components/Reveal'
 import { useStore } from '../store/StoreContext'
 import { youtubeEmbed } from '../lib/youtube'
 import { site } from '../data/content'
+import ProductCard from '../components/store/ProductCard'
+import { produtosEmDestaque } from '../lib/novidades'
 
 // Página de uma notícia (/novidades/:id), montada pelo painel (/admin → Novidades):
 // capa, título, linha fina, texto principal e blocos extras (subtítulo, texto,
@@ -56,7 +58,31 @@ function Lightbox({ fotos, idx, setIdx }) {
   )
 }
 
+// Bloco "Produtos da loja": mostra produtos à venda agora (com foto), sempre atualizados.
+function ProdutosDaLoja({ titulo }) {
+  const { produtosVitrine } = useStore()
+  const lista = produtosEmDestaque(produtosVitrine, 4)
+  if (!lista.length) return null
+  return (
+    <div className="mt-10">
+      {titulo && <h3 className="mb-4 font-display text-xl font-extrabold text-navy-900">{titulo}</h3>}
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {lista.map((p) => (
+          <ProductCard key={p.id} produto={p} />
+        ))}
+      </div>
+      <div className="mt-5 text-center">
+        <Link to="/loja" className="inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-700 hover:text-cyan-800">
+          <ShoppingBag className="h-4 w-4" />
+          Ver todos os produtos
+        </Link>
+      </div>
+    </div>
+  )
+}
+
 function Bloco({ b, abrirFoto }) {
+  if (b.tipo === 'produtosLoja') return <ProdutosDaLoja titulo={b.titulo} />
   if (b.tipo === 'subtitulo') return <h2 className="mt-12 font-display text-2xl font-extrabold text-navy-900 sm:text-3xl">{b.texto}</h2>
   if (b.tipo === 'texto')
     return paragrafos(b.texto).map((p, i) => (

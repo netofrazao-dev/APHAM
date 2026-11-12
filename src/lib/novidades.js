@@ -17,3 +17,17 @@ export function dividirNovidades(novidades = [], qtd = NEWS_QTD_PADRAO) {
     antigas: [...ativas.slice(qtd), ...ordenadas.filter((n) => n.arquivada)],
   }
 }
+
+// Novidade "da loja" (vitrineLoja): o card alterna a capa com as fotos dos
+// produtos à venda — sempre os atuais, sem precisar editar a notícia.
+export function produtosEmDestaque(produtos = [], n = 4) {
+  return [...produtos]
+    .filter((p) => p.imagens?.[0])
+    .sort((a, b) => !!a.lojaId - !!b.lojaId || (Number(b.estoque) > 0) - (Number(a.estoque) > 0) || (b.destaque === true) - (a.destaque === true))
+    .slice(0, n)
+}
+export function comFotosDaLoja(n, produtos) {
+  if (!n?.vitrineLoja) return n
+  const fotos = produtosEmDestaque(produtos, 2).map((p) => p.imagens[0])
+  return fotos.length ? { ...n, imgs: [n.img, ...fotos].filter(Boolean) } : n
+}

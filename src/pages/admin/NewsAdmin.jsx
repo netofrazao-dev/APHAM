@@ -56,7 +56,9 @@ export default function NewsAdmin() {
 
   // Cards de exemplo (do código) que não estão cadastrados — ex.: o card da taça
   // com o efeito de 2 fotos. Permite recriá-los com um clique.
-  const faltando = novidadesSeed.filter((s) => !novidades.some((n) => n.id === s.id))
+  const faltando = novidadesSeed.filter((s) => s.id !== 'nov-loja' && !novidades.some((n) => n.id === s.id))
+  // Card pronto da Loja APHAM (feito no código), publicado com um clique no topo.
+  const cardLoja = novidadesSeed.find((s) => s.id === 'nov-loja' && !novidades.some((n) => n.id === s.id))
   const restaurarFaltando = () => faltando.forEach((s) => saveNovidade(s))
 
   const salvarPost = (e) => {
@@ -68,6 +70,7 @@ export default function NewsAdmin() {
       // Mantém a ordem ao editar; post novo entra no topo do APHAM News.
       ordem: post.ordem ?? ordemDoTopo(),
       arquivada: post.arquivada || undefined,
+      vitrineLoja: post.vitrineLoja || undefined, // card da loja: fotos dos produtos à venda
       // Mantém o estado da sombra do card (ligada por padrão).
       sombra: post.sombra,
       data: post.data || '',
@@ -132,6 +135,20 @@ export default function NewsAdmin() {
           Novo post
         </button>
       </div>
+
+      {cardLoja && (
+        <div className="mb-3 flex flex-wrap items-center gap-3 rounded-xl border border-cyan-300 bg-gradient-to-r from-cyan-50 to-white p-3">
+          <img src={cardLoja.img} alt="" className="h-14 w-24 shrink-0 rounded-lg object-cover" />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold text-navy-900">Card novo pronto: “{cardLoja.titulo}”</p>
+            <p className="text-xs text-navy-500">Mostra a loja com as fotos dos produtos cadastrados. Dá para editar depois, como os outros posts.</p>
+          </div>
+          <button type="button" onClick={() => saveNovidade({ ...cardLoja, ordem: ordemDoTopo() })} className={btnAccent}>
+            <Plus className="h-4 w-4" />
+            Publicar no topo
+          </button>
+        </div>
+      )}
 
       {/* Recriar cards de exemplo que faltam (ex.: o card da taça com 2 fotos) */}
       {faltando.length > 0 && (

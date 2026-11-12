@@ -311,6 +311,42 @@ export const novidades = [
     texto:
       'As gincanas pedagógicas unem esporte, educação e valores: atividades lúdicas que ensinam dentro e fora da quadra.\n\nBrincando e competindo de forma saudável, os participantes desenvolvem corpo e mente e reforçam o papel social do projeto na comunidade marajoara.',
     img: '/midia/marca/logo-escola-esportes.jpg',
+  },  // Card da loja: fica no fim da lista do código (para não mudar os ids das outras),
+  // mas entra no topo do APHAM News (ordem -100). `vitrineLoja` faz o card alternar a
+  // capa com as fotos dos produtos à venda, e o bloco "produtosLoja" mostra os produtos.
+  {
+    id: 'nov-loja',
+    ordem: -100,
+    vitrineLoja: true,
+    data: 'Novembro de 2026',
+    tag: 'Loja',
+    titulo: 'Loja APHAM no ar: vista a camisa do handebol do Marajó',
+    resumo:
+      'A loja oficial da APHAM está aberta: produtos oficiais e personalizáveis, lojas parceiras de Breves e envio para todo o Brasil. Cada compra ajuda a manter os projetos da associação.',
+    texto: '', // o texto da página está nos blocos (o resumo já aparece no topo)
+    img: '/midia/loja/capa-loja.jpg',
+    blocos: [
+      {
+        tipo: 'texto',
+        texto:
+          'Chegou a Loja APHAM, a loja oficial da Associação de Praticantes de Handebol do Marajó. Com a marca Social Play — Vestuário Conceito, ela reúne peças com a identidade do handebol marajoara para quem joga, torce e apoia o esporte na região.\n\nMais do que vender produtos, a loja é uma forma de apoiar: o que ela arrecada ajuda a manter os treinos, as competições e os projetos sociais que a APHAM realiza em Breves e no Marajó desde 2009.',
+      },
+      { tipo: 'produtosLoja', titulo: 'Alguns produtos da loja' },
+      { tipo: 'subtitulo', texto: 'O que você encontra' },
+      {
+        tipo: 'texto',
+        texto:
+          '• Produtos oficiais e personalizáveis da APHAM, vendidos e entregues pela própria associação.\n• Lojas parceiras de Breves, que vendem dentro da loja da APHAM, com pagamento e atendimento pela APHAM.\n• Tamanho, cor e modelo à escolha, com a foto de cada variação.',
+      },
+      { tipo: 'subtitulo', texto: 'Como comprar' },
+      {
+        tipo: 'texto',
+        texto:
+          'Escolha os produtos, informe o seu CEP e finalize o pedido. O pagamento é por Pix: o QR Code aparece na hora e, depois de pagar, você envia o comprovante pelo WhatsApp. A APHAM confirma o pedido e combina a retirada ou a entrega.\n\nMora fora de Breves? A loja envia para todo o Brasil: o frete é calculado depois da compra, pelo seu CEP, e a APHAM informa o valor pelo WhatsApp.',
+      },
+      { tipo: 'citacao', texto: 'Cada compra fortalece os projetos sociais da APHAM.', autor: 'Loja APHAM · Social Play' },
+      { tipo: 'botao', rotulo: 'Visitar a Loja APHAM', url: '/loja' },
+    ],
   },
 ]
 

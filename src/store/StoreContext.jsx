@@ -13,7 +13,7 @@ import * as sb from './sync'
 import { limparNovidade, limparSettings } from './limpeza'
 import { comissaoPct, slugLoja } from './lojas'
 import { resumoPublico, hojeISO } from '../lib/doacoes'
-import { dividirNovidades, qtdNews } from '../lib/novidades'
+import { dividirNovidades, qtdNews, comFotosDaLoja } from '../lib/novidades'
 
 // ============================================================================
 //  CONTEXTO DA LOJA
@@ -55,7 +55,7 @@ function usePersistent(key, seed) {
 // lives), limpamos o cache antigo dessas coleções no navegador para o site
 // voltar a mostrar o conteúdo novo. O banco (Supabase), quando tem dados,
 // continua com prioridade na hidratação. Roda uma vez por navegador.
-const SEED_VERSION = '2026-10-26a'
+const SEED_VERSION = '2026-11-12a'
 try {
   if (localStorage.getItem(PREFIX + 'seedVersion') !== SEED_VERSION) {
     ;['novidades', 'stories', 'lives'].forEach((k) => localStorage.removeItem(PREFIX + k))
@@ -471,12 +471,6 @@ export function StoreProvider({ children }) {
     },
     [setDoacoes, atualizarPainelDoacoes]
   )
-  // APHAM News (as mais recentes) e Mais Antigas (o resto + as arquivadas).
-  const { noNews: newsAtuais, antigas: newsAntigas } = useMemo(
-    () => dividirNovidades(novidades, qtdNews(settings)),
-    [novidades, settings]
-  )
-
   const painelDoacoes = useMemo(
     () => (isSupabaseEnabled ? doacoesRemoto : resumoPublico(doacoes)),
     [doacoesRemoto, doacoes]
@@ -624,6 +618,13 @@ export function StoreProvider({ children }) {
         .map((p) => (p.lojaId ? { ...p, lojaNome: lojasPorId[p.lojaId]?.nome || '' } : p)),
     [produtos, lojasPorId]
   )
+  // APHAM News (as mais recentes) e Mais Antigas (o resto + as arquivadas).
+  // A novidade da loja ganha as fotos dos produtos à venda.
+  const { noNews: newsAtuais, antigas: newsAntigas } = useMemo(() => {
+    const { noNews, antigas } = dividirNovidades(novidades, qtdNews(settings))
+    const fotos = (n) => comFotosDaLoja(n, produtosVitrine)
+    return { noNews: noNews.map(fotos), antigas: antigas.map(fotos) }
+  }, [novidades, settings, produtosVitrine])
   // Pedidos que o lojista logado enxerga (no navegador, filtra os pedidos locais).
   const pedidosDaMinhaLoja = useMemo(() => {
     if (!minhaLoja) return []

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronUp, ChevronDown, Trash2, Type, Heading2, Image as ImageIcon, Images, Youtube, Quote, MousePointerClick, Upload, X } from 'lucide-react'
+import { ChevronUp, ChevronDown, Trash2, Type, Heading2, Image as ImageIcon, Images, Youtube, Quote, MousePointerClick, ShoppingBag, Upload, X } from 'lucide-react'
 import { fileToOptimizedDataURL } from '../../store/images'
 import { Field, inputCls } from './ui'
 
@@ -13,6 +13,7 @@ export const TIPOS_BLOCO = [
   { tipo: 'video', nome: 'Vídeo do YouTube', Icone: Youtube, novo: { url: '', legenda: '' } },
   { tipo: 'citacao', nome: 'Citação', Icone: Quote, novo: { texto: '', autor: '' } },
   { tipo: 'botao', nome: 'Botão', Icone: MousePointerClick, novo: { rotulo: '', url: '' } },
+  { tipo: 'produtosLoja', nome: 'Produtos da loja', Icone: ShoppingBag, novo: { titulo: 'Na loja da APHAM' } },
 ]
 
 // Tira blocos vazios antes de salvar.
@@ -23,6 +24,7 @@ export function limparBlocos(blocos) {
     if (b.tipo === 'galeria') return b.imgs?.length
     if (b.tipo === 'video') return b.url?.trim()
     if (b.tipo === 'botao') return b.rotulo?.trim() && b.url?.trim()
+    if (b.tipo === 'produtosLoja') return true
     return false
   })
 }
@@ -106,6 +108,13 @@ function CamposBloco({ b, set }) {
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         <input value={b.rotulo} onChange={(e) => set({ rotulo: e.target.value })} className={inputCls} placeholder="Texto do botão" />
         <input value={b.url} onChange={(e) => set({ url: e.target.value })} className={inputCls} placeholder="Link (https://... ou /pagina)" />
+      </div>
+    )
+  if (b.tipo === 'produtosLoja')
+    return (
+      <div>
+        <input value={b.titulo || ''} onChange={(e) => set({ titulo: e.target.value })} className={inputCls} placeholder="Título (opcional)" />
+        <p className="mt-1 text-xs text-navy-400">Mostra até 4 produtos da loja com foto, sempre atualizados.</p>
       </div>
     )
   return null
