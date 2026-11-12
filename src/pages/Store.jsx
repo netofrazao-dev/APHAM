@@ -216,7 +216,7 @@ export default function Store() {
               {oficiais.length > 0 && (
                 <Grupo
                   icone={BadgeCheck}
-                  titulo="Produtos oficiais da APHAM"
+                  titulo="Produtos oficiais e personalizáveis da APHAM"
                   texto="Vendidos e entregues pela APHAM. Cada compra ajuda a manter os projetos."
                   produtos={oficiais}
                 />
