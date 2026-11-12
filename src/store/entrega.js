@@ -44,3 +44,16 @@ export async function buscarCep(cep) {
     return null
   }
 }
+
+const semAcento = (t) => String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim()
+export const ehBreves = (e) => semAcento(e?.cidade) === 'breves' && String(e?.uf || '').toUpperCase() === 'PA'
+
+// Endereço salvo neste aparelho, em uma linha curta (faixa "Enviar para").
+export function resumoDestino(e) {
+  if (!e?.cep && !e?.cidade) return ''
+  const cidade = [e.cidade, e.uf].filter(Boolean).join('/')
+  const rua = [e.rua, e.numero].filter(Boolean).join(', ')
+  return rua ? `${rua} — ${cidade}` : `${cidade}${e.cep ? ` · CEP ${formatarCep(e.cep)}` : ''}`
+}
+export const avisoDestino = (e) =>
+  ehBreves(e) ? 'Retirada ou entrega em Breves' : e?.cidade ? 'Envio pelo Brasil · frete calculado depois' : ''

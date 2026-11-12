@@ -1,9 +1,11 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { ShoppingCart, ArrowLeft } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
+import EnderecoEntrega from './EnderecoEntrega'
 
 export default function StoreHeader() {
   const { cartCount, settings } = useStore()
+  const { pathname } = useLocation()
   return (
     <header className="sticky top-0 z-50 border-b border-navy-100 bg-paper/95 backdrop-blur-md">
       <div className="container-x section-pad flex h-20 items-center justify-between">
@@ -36,6 +38,8 @@ export default function StoreHeader() {
           </Link>
         </div>
       </div>
+      {/* "Enviar para" — no checkout o endereço já está no formulário */}
+      {pathname !== '/checkout' && <EnderecoEntrega />}
     </header>
   )
 }

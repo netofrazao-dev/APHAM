@@ -14,18 +14,30 @@ import PagamentoOnline from '../components/store/PagamentoOnline'
 import { pagamentoOnlineAtivo, criarPedidoOnline } from '../lib/mercadopago'
 import { pixDaLoja } from '../store/pix'
 import { variacoesTexto } from '../store/lojas'
-import { ENTREGAS, precisaEndereco, enderecoVazio, enderecoTexto, rotuloEntrega, formatarCep, buscarCep } from '../store/entrega'
+import { ENTREGAS, precisaEndereco, enderecoVazio, enderecoTexto, rotuloEntrega, formatarCep, buscarCep, ehBreves } from '../store/entrega'
 
 export default function Checkout() {
-  const { cart, cartTotal, settings, addOrder, clearCart, aplicarCupom, baixarEstoque, registrarPedidoLocal, atualizarPedidoLocal } =
-    useStore()
+  const {
+    cart,
+    cartTotal,
+    settings,
+    addOrder,
+    clearCart,
+    aplicarCupom,
+    baixarEstoque,
+    registrarPedidoLocal,
+    atualizarPedidoLocal,
+    enderecoEntrega,
+    salvarEnderecoEntrega,
+  } = useStore()
   const toast = useToast()
   const [form, setForm] = useState({
     nome: '',
     telefone: '',
     email: '',
-    entrega: 'retirada',
-    end: enderecoVazio(),
+    // Com endereço salvo (faixa "Enviar para"), já começa com ele.
+    entrega: enderecoEntrega?.cidade ? (ehBreves(enderecoEntrega) ? 'entrega' : 'envio') : 'retirada',
+    end: { ...enderecoVazio(), ...(enderecoEntrega || {}) },
     pagamento: pagamentoOnlineAtivo ? 'online' : 'pix',
     obs: '',
   })
@@ -147,6 +159,7 @@ export default function Checkout() {
     e.preventDefault()
     if (e.target.website && e.target.website.value) return // honeypot anti-spam
     if (!cart.length) return
+    if (comEndereco) salvarEnderecoEntrega(form.end) // lembra para a próxima compra
     if (form.pagamento === 'online') return iniciarPagamentoOnline()
     const order = {
       id: novoId('order'),

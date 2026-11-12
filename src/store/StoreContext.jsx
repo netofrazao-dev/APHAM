@@ -109,6 +109,9 @@ export function StoreProvider({ children }) {
   const [favoritos, setFavoritos] = usePersistent('favoritos', [])
   const [mensagens, setMensagens] = usePersistent('mensagens', [])
   const [recentes, setRecentes] = usePersistent('recentes', [])
+  // Endereço de entrega que o cliente informou (só neste aparelho), como a faixa
+  // "Enviar para" de outras lojas. Usado na loja e já preenchido no checkout.
+  const [enderecoEntrega, salvarEnderecoEntrega] = usePersistent('enderecoEntrega', null)
   // Lojas parceiras (marketplace) e repasses da APHAM para os lojistas.
   const [lojas, setLojas] = usePersistent('lojas', [])
   const [repasses, setRepasses] = usePersistent('repasses', [])
@@ -823,6 +826,8 @@ export function StoreProvider({ children }) {
     favoritos,
     mensagens,
     recentes,
+    enderecoEntrega,
+    salvarEnderecoEntrega,
     cartCount,
     cartTotal,
     isAdmin,

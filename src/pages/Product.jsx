@@ -5,6 +5,7 @@ import { useStore } from '../store/StoreContext'
 import { useToast } from '../components/Toast'
 import { formatBRL } from '../store/format'
 import { precoVitrine, precoCheioVitrine, itemCarrinho, urlLoja, chaveVariacao } from '../store/lojas'
+import { ehBreves } from '../store/entrega'
 import StoreHeader from '../components/store/StoreHeader'
 import StoreFooter from '../components/store/StoreFooter'
 import ProductImage from '../components/store/ProductImage'
@@ -13,7 +14,7 @@ import ProductCard from '../components/store/ProductCard'
 export default function Product() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { produtosVitrine: produtos, addToCart, addRecente, toggleFavorito, isFavorito, comissao, lojasPorId } = useStore()
+  const { produtosVitrine: produtos, addToCart, addRecente, toggleFavorito, isFavorito, comissao, lojasPorId, enderecoEntrega: destino } = useStore()
   const toast = useToast()
   const produto = produtos.find((p) => p.id === id)
 
@@ -258,7 +259,17 @@ export default function Product() {
             <ul className="mt-6 space-y-2 rounded-2xl border border-navy-100 bg-white p-4 text-sm text-navy-700">
               <li className="flex items-start gap-2.5">
                 <Truck className="mt-0.5 h-4 w-4 shrink-0 text-cyan-600" />
-                Pronta entrega: retirada ou entrega em Breves (PA), ou envio para todo o Brasil.
+                {destino?.cidade ? (
+                  ehBreves(destino) ? (
+                    <span>Pronta entrega: retirada ou entrega em <strong>Breves (PA)</strong>.</span>
+                  ) : (
+                    <span>
+                      Enviar para <strong>{destino.cidade}/{destino.uf}</strong>: o frete é calculado depois da compra.
+                    </span>
+                  )
+                ) : (
+                  'Pronta entrega: retirada ou entrega em Breves (PA), ou envio para todo o Brasil.'
+                )}
               </li>
               <li className="flex items-start gap-2.5">
                 <RotateCcw className="mt-0.5 h-4 w-4 shrink-0 text-cyan-600" />
