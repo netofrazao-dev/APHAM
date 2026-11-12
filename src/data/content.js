@@ -316,27 +316,28 @@ export const novidades = [
   // capa com as fotos dos produtos à venda, e o bloco "produtosLoja" mostra os produtos.
   {
     id: 'nov-loja',
+    versao: 2, // ao mudar o card no código, aumente: o painel oferece "Atualizar card da loja"
     ordem: -100,
     vitrineLoja: true,
     data: 'Novembro de 2026',
     tag: 'Loja',
-    titulo: 'Loja APHAM no ar: vista a camisa do handebol do Marajó',
+    titulo: 'Loja SocialPlay no ar: vista a camisa do handebol do Marajó',
     resumo:
-      'A loja oficial da APHAM está aberta: produtos oficiais e personalizáveis, lojas parceiras de Breves e envio para todo o Brasil. Cada compra ajuda a manter os projetos da associação.',
+      'A Loja SocialPlay, loja oficial da APHAM, está aberta: produtos oficiais e personalizáveis, lojas parceiras de Breves e envio para todo o Brasil. Cada compra ajuda a manter os projetos da associação.',
     texto: '', // o texto da página está nos blocos (o resumo já aparece no topo)
     img: '/midia/loja/capa-loja.jpg',
     blocos: [
       {
         tipo: 'texto',
         texto:
-          'Chegou a Loja APHAM, a loja oficial da Associação de Praticantes de Handebol do Marajó. Com a marca Social Play — Vestuário Conceito, ela reúne peças com a identidade do handebol marajoara para quem joga, torce e apoia o esporte na região.\n\nMais do que vender produtos, a loja é uma forma de apoiar: o que ela arrecada ajuda a manter os treinos, as competições e os projetos sociais que a APHAM realiza em Breves e no Marajó desde 2009.',
+          'Chegou a Loja SocialPlay, a loja oficial da Associação de Praticantes de Handebol do Marajó. Com a linha Vestuário Conceito, ela reúne peças com a identidade do handebol marajoara para quem joga, torce e apoia o esporte na região.\n\nMais do que vender produtos, a loja é uma forma de apoiar: o que ela arrecada ajuda a manter os treinos, as competições e os projetos sociais que a APHAM realiza em Breves e no Marajó desde 2009.',
       },
       { tipo: 'produtosLoja', titulo: 'Alguns produtos da loja' },
       { tipo: 'subtitulo', texto: 'O que você encontra' },
       {
         tipo: 'texto',
         texto:
-          '• Produtos oficiais e personalizáveis da APHAM, vendidos e entregues pela própria associação.\n• Lojas parceiras de Breves, que vendem dentro da loja da APHAM, com pagamento e atendimento pela APHAM.\n• Tamanho, cor e modelo à escolha, com a foto de cada variação.',
+          '• Produtos oficiais e personalizáveis da APHAM, vendidos e entregues pela própria associação.\n• Lojas parceiras de Breves, que vendem dentro da Loja SocialPlay, com pagamento e atendimento pela APHAM.\n• Tamanho, cor e modelo à escolha, com a foto de cada variação.',
       },
       { tipo: 'subtitulo', texto: 'Como comprar' },
       {
@@ -344,8 +345,8 @@ export const novidades = [
         texto:
           'Escolha os produtos, informe o seu CEP e finalize o pedido. O pagamento é por Pix: o QR Code aparece na hora e, depois de pagar, você envia o comprovante pelo WhatsApp. A APHAM confirma o pedido e combina a retirada ou a entrega.\n\nMora fora de Breves? A loja envia para todo o Brasil: o frete é calculado depois da compra, pelo seu CEP, e a APHAM informa o valor pelo WhatsApp.',
       },
-      { tipo: 'citacao', texto: 'Cada compra fortalece os projetos sociais da APHAM.', autor: 'Loja APHAM · Social Play' },
-      { tipo: 'botao', rotulo: 'Visitar a Loja APHAM', url: '/loja' },
+      { tipo: 'citacao', texto: 'Cada compra fortalece os projetos sociais da APHAM.', autor: 'Loja SocialPlay' },
+      { tipo: 'botao', rotulo: 'Visitar a Loja SocialPlay', url: '/loja' },
     ],
   },
 ]
@@ -809,6 +810,19 @@ export const politicaLoja = {
   comoPedir:
     'Para trocar, devolver ou tirar dúvidas, chame a APHAM no WhatsApp com o número do pedido (ex.: APHAM-123456).',
 }
+
+// Carrossel da Loja SocialPlay (topo da loja e página da novidade da loja).
+// Cada slide: frase (opcional), sub (opcional), legenda (quando não há frase) e
+// imagens SEM FUNDO (PNG/SVG transparente). As ilustrações atuais são da coleção
+// Fluent Emoji (Microsoft, licença MIT) — dá para trocar por fotos reais sem fundo.
+const item = (nome) => `/midia/loja/itens/${nome}.svg`
+export const carrosselLoja = [
+  { frase: 'Produtos personalizáveis!', sub: 'Com o seu nome, número ou time', imgs: ['bone', 'chaveiro', 'camisa'].map(item) },
+  { legenda: 'Acessórios esportivos', imgs: ['meias', 'luvas', 'cronometro', 'tenis', 'mochila'].map(item) },
+  { legenda: 'Bolas de vários esportes', imgs: ['bola-futebol', 'bola-basquete', 'bola-volei', 'bola-americana', 'bola-tenis'].map(item) },
+  { frase: 'Vista a camisa do handebol do Marajó', imgs: ['handebol', 'regata', 'short', 'trofeu'].map(item) },
+  { frase: 'Envio para todo o Brasil', sub: 'Frete calculado pelo seu CEP', imgs: ['caixa', 'caminhao', 'mapa'].map(item) },
+]
 
 // Assinatura da Social Play (dourada, fundo transparente) — usada como marca d'água.
 export const assinaturaSocialPlay = '/midia/marca/assinatura-socialplay.png'

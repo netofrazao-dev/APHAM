@@ -7,6 +7,7 @@ import { lojaConceito, assinaturaSocialPlay, site } from '../data/content'
 import StoreHeader from '../components/store/StoreHeader'
 import StoreFooter from '../components/store/StoreFooter'
 import ProductCard from '../components/store/ProductCard'
+import CarrosselSocialPlay from '../components/store/CarrosselSocialPlay'
 
 function Grupo({ icone: Icone, titulo, texto, produtos }) {
   return (
@@ -94,25 +95,29 @@ export default function Store() {
     <div className="flex min-h-screen flex-col bg-paper">
       <StoreHeader />
 
-      {/* Banner — só a assinatura da Social Play no fundo */}
+      {/* Banner — texto à esquerda e, à direita (embaixo no celular), o carrossel da
+          Social Play, com a assinatura dourada bem clarinha ao fundo */}
       <section className="relative overflow-hidden bg-navy-950">
         <img
           src={assinaturaSocialPlay}
           alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute right-[-3%] top-1/2 w-[56%] max-w-xl -translate-y-1/2 select-none opacity-25"
+          className="pointer-events-none absolute right-[-3%] top-1/2 w-[56%] max-w-xl -translate-y-1/2 select-none opacity-[0.12]"
         />
         {/* Degradê leve só para a leitura do texto à esquerda */}
         <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/70 to-transparent" />
-        <div className="container-x section-pad relative py-14 lg:py-20">
-          <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-navy-950/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100">
-            <ShoppingBag className="h-3.5 w-3.5 text-cyan-400" />
-            {lojaConceito.marca}
-          </span>
-          <h1 className="mt-5 max-w-2xl font-akbar text-5xl font-extrabold tracking-tight text-white sm:text-6xl">
-            {lojaConceito.conceito}
-          </h1>
-          <p className="mt-4 max-w-xl text-white/80">{settings.descricao || lojaConceito.descricao}</p>
+        <div className="container-x section-pad relative grid grid-cols-1 items-center gap-6 py-12 md:grid-cols-2 lg:py-16">
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-navy-950/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100">
+              <ShoppingBag className="h-3.5 w-3.5 text-cyan-400" />
+              {lojaConceito.marca}
+            </span>
+            <h1 className="mt-5 max-w-2xl font-akbar text-5xl font-extrabold tracking-tight text-white sm:text-6xl">
+              {lojaConceito.conceito}
+            </h1>
+            <p className="mt-4 max-w-xl text-white/80">{settings.descricao || lojaConceito.descricao}</p>
+          </div>
+          <CarrosselSocialPlay className="h-64 sm:h-72 lg:h-80" />
         </div>
       </section>
 

@@ -59,6 +59,10 @@ export default function NewsAdmin() {
   const faltando = novidadesSeed.filter((s) => s.id !== 'nov-loja' && !novidades.some((n) => n.id === s.id))
   // Card pronto da Loja APHAM (feito no código), publicado com um clique no topo.
   const cardLoja = novidadesSeed.find((s) => s.id === 'nov-loja' && !novidades.some((n) => n.id === s.id))
+  // Já publicado, mas o card mudou no código (campo `versao`): oferece atualizar.
+  const seedLoja = novidadesSeed.find((s) => s.id === 'nov-loja')
+  const lojaPublicada = novidades.find((n) => n.id === 'nov-loja')
+  const cardLojaNovo = lojaPublicada && (lojaPublicada.versao || 1) < (seedLoja?.versao || 1) ? seedLoja : null
   const restaurarFaltando = () => faltando.forEach((s) => saveNovidade(s))
 
   const salvarPost = (e) => {
@@ -71,6 +75,7 @@ export default function NewsAdmin() {
       ordem: post.ordem ?? ordemDoTopo(),
       arquivada: post.arquivada || undefined,
       vitrineLoja: post.vitrineLoja || undefined, // card da loja: fotos dos produtos à venda
+      versao: post.versao,
       // Mantém o estado da sombra do card (ligada por padrão).
       sombra: post.sombra,
       data: post.data || '',
@@ -146,6 +151,23 @@ export default function NewsAdmin() {
           <button type="button" onClick={() => saveNovidade({ ...cardLoja, ordem: ordemDoTopo() })} className={btnAccent}>
             <Plus className="h-4 w-4" />
             Publicar no topo
+          </button>
+        </div>
+      )}
+
+      {cardLojaNovo && (
+        <div className="mb-3 flex flex-wrap items-center gap-3 rounded-xl border border-amber-300 bg-amber-50 p-3">
+          <img src={cardLojaNovo.img} alt="" className="h-14 w-24 shrink-0 rounded-lg object-cover" />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold text-navy-900">Nova versão do card da loja: “{cardLojaNovo.titulo}”</p>
+            <p className="text-xs text-navy-600">Troca o título e o texto do card publicado pela versão nova (mantém a posição no News).</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => saveNovidade({ ...cardLojaNovo, ordem: lojaPublicada.ordem, arquivada: lojaPublicada.arquivada, sombra: lojaPublicada.sombra })}
+            className={btnAccent}
+          >
+            Atualizar card da loja
           </button>
         </div>
       )}

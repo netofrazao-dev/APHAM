@@ -8,8 +8,9 @@ import PageShell from '../components/PageShell'
 import Reveal from '../components/Reveal'
 import { useStore } from '../store/StoreContext'
 import { youtubeEmbed } from '../lib/youtube'
-import { site } from '../data/content'
+import { site, assinaturaSocialPlay } from '../data/content'
 import ProductCard from '../components/store/ProductCard'
+import CarrosselSocialPlay from '../components/store/CarrosselSocialPlay'
 import { produtosEmDestaque } from '../lib/novidades'
 
 // Página de uma notícia (/novidades/:id), montada pelo painel (/admin → Novidades):
@@ -240,12 +241,27 @@ export default function NovidadePage() {
       <main>
         <article className="section-pad pb-16 lg:pb-20">
           <div className="container-x max-w-3xl">
-            {n.img && (
+            {/* Novidade da loja: carrossel da Social Play no lugar da foto principal */}
+            {n.vitrineLoja ? (
               <Reveal>
-                <button type="button" onClick={() => abrirFoto(n.img)} className="-mt-8 block w-full overflow-hidden rounded-3xl shadow-lift ring-4 ring-paper lg:-mt-10">
-                  <img src={n.img} alt={n.titulo} className="max-h-[32rem] w-full object-cover" />
-                </button>
+                <div className="relative -mt-8 overflow-hidden rounded-3xl bg-navy-950 p-6 shadow-lift ring-4 ring-paper lg:-mt-10">
+                  <img
+                    src={assinaturaSocialPlay}
+                    alt=""
+                    aria-hidden="true"
+                    className="pointer-events-none absolute left-1/2 top-1/2 w-[70%] max-w-md -translate-x-1/2 -translate-y-1/2 opacity-[0.12]"
+                  />
+                  <CarrosselSocialPlay className="h-72 sm:h-80" />
+                </div>
               </Reveal>
+            ) : (
+              n.img && (
+                <Reveal>
+                  <button type="button" onClick={() => abrirFoto(n.img)} className="-mt-8 block w-full overflow-hidden rounded-3xl shadow-lift ring-4 ring-paper lg:-mt-10">
+                    <img src={n.img} alt={n.titulo} className="max-h-[32rem] w-full object-cover" />
+                  </button>
+                </Reveal>
+              )
             )}
 
             <div className={n.img ? 'mt-10' : 'mt-12'}>

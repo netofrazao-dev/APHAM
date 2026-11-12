@@ -1,0 +1,2 @@
+Ilustrações: Fluent Emoji, da Microsoft (https://github.com/microsoft/fluentui-emoji).
+Licença MIT — uso livre, inclusive comercial. Copyright (c) Microsoft Corporation.
