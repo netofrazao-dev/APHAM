@@ -139,6 +139,35 @@ variáveis (e os cartões de teste da documentação); depois troque pelas de pr
 > O dinheiro cai na conta Mercado Pago da APHAM; os repasses às lojas parceiras
 > continuam registrados em **/admin → Lojas parceiras**.
 
+## 2.4) Frete automático — Correios pelo Melhor Envio
+
+Para fora de Breves, o cliente digita o CEP (no carrinho ou no checkout), vê as opções
+dos Correios com preço e prazo (ex.: PAC e SEDEX) e **paga o frete junto com o pedido**.
+O servidor refaz a cotação ao criar o pedido, com o peso, as medidas e os preços do
+banco: ninguém consegue mudar o valor do frete pelo navegador.
+
+1. Crie a conta da APHAM em **melhorenvio.com.br** (de preferência no CNPJ). Não tem
+   mensalidade: paga-se só a etiqueta de cada envio.
+2. No painel do Melhor Envio, na área de **integrações / permissões de acesso**, gere um
+   **token** com permissão de **cálculo de fretes**.
+3. No **Vercel → Settings → Environment Variables**, cadastre `MELHOR_ENVIO_TOKEN` =
+   o token (**secreta**). Faça um **redeploy**.
+4. Em **/admin → Configurações → Frete pelos Correios**: confira o **CEP de onde os
+   pacotes saem**, a **embalagem padrão**, os **dias para separar e postar** e a **taxa de
+   embalagem**. O cartão mostra "✓ Melhor Envio conectado" quando o token está certo.
+5. Em **/admin → Produtos**, preencha **peso e medidas** de cada produto (opcional; sem
+   eles vale a embalagem padrão).
+6. A cada pedido com envio, o painel mostra o serviço escolhido: compre a etiqueta no
+   Melhor Envio (com crédito na carteira de lá) e poste na agência dos Correios.
+
+Para testar sem gastar: crie a conta e o token em **sandbox.melhorenvio.com.br** e
+cadastre também `MELHOR_ENVIO_SANDBOX` = `true`; depois troque pelo token de produção e
+apague essa variável.
+
+> Sem o token (ou com o frete desligado no painel, ou se o Melhor Envio sair do ar), a
+> loja segue como antes: o frete para fora de Breves é calculado depois da compra e
+> cobrado à parte pelo WhatsApp.
+
 ## 3) E-mail automático (Resend)
 
 1. Crie conta em **resend.com** e gere uma **API Key**.
@@ -181,6 +210,8 @@ variáveis (e os cartões de teste da documentação); depois troque pelas de pr
 | `MP_ACCESS_TOKEN` | **secreta** | Mercado Pago → Credenciais |
 | `MP_WEBHOOK_SECRET` | **secreta** | Mercado Pago → Webhooks |
 | `SUPABASE_SERVICE_ROLE_KEY` | **secreta** | Supabase → Settings → API (service_role) |
+| `MELHOR_ENVIO_TOKEN` | **secreta** | Melhor Envio → integrações (token de acesso) |
+| `MELHOR_ENVIO_SANDBOX` | config | só para testes: `true` (apague em produção) |
 | `INSTAGRAM_TOKEN` | **secreta** | Meta for Developers |
 | `INSTAGRAM_USER_ID` | config | Meta for Developers |
 

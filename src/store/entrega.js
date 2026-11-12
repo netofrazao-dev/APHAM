@@ -1,10 +1,11 @@
 // Formas de entrega da loja e o endereço do cliente.
-// "envio" = para todo o Brasil: o frete é calculado depois da compra (pelo CEP)
-// e a APHAM informa o valor pelo WhatsApp, para pagar à parte.
+// "envio" = para todo o Brasil pelos Correios: o frete vem do Melhor Envio pelo
+// CEP (src/store/frete.js) e entra no total. Sem cotação, a APHAM calcula depois
+// da compra e informa o valor pelo WhatsApp, para pagar à parte.
 export const ENTREGAS = [
   { id: 'retirada', rotulo: 'Retirar com a APHAM', detalhe: 'Em Breves (PA), sem custo' },
   { id: 'entrega', rotulo: 'Entrega em Breves', detalhe: 'Na sua casa, em Breves (PA)' },
-  { id: 'envio', rotulo: 'Envio para todo o Brasil', detalhe: 'Frete calculado depois da compra' },
+  { id: 'envio', rotulo: 'Envio para todo o Brasil', detalhe: 'Pelos Correios, frete pelo CEP' },
 ]
 
 export const precisaEndereco = (entrega) => entrega === 'entrega' || entrega === 'envio'
@@ -25,8 +26,9 @@ export function enderecoTexto(e) {
   return [linha1, linha2, e.cep && `CEP ${formatarCep(e.cep)}`].filter(Boolean).join(' — ')
 }
 
+// Igual a api/_lib/pedido.js → rotuloEntrega.
 export function rotuloEntrega(o) {
-  if (o?.entrega === 'envio') return 'Envio para o Brasil (frete a calcular)'
+  if (o?.entrega === 'envio') return o.freteServico ? `Envio para o Brasil — ${o.freteServico}` : 'Envio para o Brasil (frete a calcular)'
   if (o?.entrega === 'entrega') return 'Entrega em Breves'
   return 'Retirada com a APHAM'
 }
@@ -56,4 +58,4 @@ export function resumoDestino(e) {
   return rua ? `${rua} — ${cidade}` : `${cidade}${e.cep ? ` · CEP ${formatarCep(e.cep)}` : ''}`
 }
 export const avisoDestino = (e) =>
-  ehBreves(e) ? 'Retirada ou entrega em Breves' : e?.cidade ? 'Envio pelo Brasil · frete calculado depois' : ''
+  ehBreves(e) ? 'Retirada ou entrega em Breves' : e?.cidade ? 'Envio pelos Correios · frete pelo CEP' : ''

@@ -22,7 +22,20 @@ const vazio = () => ({
   destaque: false,
   ativo: true,
   imagens: [],
+  peso: '',
+  altura: '',
+  largura: '',
+  comprimento: '',
 })
+
+// Peso (kg) e medidas da embalagem (cm) para o frete; vazio = embalagem padrão.
+const MEDIDAS_ENVIO = [
+  ['peso', 'Peso (kg)', '0.3', '0.01'],
+  ['altura', 'Altura (cm)', '4', '1'],
+  ['largura', 'Largura (cm)', '20', '1'],
+  ['comprimento', 'Comprimento (cm)', '30', '1'],
+]
+const numeroOuNulo = (v) => (v === '' || v == null || !(Number(v) > 0) ? null : Number(v))
 
 // Sem `loja`: painel da APHAM (todos os produtos, com filtro por loja).
 // Com `loja`: área do lojista (só os produtos dele, preço = valor que ele recebe).
@@ -45,6 +58,7 @@ export default function ProductsAdmin({ loja = null }) {
       coresStr: (p.cores || []).join(', '),
       modelosStr: (p.modelos || []).join(', '),
       fotoDe: p.fotoDe || {},
+      ...Object.fromEntries(MEDIDAS_ENVIO.map(([k]) => [k, p[k] ?? ''])),
     })
 
   const set = (campo, valor) => setForm((f) => ({ ...f, [campo]: valor }))
@@ -110,6 +124,7 @@ export default function ProductsAdmin({ loja = null }) {
       destaque: !!form.destaque,
       ativo: !!form.ativo,
       imagens: form.imagens || [],
+      ...Object.fromEntries(MEDIDAS_ENVIO.map(([k]) => [k, numeroOuNulo(form[k])])),
       ...(loja ? { lojaId: loja.id } : form.lojaId ? { lojaId: form.lojaId } : {}),
     }
     const ok = await saveProduto(produto)
@@ -240,6 +255,22 @@ export default function ProductsAdmin({ loja = null }) {
                 <Field label="Modelos (opcional)" hint="Separe por vírgula. Ex.: Masculina, Feminina, Infantil">
                   <input value={form.modelosStr || ''} onChange={(e) => set('modelosStr', e.target.value)} className={inputCls} placeholder="Masculina, Feminina, Infantil" />
                 </Field>
+              </div>
+
+              {/* Envio */}
+              <div className="sm:col-span-2">
+                <span className="mb-1.5 block text-sm font-semibold text-navy-800">Envio pelos Correios (opcional)</span>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  {MEDIDAS_ENVIO.map(([k, rotulo, exemplo, passo]) => (
+                    <label key={k} className="block">
+                      <span className="mb-1 block text-xs font-medium text-navy-500">{rotulo}</span>
+                      <input type="number" min="0" step={passo} value={form[k] ?? ''} onChange={(e) => set(k, e.target.value)} className={inputCls} placeholder={exemplo} />
+                    </label>
+                  ))}
+                </div>
+                <span className="mt-1 block text-xs text-navy-400">
+                  Peso de uma unidade já embalada e medidas da embalagem. Em branco, o frete usa a embalagem padrão das Configurações.
+                </span>
               </div>
 
               {/* Imagens */}

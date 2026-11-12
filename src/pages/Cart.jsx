@@ -5,6 +5,7 @@ import { formatBRL } from '../store/format'
 import StoreHeader from '../components/store/StoreHeader'
 import StoreFooter from '../components/store/StoreFooter'
 import ProductCard from '../components/store/ProductCard'
+import CalculadoraFrete from '../components/store/CalculadoraFrete'
 import { variacoesTexto } from '../store/lojas'
 
 export default function Cart() {
@@ -84,12 +85,9 @@ export default function Cart() {
                   <span>Subtotal</span>
                   <span>{formatBRL(cartTotal)}</span>
                 </div>
-                <div className="mt-2 flex items-center justify-between text-sm text-navy-600">
-                  <span>Entrega</span>
-                  <span>a combinar</span>
-                </div>
+                <CalculadoraFrete itens={cart} />
                 <div className="mt-4 flex items-center justify-between border-t border-navy-100 pt-4">
-                  <span className="font-display font-bold text-navy-900">Total</span>
+                  <span className="font-display font-bold text-navy-900">Total sem o frete</span>
                   <span className="font-display text-xl font-extrabold text-navy-900">{formatBRL(cartTotal)}</span>
                 </div>
                 <Link to="/checkout" className="btn-accent mt-6 w-full">

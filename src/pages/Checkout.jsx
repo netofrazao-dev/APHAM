@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { MessageCircle, Check, ShoppingBag, Tag, X, CreditCard, Loader2, ArrowLeft, ShieldCheck } from 'lucide-react'
 import { useStore, novoId } from '../store/StoreContext'
@@ -15,6 +15,7 @@ import { pagamentoOnlineAtivo, criarPedidoOnline } from '../lib/mercadopago'
 import { pixDaLoja } from '../store/pix'
 import { variacoesTexto } from '../store/lojas'
 import { ENTREGAS, precisaEndereco, enderecoVazio, enderecoTexto, rotuloEntrega, formatarCep, buscarCep, ehBreves } from '../store/entrega'
+import { useFrete, prazoTexto } from '../store/frete'
 
 export default function Checkout() {
   const {
@@ -66,17 +67,30 @@ export default function Checkout() {
   }
   const comEndereco = precisaEndereco(form.entrega)
   const endereco = comEndereco ? enderecoTexto(form.end) : ''
-  const freteACalcular = form.entrega === 'envio'
+  const envio = form.entrega === 'envio'
+  const cepCompleto = form.end.cep.replace(/\D/g, '').length === 8
+
+  // Envio pelo Brasil: opções do Melhor Envio para o CEP. Vem marcada a mais
+  // barata; se a cotação muda, mantém a escolha quando ela ainda existe.
+  const cotacao = useFrete(form.end.cep, cart, envio)
+  const [freteServico, setFreteServico] = useState('')
+  useEffect(() => {
+    if (cotacao.opcoes.length && !cotacao.opcoes.some((o) => o.id === freteServico)) setFreteServico(cotacao.opcoes[0].id)
+  }, [cotacao.opcoes, freteServico])
+  const opcaoFrete = envio ? cotacao.opcoes.find((o) => o.id === freteServico) || null : null
+  const freteACalcular = envio && !opcaoFrete
 
   const subtotal = cartTotal
   const desconto = cupom ? cupom.desconto : 0
   const frete = useMemo(() => {
+    if (opcaoFrete) return opcaoFrete.preco
     if (form.entrega !== 'entrega') return 0
     const taxa = Number(settings.entregaTaxa) || 0
     const gratisAcima = settings.entregaGratisAcima
     if (gratisAcima != null && gratisAcima !== '' && subtotal >= Number(gratisAcima)) return 0
     return taxa
-  }, [form.entrega, settings.entregaTaxa, settings.entregaGratisAcima, subtotal])
+  }, [opcaoFrete, form.entrega, settings.entregaTaxa, settings.entregaGratisAcima, subtotal])
+  const dadosFrete = opcaoFrete ? { freteServico: opcaoFrete.nome, freteServicoId: opcaoFrete.id, fretePrazo: opcaoFrete.prazo } : {}
   const total = Math.max(0, subtotal - desconto) + frete
 
   const aplicar = () => {
@@ -104,7 +118,7 @@ export default function Checkout() {
       '',
       `Subtotal: ${formatBRL(order.subtotal)}`,
       order.desconto ? `Desconto (${order.cupomCodigo}): -${formatBRL(order.desconto)}` : '',
-      `Entrega: ${order.freteACalcular ? 'frete a calcular' : order.frete ? formatBRL(order.frete) : order.entrega === 'entrega' ? 'grátis' : 'Retirada'}`,
+      `${order.entrega === 'envio' ? 'Frete' : 'Entrega'}: ${order.freteACalcular ? 'a calcular' : order.frete ? formatBRL(order.frete) : order.entrega === 'entrega' ? 'grátis' : 'Retirada'}`,
       `*Total: ${formatBRL(order.total)}*`,
       '',
       `*Cliente:* ${order.cliente.nome}`,
@@ -133,6 +147,7 @@ export default function Checkout() {
         cliente: { nome: form.nome, telefone: form.telefone, email: form.email },
         entrega: form.entrega,
         endereco: form.end,
+        freteServico: opcaoFrete?.id || '',
         obs: form.obs,
         cupom: cupom?.codigo || '',
         totalEsperado: total,
@@ -142,6 +157,7 @@ export default function Checkout() {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (err) {
       toast(err.message, 'erro')
+      if (envio) cotacao.recarregar() // o frete pode ter mudado: mostra as opções atuais
     } finally {
       setEnviando(false)
     }
@@ -175,6 +191,7 @@ export default function Checkout() {
       entrega: form.entrega,
       endereco,
       ...(comEndereco ? { enderecoDetalhado: form.end } : {}),
+      ...dadosFrete,
       ...(freteACalcular ? { freteACalcular: true } : {}),
       pagamento: form.pagamento,
       obs: form.obs,
@@ -221,6 +238,12 @@ export default function Checkout() {
               {pedido.freteACalcular && (
                 <p className="mt-3 max-w-md rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
                   <strong>Frete:</strong> a APHAM calcula o envio para o seu CEP e manda o valor pelo WhatsApp, para pagar à parte.
+                </p>
+              )}
+              {pedido.freteServico && (
+                <p className="mt-3 max-w-md rounded-xl bg-cyan-50 px-4 py-3 text-sm text-cyan-900">
+                  <strong>Envio:</strong> {pedido.freteServico} · {formatBRL(pedido.frete)}
+                  {pedido.fretePrazo ? ` · chega em ${prazoTexto(pedido.fretePrazo)}` : ''}.
                 </p>
               )}
               {pedido.url && pedido.pagamento !== 'pix' && (
@@ -357,8 +380,8 @@ export default function Checkout() {
               {comEndereco && (
                 <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-6">
                   <div className="sm:col-span-2">
-                    <label htmlFor="cep" className="mb-1.5 block text-sm font-semibold text-navy-800">CEP {freteACalcular && '*'}</label>
-                    <input id="cep" inputMode="numeric" autoComplete="postal-code" required={freteACalcular} value={form.end.cep} onChange={(e) => mudarCep(e.target.value)} className={inputCls} placeholder="00000-000" />
+                    <label htmlFor="cep" className="mb-1.5 block text-sm font-semibold text-navy-800">CEP {envio && '*'}</label>
+                    <input id="cep" inputMode="numeric" autoComplete="postal-code" required={envio} value={form.end.cep} onChange={(e) => mudarCep(e.target.value)} className={inputCls} placeholder="00000-000" />
                     {buscandoCep && <p className="mt-1 text-xs text-navy-500">Buscando o endereço…</p>}
                     {cepNaoAchado && <p className="mt-1 text-xs text-amber-700">CEP não encontrado. Preencha o endereço à mão.</p>}
                   </div>
@@ -388,10 +411,47 @@ export default function Checkout() {
                   </div>
                 </div>
               )}
+              {envio && (cotacao.carregando || cotacao.opcoes.length > 0) && (
+                <div className="mt-5">
+                  <p className="mb-2 text-sm font-semibold text-navy-800">Frete</p>
+                  {cotacao.carregando ? (
+                    <p className="inline-flex items-center gap-2 text-sm text-navy-500">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Calculando o frete para o seu CEP…
+                    </p>
+                  ) : (
+                    <div className="grid gap-2">
+                      {cotacao.opcoes.map((o) => (
+                        <label
+                          key={o.id}
+                          className={`flex cursor-pointer items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm ${
+                            freteServico === o.id ? 'border-cyan-500 bg-cyan-50' : 'border-navy-200 hover:border-navy-300'
+                          }`}
+                        >
+                          <input type="radio" name="freteServico" value={o.id} checked={freteServico === o.id} onChange={() => setFreteServico(o.id)} className="sr-only" />
+                          <span>
+                            <span className="block font-semibold text-navy-900">{o.nome}</span>
+                            {o.prazo && <span className="block text-xs text-navy-500">Chega em {prazoTexto(o.prazo)}</span>}
+                          </span>
+                          <span className="shrink-0 font-display font-bold text-navy-900">{formatBRL(o.preco)}</span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
               <p className="mt-3 text-xs text-navy-500">
-                {freteACalcular
-                  ? 'Enviamos para todo o Brasil. O frete é calculado depois da compra, pelo seu CEP, e a APHAM informa o valor pelo WhatsApp para pagar à parte.'
-                  : settings.entregaInfo}
+                {!envio
+                  ? settings.entregaInfo
+                  : opcaoFrete
+                    ? Number(settings.fretePrazoExtra ?? 2) > 0
+                      ? 'O prazo já conta os dias para a APHAM separar e postar o seu pedido nos Correios.'
+                      : 'Enviamos pelos Correios para todo o Brasil.'
+                    : !cepCompleto
+                      ? 'Informe o CEP para calcular o frete.'
+                      : cotacao.carregando
+                        ? ''
+                        : 'Enviamos para todo o Brasil. O frete é calculado depois da compra, pelo seu CEP, e a APHAM informa o valor pelo WhatsApp para pagar à parte.'}
               </p>
             </div>
 
@@ -459,8 +519,20 @@ export default function Checkout() {
                 <div className="flex justify-between text-navy-600"><span>Subtotal</span><span>{formatBRL(subtotal)}</span></div>
                 {desconto > 0 && <div className="flex justify-between text-cyan-700"><span>Desconto</span><span>-{formatBRL(desconto)}</span></div>}
                 <div className="flex justify-between text-navy-600">
-                  <span>{freteACalcular ? 'Frete' : 'Entrega'}</span>
-                  <span>{freteACalcular ? 'a calcular' : form.entrega === 'entrega' ? (frete > 0 ? formatBRL(frete) : 'Grátis') : 'Retirada'}</span>
+                  <span>{envio ? 'Frete' : 'Entrega'}</span>
+                  <span>
+                    {envio
+                      ? opcaoFrete
+                        ? formatBRL(frete)
+                        : cotacao.carregando
+                          ? 'calculando…'
+                          : 'a calcular'
+                      : form.entrega === 'entrega'
+                        ? frete > 0
+                          ? formatBRL(frete)
+                          : 'Grátis'
+                        : 'Retirada'}
+                  </span>
                 </div>
               </div>
               <div className="mt-3 flex items-center justify-between border-t border-navy-100 pt-3">
@@ -468,7 +540,7 @@ export default function Checkout() {
                 <span className="font-display text-xl font-extrabold text-navy-900">{formatBRL(total)}</span>
               </div>
 
-              <button type="submit" disabled={enviando} className="btn-accent mt-6 w-full disabled:opacity-60">
+              <button type="submit" disabled={enviando || (envio && cotacao.carregando)} className="btn-accent mt-6 w-full disabled:opacity-60">
                 {enviando ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : form.pagamento === 'online' ? (

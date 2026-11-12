@@ -33,7 +33,12 @@ export default async function handler(req, res) {
         ...(sobrenome.length ? { last_name: sobrenome.join(' ') } : {}),
         ...(identificacao?.number ? { identification: { type: identificacao.type, number: String(identificacao.number) } } : {}),
       },
-      items: p.itens.map((i) => ({ title: i.nome, unit_price: reais(i.preco), quantity: i.qtd, external_code: String(i.id) })),
+      items: [
+        ...p.itens.map((i) => ({ title: i.nome, unit_price: reais(i.preco), quantity: i.qtd, external_code: String(i.id) })),
+        ...(p.frete > 0
+          ? [{ title: p.freteServico ? `Frete — ${p.freteServico}` : 'Entrega', unit_price: reais(p.frete), quantity: 1, external_code: 'frete' }]
+          : []),
+      ],
       transactions: {
         payments: [
           {

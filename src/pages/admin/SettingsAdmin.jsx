@@ -1,7 +1,40 @@
-import { useRef, useState } from 'react'
-import { Save, Download, Upload, RotateCcw, Check, Database, UploadCloud } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Save, Download, Upload, RotateCcw, Check, Database, UploadCloud, Truck } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
+import { formatarCep } from '../../store/entrega'
 import { PageTitle, Card, Field, inputCls, btnPrimary, btnGhost } from './ui'
+
+// Iguais aos de api/_lib/frete.js (o servidor usa estes quando o campo está vazio).
+const PACOTE_PADRAO = { peso: 0.3, altura: 4, largura: 20, comprimento: 30 }
+const MEDIDAS_PACOTE = [
+  ['peso', 'Peso (kg)', '0.01'],
+  ['altura', 'Altura (cm)', '1'],
+  ['largura', 'Largura (cm)', '1'],
+  ['comprimento', 'Comprimento (cm)', '1'],
+]
+
+// Diz se o token do Melhor Envio está na Vercel (o token em si nunca vem ao navegador).
+function StatusMelhorEnvio() {
+  const [st, setSt] = useState(null)
+  useEffect(() => {
+    fetch('/api/frete')
+      .then((r) => r.json())
+      .then((j) => setSt(j.ok ? j : { erro: true }))
+      .catch(() => setSt({ erro: true }))
+  }, [])
+  if (!st) return <p className="text-sm text-navy-500">Verificando o Melhor Envio…</p>
+  if (st.erro) return <p className="text-sm text-navy-500">Não foi possível verificar o Melhor Envio agora (só funciona no site publicado).</p>
+  return st.configurado ? (
+    <p className="text-sm font-semibold text-emerald-700">
+      ✓ Melhor Envio conectado{st.sandbox ? ' (modo de testes — sandbox)' : ''}. O frete é calculado no carrinho e no checkout.
+    </p>
+  ) : (
+    <p className="text-sm font-semibold text-amber-700">
+      Falta o token do Melhor Envio: crie em melhorenvio.com.br e coloque na Vercel como MELHOR_ENVIO_TOKEN. Até lá, o frete
+      para fora de Breves continua sendo calculado depois da compra.
+    </p>
+  )
+}
 
 export default function SettingsAdmin() {
   const { settings, updateSettings, exportData, importData, resetData, supabaseAtivo, migrarParaSupabase } = useStore()
@@ -125,6 +158,53 @@ export default function SettingsAdmin() {
           <label className="mt-4 flex items-center gap-2 text-sm font-medium text-navy-800">
             <input type="checkbox" checked={form.lojaAtiva !== false} onChange={(e) => set('lojaAtiva', e.target.checked)} className="h-4 w-4 rounded border-navy-300 text-cyan-500" />
             Loja aberta para pedidos
+          </label>
+        </Card>
+
+        <Card>
+          <h2 className="mb-1 inline-flex items-center gap-2 font-display font-bold text-navy-900">
+            <Truck className="h-5 w-5 text-cyan-600" />
+            Frete pelos Correios (Melhor Envio)
+          </h2>
+          <p className="mb-3 text-sm text-navy-500">
+            Para fora de Breves, o cliente vê o frete e o prazo pelo CEP e já paga junto com o pedido. Depois, a APHAM compra a
+            etiqueta no Melhor Envio e posta nos Correios.
+          </p>
+          <StatusMelhorEnvio />
+          <label className="mt-4 flex items-center gap-2 text-sm font-medium text-navy-800">
+            <input type="checkbox" checked={form.freteAutomatico !== false} onChange={(e) => set('freteAutomatico', e.target.checked)} className="h-4 w-4 rounded border-navy-300 text-cyan-500" />
+            Calcular o frete automaticamente
+          </label>
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <Field label="CEP de onde os pacotes saem" hint="Onde a APHAM posta (Breves).">
+              <input inputMode="numeric" value={form.freteCepOrigem ?? ''} onChange={(e) => set('freteCepOrigem', formatarCep(e.target.value))} placeholder="68800-000" className={inputCls} />
+            </Field>
+            <Field label="Dias para separar e postar" hint="Somados ao prazo dos Correios.">
+              <input type="number" min="0" step="1" value={form.fretePrazoExtra ?? 2} onChange={(e) => set('fretePrazoExtra', e.target.value === '' ? 0 : Number(e.target.value))} className={inputCls} />
+            </Field>
+            <Field label="Taxa de embalagem (R$)" hint="Somada a cada frete (0 = nada).">
+              <input type="number" min="0" step="0.01" value={form.freteAdicional ?? 0} onChange={(e) => set('freteAdicional', e.target.value === '' ? 0 : Number(e.target.value))} className={inputCls} />
+            </Field>
+          </div>
+          <p className="mb-2 mt-5 text-sm font-semibold text-navy-800">Embalagem padrão</p>
+          <p className="mb-3 text-xs text-navy-400">Usada nos produtos sem peso e medidas no cadastro. Ex.: camiseta dobrada num envelope.</p>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {MEDIDAS_PACOTE.map(([k, rotulo, passo]) => (
+              <Field key={k} label={rotulo}>
+                <input
+                  type="number"
+                  min="0"
+                  step={passo}
+                  value={form.fretePacote?.[k] ?? PACOTE_PADRAO[k]}
+                  onChange={(e) => set('fretePacote', { ...PACOTE_PADRAO, ...(form.fretePacote || {}), [k]: e.target.value === '' ? '' : Number(e.target.value) })}
+                  className={inputCls}
+                />
+              </Field>
+            ))}
+          </div>
+          <label className="mt-4 flex items-center gap-2 text-sm font-medium text-navy-800">
+            <input type="checkbox" checked={form.freteSoCorreios !== false} onChange={(e) => set('freteSoCorreios', e.target.checked)} className="h-4 w-4 rounded border-navy-300 text-cyan-500" />
+            Mostrar só os Correios (outras transportadoras quase não atendem o Marajó)
           </label>
         </Card>
 

@@ -1,5 +1,6 @@
 import crypto from 'node:crypto'
 import { sb, emLista } from './supabase.js'
+import { freteAtivo, cotarFrete } from './frete.js'
 
 // ============================================================================
 //  Pedidos da loja pagos pelo site (Mercado Pago).
@@ -15,7 +16,17 @@ const comissaoPct = (s) => {
   const v = Number(s?.comissaoLojas)
   return Number.isFinite(v) && v >= 0 ? v : 10
 }
+// Preço na loja: o do lojista + a comissão da APHAM nos produtos das parceiras.
+export const precoDeVenda = (p, settings) => {
+  const base = arred(precoFinal(p))
+  return p.lojaId ? arred(base * (1 + comissaoPct(settings) / 100)) : base
+}
 const texto = (v, max) => String(v ?? '').trim().slice(0, max)
+// Igual a src/store/entrega.js → rotuloEntrega.
+function rotuloEntrega(o) {
+  if (o.entrega === 'envio') return o.freteServico ? `Envio para o Brasil — ${o.freteServico}` : 'Envio para o Brasil (frete a calcular)'
+  return o.entrega === 'entrega' ? 'Entrega em Breves' : 'Retirada com a APHAM'
+}
 // Igual a src/store/entrega.js → enderecoTexto.
 function enderecoTexto(e) {
   const linha1 = [e.rua, e.numero].filter(Boolean).join(', ') + (e.complemento ? ` (${e.complemento})` : '')
@@ -72,7 +83,7 @@ export async function montarPedido(entrada) {
     itens.push({
       id: p.id,
       nome: p.nome,
-      preco: p.lojaId ? arred(base * (1 + pct / 100)) : base,
+      preco: precoDeVenda(p, settings),
       imagem: p.imagens?.[iFoto ?? 0] || p.imagens?.[0] || '',
       tamanho,
       cor,
@@ -94,7 +105,8 @@ export async function montarPedido(entrada) {
     desconto = arred(c.tipo === 'percent' ? (subtotal * Number(c.valor)) / 100 : Math.min(Number(c.valor), subtotal))
     cupomCodigo = c.codigo
   }
-  // retirada | entrega (Breves, com taxa) | envio (todo o Brasil, frete calculado depois)
+  // retirada | entrega (Breves, com taxa) | envio (todo o Brasil, frete pelo Melhor Envio
+  // ou, sem cotação, calculado depois pela APHAM)
   const entrega = ['entrega', 'envio'].includes(entrada.entrega) ? entrada.entrega : 'retirada'
   const e = entrada.endereco && typeof entrada.endereco === 'object' ? entrada.endereco : {}
   const end = {
@@ -109,9 +121,31 @@ export async function montarPedido(entrada) {
   if (entrega !== 'retirada' && (!end.rua || !end.numero || !end.bairro || !end.cidade || !end.uf)) return { erro: 'Preencha o endereço de entrega.' }
   if (entrega === 'envio' && end.cep.length !== 8) return { erro: 'Informe um CEP válido.' }
   let frete = 0
+  let envio = null // { freteServico, freteServicoId, fretePrazo }
   if (entrega === 'entrega') {
     const gratis = settings.entregaGratisAcima
     frete = gratis != null && gratis !== '' && subtotal >= Number(gratis) ? 0 : arred(settings.entregaTaxa)
+  }
+  // Refaz a cotação e usa o serviço que o cliente escolheu. Sem escolha (o
+  // navegador não conseguiu cotar) ou sem cotação aqui, o frete fica "a calcular".
+  const escolhido = texto(entrada.freteServico, 20)
+  if (entrega === 'envio' && escolhido && freteAtivo(settings)) {
+    let opcoes = []
+    try {
+      opcoes = await cotarFrete({
+        cep: end.cep,
+        itens: itens.map((i) => ({ produto: produtos[i.id], qtd: i.qtd, preco: i.preco })),
+        settings,
+      })
+    } catch (err) {
+      console.error('frete no pedido', err)
+    }
+    if (opcoes.length) {
+      const op = opcoes.find((o) => o.id === escolhido)
+      if (!op) return { erro: 'Essa opção de frete não está mais disponível. Escolha outra.' }
+      frete = op.preco
+      envio = { freteServico: op.nome, freteServicoId: op.id, fretePrazo: op.prazo }
+    }
   }
   const total = arred(Math.max(0, subtotal - desconto) + frete)
   if (total < 1) return { erro: 'Valor do pedido muito baixo para pagamento online.' }
@@ -130,7 +164,8 @@ export async function montarPedido(entrada) {
     entrega,
     endereco: entrega === 'retirada' ? '' : enderecoTexto(end),
     ...(entrega === 'retirada' ? {} : { enderecoDetalhado: end }),
-    ...(entrega === 'envio' ? { freteACalcular: true } : {}),
+    ...(envio || {}),
+    ...(entrega === 'envio' && !envio ? { freteACalcular: true } : {}),
     pagamento: 'online',
     pagamentoOnline: { status: 'aguardando' },
     obs: texto(entrada.obs, 1000),
@@ -234,7 +269,8 @@ async function avisarAprovado(p) {
         '',
         `Total: ${brl(p.total)}`,
         `Cliente: ${p.cliente.nome} · ${p.cliente.telefone} · ${p.cliente.email}`,
-        `Entrega: ${p.entrega === 'envio' ? 'Envio para o Brasil (frete a calcular)' : p.entrega === 'entrega' ? 'Entrega em Breves' : 'Retirada'}${p.endereco ? ` — ${p.endereco}` : ''}`,
+        `Entrega: ${rotuloEntrega(p)}${p.endereco ? ` — ${p.endereco}` : ''}`,
+        p.freteServico ? `Frete: ${brl(p.frete)} — comprar a etiqueta (${p.freteServico}) no Melhor Envio` : '',
         p.obs ? `Obs: ${p.obs}` : '',
       ]
         .filter(Boolean)

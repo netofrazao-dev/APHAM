@@ -73,7 +73,7 @@ export default function OrdersAdmin() {
                       <div className="mt-3 space-y-0.5 border-t border-navy-100 pt-2 text-sm text-navy-600">
                         <div className="flex justify-between"><span>Subtotal</span><span>{formatBRL(o.subtotal ?? o.total)}</span></div>
                         {o.desconto > 0 && <div className="flex justify-between text-cyan-700"><span>Desconto {o.cupomCodigo ? `(${o.cupomCodigo})` : ''}</span><span>-{formatBRL(o.desconto)}</span></div>}
-                        {o.frete > 0 && <div className="flex justify-between"><span>Entrega</span><span>{formatBRL(o.frete)}</span></div>}
+                        {o.frete > 0 && <div className="flex justify-between"><span>{o.entrega === 'envio' ? 'Frete' : 'Entrega'}</span><span>{formatBRL(o.frete)}</span></div>}
                         <div className="flex justify-between font-bold text-navy-900"><span>Total</span><span>{formatBRL(o.total)}</span></div>
                       </div>
                       {/* Divisão com as lojas parceiras */}
@@ -104,6 +104,11 @@ export default function OrdersAdmin() {
                       {o.cliente?.email && <p>{o.cliente.email}</p>}
                       <p className="mt-2"><span className="text-navy-400">Entrega:</span> {rotuloEntrega(o)}{o.endereco ? ` — ${o.endereco}` : ''}</p>
                       {o.freteACalcular && <p className="mt-1 text-xs font-semibold text-amber-700">Calcule o frete para o CEP e mande o valor ao cliente pelo WhatsApp.</p>}
+                      {o.freteServico && (
+                        <p className="mt-1 text-xs font-semibold text-cyan-700">
+                          Frete cobrado no pedido ({formatBRL(o.frete)}{o.fretePrazo ? `, prazo informado: até ${o.fretePrazo} dias úteis` : ''}). Compre a etiqueta {o.freteServico} no Melhor Envio e poste nos Correios.
+                        </p>
+                      )}
                       <p><span className="text-navy-400">Pagamento:</span> {o.pagamento === 'online' ? `Mercado Pago — ${PAGAMENTO_ONLINE[o.pagamentoOnline?.status] || 'aguardando'}` : o.pagamento === 'pix' ? 'PIX' : 'A combinar'}</p>
                       {o.obs && <p className="mt-1"><span className="text-navy-400">Obs:</span> {o.obs}</p>}
                     </div>
