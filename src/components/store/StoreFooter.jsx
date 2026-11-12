@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { site } from '../../data/content'
+import CreditoDev from '../CreditoDev'
 
 export default function StoreFooter() {
   return (
@@ -25,6 +26,9 @@ export default function StoreFooter() {
             Admin
           </Link>
         </div>
+      </div>
+      <div className="flex justify-center pb-6">
+        <CreditoDev claro />
       </div>
     </footer>
   )
