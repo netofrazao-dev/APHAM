@@ -11,7 +11,7 @@ export default function ProductCard({ produto }) {
   const toast = useToast()
   const navigate = useNavigate()
   const temPromo = produto.precoPromo != null && produto.precoPromo !== ''
-  const precisaEscolher = (produto.tamanhos?.length || 0) > 0 || (produto.cores?.length || 0) > 0
+  const precisaEscolher = ['tamanhos', 'cores', 'modelos'].some((k) => (produto[k]?.length || 0) > 0)
   const semEstoque = Number(produto.estoque) <= 0
   const favorito = isFavorito(produto.id)
 

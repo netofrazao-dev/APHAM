@@ -4,6 +4,8 @@ import { useStore } from '../../store/StoreContext'
 import { formatBRL } from '../../store/format'
 import { ORDER_STATUSES, statusInfo, statusCor, PAGAMENTO_ONLINE } from '../../store/constants'
 import { PageTitle, Card } from './ui'
+import { variacoesTexto } from '../../store/lojas'
+import { rotuloEntrega } from '../../store/entrega'
 
 const STATUS_IDS = [...ORDER_STATUSES.map((s) => s.id), 'cancelado']
 
@@ -61,7 +63,7 @@ export default function OrdersAdmin() {
                           <li key={idx} className="flex justify-between gap-3">
                             <span>
                               {i.qtd}x {i.nome}
-                              {(i.tamanho || i.cor) && <span className="text-navy-400"> ({[i.tamanho, i.cor].filter(Boolean).join(', ')})</span>}
+                              {variacoesTexto(i) && <span className="text-navy-400"> ({variacoesTexto(i, ', ')})</span>}
                               {i.lojaId && <span className="ml-1.5 rounded-full bg-violet-100 px-2 py-0.5 text-[11px] font-semibold text-violet-700">{i.lojaNome || 'Loja parceira'}</span>}
                             </span>
                             <span className="font-medium">{formatBRL(i.preco * i.qtd)}</span>
@@ -100,7 +102,8 @@ export default function OrdersAdmin() {
                       <p className="mt-2">{o.cliente?.nome}</p>
                       <p>{o.cliente?.telefone}</p>
                       {o.cliente?.email && <p>{o.cliente.email}</p>}
-                      <p className="mt-2"><span className="text-navy-400">Entrega:</span> {o.entrega === 'entrega' ? 'Entrega' : 'Retirada'}{o.entrega === 'entrega' && o.endereco ? ` — ${o.endereco}` : ''}</p>
+                      <p className="mt-2"><span className="text-navy-400">Entrega:</span> {rotuloEntrega(o)}{o.endereco ? ` — ${o.endereco}` : ''}</p>
+                      {o.freteACalcular && <p className="mt-1 text-xs font-semibold text-amber-700">Calcule o frete para o CEP e mande o valor ao cliente pelo WhatsApp.</p>}
                       <p><span className="text-navy-400">Pagamento:</span> {o.pagamento === 'online' ? `Mercado Pago — ${PAGAMENTO_ONLINE[o.pagamentoOnline?.status] || 'aguardando'}` : o.pagamento === 'pix' ? 'PIX' : 'A combinar'}</p>
                       {o.obs && <p className="mt-1"><span className="text-navy-400">Obs:</span> {o.obs}</p>}
                     </div>

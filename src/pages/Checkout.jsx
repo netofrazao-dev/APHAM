@@ -13,6 +13,8 @@ import PixBox from '../components/store/PixBox'
 import PagamentoOnline from '../components/store/PagamentoOnline'
 import { pagamentoOnlineAtivo, criarPedidoOnline } from '../lib/mercadopago'
 import { pixDaLoja } from '../store/pix'
+import { variacoesTexto } from '../store/lojas'
+import { ENTREGAS, precisaEndereco, enderecoVazio, enderecoTexto, rotuloEntrega, formatarCep, buscarCep } from '../store/entrega'
 
 export default function Checkout() {
   const { cart, cartTotal, settings, addOrder, clearCart, aplicarCupom, baixarEstoque, registrarPedidoLocal, atualizarPedidoLocal } =
@@ -23,7 +25,7 @@ export default function Checkout() {
     telefone: '',
     email: '',
     entrega: 'retirada',
-    endereco: '',
+    end: enderecoVazio(),
     pagamento: pagamentoOnlineAtivo ? 'online' : 'pix',
     obs: '',
   })
@@ -35,6 +37,24 @@ export default function Checkout() {
   const [enviando, setEnviando] = useState(false)
 
   const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
+  const setEnd = (campo, valor) => setForm((f) => ({ ...f, end: { ...f.end, [campo]: valor } }))
+  const [buscandoCep, setBuscandoCep] = useState(false)
+  const [cepNaoAchado, setCepNaoAchado] = useState(false)
+  // CEP completo: preenche rua, bairro, cidade e UF (o cliente pode corrigir).
+  const mudarCep = async (valor) => {
+    const cep = formatarCep(valor)
+    setEnd('cep', cep)
+    setCepNaoAchado(false)
+    if (cep.replace(/\D/g, '').length !== 8) return
+    setBuscandoCep(true)
+    const r = await buscarCep(cep)
+    setBuscandoCep(false)
+    if (!r) return setCepNaoAchado(true)
+    setForm((f) => ({ ...f, end: { ...f.end, rua: r.rua || f.end.rua, bairro: r.bairro || f.end.bairro, cidade: r.cidade, uf: r.uf } }))
+  }
+  const comEndereco = precisaEndereco(form.entrega)
+  const endereco = comEndereco ? enderecoTexto(form.end) : ''
+  const freteACalcular = form.entrega === 'envio'
 
   const subtotal = cartTotal
   const desconto = cupom ? cupom.desconto : 0
@@ -61,7 +81,7 @@ export default function Checkout() {
   const montarTexto = (order) => {
     const linhas = order.itens.map(
       (i) =>
-        `• ${i.qtd}x ${i.nome}${i.tamanho || i.cor ? ` (${[i.tamanho, i.cor].filter(Boolean).join(', ')})` : ''}${i.lojaNome ? ` [Loja: ${i.lojaNome}]` : ''} — ${formatBRL(i.preco * i.qtd)}`
+        `• ${i.qtd}x ${i.nome}${variacoesTexto(i) ? ` (${variacoesTexto(i, ', ')})` : ''}${i.lojaNome ? ` [Loja: ${i.lojaNome}]` : ''} — ${formatBRL(i.preco * i.qtd)}`
     )
     return [
       `*Novo pedido — ${settings.nomeLoja}*`,
@@ -72,14 +92,14 @@ export default function Checkout() {
       '',
       `Subtotal: ${formatBRL(order.subtotal)}`,
       order.desconto ? `Desconto (${order.cupomCodigo}): -${formatBRL(order.desconto)}` : '',
-      `Entrega: ${order.frete ? formatBRL(order.frete) : order.entrega === 'entrega' ? 'a combinar' : 'Retirada'}`,
+      `Entrega: ${order.freteACalcular ? 'frete a calcular' : order.frete ? formatBRL(order.frete) : order.entrega === 'entrega' ? 'grátis' : 'Retirada'}`,
       `*Total: ${formatBRL(order.total)}*`,
       '',
       `*Cliente:* ${order.cliente.nome}`,
       `*Telefone:* ${order.cliente.telefone}`,
       order.cliente.email ? `*E-mail:* ${order.cliente.email}` : '',
-      `*Entrega:* ${order.entrega === 'entrega' ? 'Entrega' : 'Retirada'}`,
-      order.entrega === 'entrega' && order.endereco ? `*Endereço:* ${order.endereco}` : '',
+      `*Entrega:* ${rotuloEntrega(order)}`,
+      order.endereco ? `*Endereço:* ${order.endereco}` : '',
       `*Pagamento:* ${order.pagamento === 'pix' ? 'Pix (segue o comprovante)' : 'A combinar'}`,
       order.obs ? `*Obs:* ${order.obs}` : '',
     ]
@@ -100,7 +120,7 @@ export default function Checkout() {
         itens: cart.map(({ id, qtd, tamanho, cor }) => ({ id, qtd, tamanho, cor })),
         cliente: { nome: form.nome, telefone: form.telefone, email: form.email },
         entrega: form.entrega,
-        endereco: form.endereco,
+        endereco: form.end,
         obs: form.obs,
         cupom: cupom?.codigo || '',
         totalEsperado: total,
@@ -140,7 +160,9 @@ export default function Checkout() {
       frete,
       total,
       entrega: form.entrega,
-      endereco: form.endereco,
+      endereco,
+      ...(comEndereco ? { enderecoDetalhado: form.end } : {}),
+      ...(freteACalcular ? { freteACalcular: true } : {}),
       pagamento: form.pagamento,
       obs: form.obs,
       status: 'recebido',
@@ -181,6 +203,11 @@ export default function Checkout() {
               {pedido.pagamento === 'pix' && (
                 <p className="mt-2 max-w-md text-sm text-navy-500">
                   Pague com o Pix abaixo e depois envie o comprovante pelo WhatsApp. A APHAM confirma o pedido e combina a retirada ou a entrega.
+                </p>
+              )}
+              {pedido.freteACalcular && (
+                <p className="mt-3 max-w-md rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                  <strong>Frete:</strong> a APHAM calcula o envio para o seu CEP e manda o valor pelo WhatsApp, para pagar à parte.
                 </p>
               )}
               {pedido.url && pedido.pagamento !== 'pix' && (
@@ -305,24 +332,54 @@ export default function Checkout() {
 
             <div className="rounded-2xl border border-navy-100 bg-white p-6">
               <h2 className="font-display font-bold text-navy-900">Entrega</h2>
-              <div className="mt-4 flex flex-wrap gap-3">
-                {[
-                  { v: 'retirada', l: 'Retirar com a APHAM' },
-                  { v: 'entrega', l: 'Receber em casa' },
-                ].map((o) => (
-                  <label key={o.v} className={`cursor-pointer rounded-xl border px-4 py-3 text-sm font-medium ${form.entrega === o.v ? 'border-cyan-500 bg-cyan-50 text-cyan-700' : 'border-navy-200 text-navy-700'}`}>
-                    <input type="radio" name="entrega" value={o.v} checked={form.entrega === o.v} onChange={onChange} className="sr-only" />
-                    {o.l}
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                {ENTREGAS.map((o) => (
+                  <label key={o.id} className={`cursor-pointer rounded-xl border px-4 py-3 text-sm ${form.entrega === o.id ? 'border-cyan-500 bg-cyan-50 text-cyan-800' : 'border-navy-200 text-navy-700'}`}>
+                    <input type="radio" name="entrega" value={o.id} checked={form.entrega === o.id} onChange={onChange} className="sr-only" />
+                    <span className="block font-semibold">{o.rotulo}</span>
+                    <span className="block text-xs opacity-75">{o.detalhe}</span>
                   </label>
                 ))}
               </div>
-              {form.entrega === 'entrega' && (
-                <div className="mt-4">
-                  <label className="mb-1.5 block text-sm font-semibold text-navy-800">Endereço</label>
-                  <input name="endereco" value={form.endereco} onChange={onChange} className={inputCls} placeholder="Rua, nº, bairro, cidade" />
+              {comEndereco && (
+                <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-6">
+                  <div className="sm:col-span-2">
+                    <label htmlFor="cep" className="mb-1.5 block text-sm font-semibold text-navy-800">CEP {freteACalcular && '*'}</label>
+                    <input id="cep" inputMode="numeric" autoComplete="postal-code" required={freteACalcular} value={form.end.cep} onChange={(e) => mudarCep(e.target.value)} className={inputCls} placeholder="00000-000" />
+                    {buscandoCep && <p className="mt-1 text-xs text-navy-500">Buscando o endereço…</p>}
+                    {cepNaoAchado && <p className="mt-1 text-xs text-amber-700">CEP não encontrado. Preencha o endereço à mão.</p>}
+                  </div>
+                  <div className="sm:col-span-4">
+                    <label htmlFor="rua" className="mb-1.5 block text-sm font-semibold text-navy-800">Rua / avenida *</label>
+                    <input id="rua" required autoComplete="address-line1" value={form.end.rua} onChange={(e) => setEnd('rua', e.target.value)} className={inputCls} />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label htmlFor="numero" className="mb-1.5 block text-sm font-semibold text-navy-800">Número *</label>
+                    <input id="numero" required value={form.end.numero} onChange={(e) => setEnd('numero', e.target.value)} className={inputCls} placeholder="ou s/n" />
+                  </div>
+                  <div className="sm:col-span-4">
+                    <label htmlFor="complemento" className="mb-1.5 block text-sm font-semibold text-navy-800">Complemento</label>
+                    <input id="complemento" autoComplete="address-line2" value={form.end.complemento} onChange={(e) => setEnd('complemento', e.target.value)} className={inputCls} placeholder="Casa, apto, ponto de referência" />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label htmlFor="bairro" className="mb-1.5 block text-sm font-semibold text-navy-800">Bairro *</label>
+                    <input id="bairro" required value={form.end.bairro} onChange={(e) => setEnd('bairro', e.target.value)} className={inputCls} />
+                  </div>
+                  <div className="sm:col-span-3">
+                    <label htmlFor="cidade" className="mb-1.5 block text-sm font-semibold text-navy-800">Cidade *</label>
+                    <input id="cidade" required autoComplete="address-level2" value={form.end.cidade} onChange={(e) => setEnd('cidade', e.target.value)} className={inputCls} placeholder={form.entrega === 'entrega' ? 'Breves' : ''} />
+                  </div>
+                  <div className="sm:col-span-1">
+                    <label htmlFor="uf" className="mb-1.5 block text-sm font-semibold text-navy-800">UF *</label>
+                    <input id="uf" required maxLength={2} autoComplete="address-level1" value={form.end.uf} onChange={(e) => setEnd('uf', e.target.value.toUpperCase())} className={inputCls} placeholder="PA" />
+                  </div>
                 </div>
               )}
-              <p className="mt-3 text-xs text-navy-500">{settings.entregaInfo}</p>
+              <p className="mt-3 text-xs text-navy-500">
+                {freteACalcular
+                  ? 'Enviamos para todo o Brasil. O frete é calculado depois da compra, pelo seu CEP, e a APHAM informa o valor pelo WhatsApp para pagar à parte.'
+                  : settings.entregaInfo}
+              </p>
             </div>
 
             <div className="rounded-2xl border border-navy-100 bg-white p-6">
@@ -363,7 +420,7 @@ export default function Checkout() {
                   <li key={idx} className="flex justify-between gap-3 text-sm">
                     <span className="text-navy-700">
                       {i.qtd}x {i.nome}
-                      {(i.tamanho || i.cor) && <span className="block text-xs text-navy-400">{[i.tamanho, i.cor].filter(Boolean).join(' · ')}</span>}
+                      {variacoesTexto(i) && <span className="block text-xs text-navy-400">{variacoesTexto(i)}</span>}
                     </span>
                     <span className="font-semibold text-navy-900">{formatBRL(i.preco * i.qtd)}</span>
                   </li>
@@ -388,10 +445,13 @@ export default function Checkout() {
               <div className="mt-4 space-y-2 border-t border-navy-100 pt-4 text-sm">
                 <div className="flex justify-between text-navy-600"><span>Subtotal</span><span>{formatBRL(subtotal)}</span></div>
                 {desconto > 0 && <div className="flex justify-between text-cyan-700"><span>Desconto</span><span>-{formatBRL(desconto)}</span></div>}
-                <div className="flex justify-between text-navy-600"><span>Entrega</span><span>{form.entrega === 'entrega' ? (frete > 0 ? formatBRL(frete) : 'Grátis') : 'Retirada'}</span></div>
+                <div className="flex justify-between text-navy-600">
+                  <span>{freteACalcular ? 'Frete' : 'Entrega'}</span>
+                  <span>{freteACalcular ? 'a calcular' : form.entrega === 'entrega' ? (frete > 0 ? formatBRL(frete) : 'Grátis') : 'Retirada'}</span>
+                </div>
               </div>
               <div className="mt-3 flex items-center justify-between border-t border-navy-100 pt-3">
-                <span className="font-display font-bold text-navy-900">Total</span>
+                <span className="font-display font-bold text-navy-900">{freteACalcular ? 'Total sem o frete' : 'Total'}</span>
                 <span className="font-display text-xl font-extrabold text-navy-900">{formatBRL(total)}</span>
               </div>
 

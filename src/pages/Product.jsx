@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ChevronRight, Minus, Plus, ShoppingCart, Check, Heart, Store as StoreIcon, BadgeCheck, Truck, RotateCcw } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Minus, Plus, ShoppingCart, Check, Heart, Store as StoreIcon, BadgeCheck, Truck, RotateCcw } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
 import { useToast } from '../components/Toast'
 import { formatBRL } from '../store/format'
-import { precoVitrine, precoCheioVitrine, itemCarrinho, urlLoja } from '../store/lojas'
+import { precoVitrine, precoCheioVitrine, itemCarrinho, urlLoja, chaveVariacao } from '../store/lojas'
 import StoreHeader from '../components/store/StoreHeader'
 import StoreFooter from '../components/store/StoreFooter'
 import ProductImage from '../components/store/ProductImage'
@@ -20,6 +20,8 @@ export default function Product() {
   const [imgIdx, setImgIdx] = useState(0)
   const [tamanho, setTamanho] = useState('')
   const [cor, setCor] = useState('')
+  const [modelo, setModelo] = useState('')
+  const toque = useRef(null)
   const [qtd, setQtd] = useState(1)
   const [added, setAdded] = useState(false)
 
@@ -51,11 +53,25 @@ export default function Product() {
 
   const temTam = (produto.tamanhos?.length || 0) > 0
   const temCor = (produto.cores?.length || 0) > 0
+  const temModelo = (produto.modelos?.length || 0) > 0
+  const fotos = produto.imagens || []
+  const irFoto = (i) => fotos.length && setImgIdx((i + fotos.length) % fotos.length)
+  // Escolher uma cor/modelo mostra a foto ligada a ela no painel (se houver).
+  const escolher = (tipo, valor) => {
+    if (tipo === 'cor') setCor(valor)
+    else setModelo(valor)
+    const i = produto.fotoDe?.[chaveVariacao(tipo, valor)]
+    if (Number.isInteger(i) && i < fotos.length) setImgIdx(i)
+  }
+  const fimToque = (e) => {
+    const dx = e.changedTouches[0].clientX - (toque.current ?? 0)
+    if (Math.abs(dx) > 40) irFoto(dx < 0 ? imgIdx + 1 : imgIdx - 1)
+  }
   const semEstoque = Number(produto.estoque) <= 0
-  const faltaEscolher = (temTam && !tamanho) || (temCor && !cor)
+  const faltaEscolher = (temTam && !tamanho) || (temCor && !cor) || (temModelo && !modelo)
   const favorito = isFavorito(produto.id)
 
-  const montarItem = () => itemCarrinho(produto, comissao, { tamanho, cor, qtd })
+  const montarItem = () => itemCarrinho(produto, comissao, { tamanho, cor, modelo, qtd })
   const loja = produto.lojaId ? lojasPorId[produto.lojaId] : null
 
   const handleAdd = () => {
@@ -85,17 +101,47 @@ export default function Product() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
           {/* Galeria */}
           <div>
-            <div className="overflow-hidden rounded-2xl border border-navy-100 bg-white">
-              {produto.imagens?.length ? (
-                <img src={produto.imagens[imgIdx]} alt={produto.nome} className="aspect-square w-full object-cover" />
+            {/* Foto principal: deslize para os lados (celular) ou use as setas */}
+            <div
+              className="relative overflow-hidden rounded-2xl border border-navy-100 bg-white"
+              onTouchStart={(e) => (toque.current = e.touches[0].clientX)}
+              onTouchEnd={fimToque}
+            >
+              {fotos.length ? (
+                <img src={fotos[imgIdx] || fotos[0]} alt={produto.nome} className="aspect-square w-full select-none object-cover" draggable={false} />
               ) : (
                 <ProductImage produto={produto} className="aspect-square w-full" />
               )}
+              {fotos.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => irFoto(imgIdx - 1)}
+                    aria-label="Foto anterior"
+                    className="absolute left-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-navy-900 shadow-soft transition hover:bg-white"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => irFoto(imgIdx + 1)}
+                    aria-label="Próxima foto"
+                    className="absolute right-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-navy-900 shadow-soft transition hover:bg-white"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
+                  <div className="absolute inset-x-0 bottom-3 flex justify-center gap-1.5">
+                    {fotos.map((_, i) => (
+                      <span key={i} className={`h-1.5 rounded-full transition-all ${i === imgIdx ? 'w-5 bg-cyan-500' : 'w-1.5 bg-white/80'}`} />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
-            {produto.imagens?.length > 1 && (
-              <div className="mt-3 flex gap-3">
-                {produto.imagens.map((im, i) => (
-                  <button key={i} type="button" onClick={() => setImgIdx(i)} className={`h-16 w-16 overflow-hidden rounded-lg border-2 ${i === imgIdx ? 'border-cyan-500' : 'border-navy-100'}`}>
+            {fotos.length > 1 && (
+              <div className="mt-3 flex gap-3 overflow-x-auto pb-1">
+                {fotos.map((im, i) => (
+                  <button key={i} type="button" onClick={() => setImgIdx(i)} aria-label={`Ver foto ${i + 1}`} className={`h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 ${i === imgIdx ? 'border-cyan-500' : 'border-navy-100'}`}>
                     <img src={im} alt="" className="h-full w-full object-cover" />
                   </button>
                 ))}
@@ -160,12 +206,25 @@ export default function Product() {
               </div>
             )}
 
+            {temModelo && (
+              <div className="mt-5">
+                <p className="mb-2 text-sm font-semibold text-navy-800">Modelo</p>
+                <div className="flex flex-wrap gap-2">
+                  {produto.modelos.map((m) => (
+                    <button key={m} type="button" onClick={() => escolher('modelo', m)} className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${modelo === m ? 'border-cyan-500 bg-cyan-50 text-cyan-700' : 'border-navy-200 text-navy-700 hover:border-navy-300'}`}>
+                      {m}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {temCor && (
               <div className="mt-5">
                 <p className="mb-2 text-sm font-semibold text-navy-800">Cor</p>
                 <div className="flex flex-wrap gap-2">
                   {produto.cores.map((c) => (
-                    <button key={c} type="button" onClick={() => setCor(c)} className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${cor === c ? 'border-cyan-500 bg-cyan-50 text-cyan-700' : 'border-navy-200 text-navy-700 hover:border-navy-300'}`}>
+                    <button key={c} type="button" onClick={() => escolher('cor', c)} className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${cor === c ? 'border-cyan-500 bg-cyan-50 text-cyan-700' : 'border-navy-200 text-navy-700 hover:border-navy-300'}`}>
                       {c}
                     </button>
                   ))}
@@ -199,7 +258,7 @@ export default function Product() {
             <ul className="mt-6 space-y-2 rounded-2xl border border-navy-100 bg-white p-4 text-sm text-navy-700">
               <li className="flex items-start gap-2.5">
                 <Truck className="mt-0.5 h-4 w-4 shrink-0 text-cyan-600" />
-                Pronta entrega: retirada com a APHAM ou entrega em Breves (PA).
+                Pronta entrega: retirada ou entrega em Breves (PA), ou envio para todo o Brasil.
               </li>
               <li className="flex items-start gap-2.5">
                 <RotateCcw className="mt-0.5 h-4 w-4 shrink-0 text-cyan-600" />
@@ -212,7 +271,9 @@ export default function Product() {
               </li>
             </ul>
             {!semEstoque && faltaEscolher && (
-              <p className="mt-3 text-sm text-navy-500">Selecione {temTam && !tamanho ? 'o tamanho' : ''}{temTam && !tamanho && temCor && !cor ? ' e ' : ''}{temCor && !cor ? 'a cor' : ''}.</p>
+              <p className="mt-3 text-sm text-navy-500">
+                Selecione {[temTam && !tamanho && 'o tamanho', temModelo && !modelo && 'o modelo', temCor && !cor && 'a cor'].filter(Boolean).join(' e ')}.
+              </p>
             )}
           </div>
         </div>

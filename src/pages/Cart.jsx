@@ -5,6 +5,7 @@ import { formatBRL } from '../store/format'
 import StoreHeader from '../components/store/StoreHeader'
 import StoreFooter from '../components/store/StoreFooter'
 import ProductCard from '../components/store/ProductCard'
+import { variacoesTexto } from '../store/lojas'
 
 export default function Cart() {
   const { cart, updateQtd, removeFromCart, cartTotal, produtos } = useStore()
@@ -46,9 +47,9 @@ export default function Cart() {
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <h3 className="font-display text-sm font-bold text-navy-900">{item.nome}</h3>
-                          {(item.tamanho || item.cor) && (
+                          {variacoesTexto(item) && (
                             <p className="mt-0.5 text-xs text-navy-500">
-                              {[item.tamanho, item.cor].filter(Boolean).join(' · ')}
+                              {variacoesTexto(item)}
                             </p>
                           )}
                           {item.lojaNome && <p className="mt-0.5 text-xs text-violet-700">Vendido por {item.lojaNome}</p>}

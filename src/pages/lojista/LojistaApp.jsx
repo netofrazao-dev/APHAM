@@ -4,8 +4,9 @@ import { ArrowLeft, ArrowUpRight, ClipboardList, Clock, ExternalLink, LayoutDash
 import { useStore } from '../../store/StoreContext'
 import { formatBRL } from '../../store/format'
 import { fileToOptimizedDataURL } from '../../store/images'
-import { STATUS_LOJA, saldoDaLoja, urlLoja } from '../../store/lojas'
+import { STATUS_LOJA, saldoDaLoja, urlLoja, variacoesTexto } from '../../store/lojas'
 import { statusInfo, statusCor } from '../../store/constants'
+import { rotuloEntrega } from '../../store/entrega'
 import ProductsAdmin from '../admin/ProductsAdmin'
 import { Card, Field, inputCls, btnPrimary, btnGhost, PageTitle } from '../admin/ui'
 
@@ -257,7 +258,7 @@ function Pedidos() {
               {itens.map((i, k) => (
                 <li key={k}>
                   {i.qtd}x {i.nome}
-                  {(i.tamanho || i.cor) && <span className="text-navy-400"> ({[i.tamanho, i.cor].filter(Boolean).join(', ')})</span>} —{' '}
+                  {variacoesTexto(i) && <span className="text-navy-400"> ({variacoesTexto(i, ', ')})</span>} —{' '}
                   {formatBRL((i.precoLojista ?? i.preco) * i.qtd)}
                 </li>
               ))}
@@ -266,7 +267,7 @@ function Pedidos() {
               <p className="mt-3 rounded-lg bg-navy-50 px-3 py-2 text-xs text-navy-600">
                 Cliente: {o.cliente.nome}
                 {o.cliente.telefone && ` · ${o.cliente.telefone}`}
-                {o.entrega && ` · ${o.entrega === 'entrega' ? `Entrega: ${o.endereco || ''}` : 'Retirada'}`}
+                {o.entrega && ` · ${rotuloEntrega(o)}${o.endereco ? `: ${o.endereco}` : ''}`}
               </p>
             )}
             {!pago && o.status !== 'cancelado' && <p className="mt-2 text-xs text-amber-700">Aguardando a APHAM confirmar o pagamento.</p>}

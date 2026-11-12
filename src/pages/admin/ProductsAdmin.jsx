@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Plus, Pencil, Trash2, Star, X, Upload, Image as ImageIcon } from 'lucide-react'
 import { useStore, slugify, novoId } from '../../store/StoreContext'
 import { formatBRL, precoFinal } from '../../store/format'
+import { chaveVariacao } from '../../store/lojas'
 import { fileToOptimizedDataURL } from '../../store/images'
 import ProductImage from '../../components/store/ProductImage'
 import { PageTitle, Card, Field, inputCls, btnAccent, btnGhost, btnPrimary, btnDanger } from './ui'
@@ -15,6 +16,8 @@ const vazio = () => ({
   descricao: '',
   tamanhosStr: '',
   coresStr: '',
+  modelosStr: '',
+  fotoDe: {},
   estoque: 0,
   destaque: false,
   ativo: true,
@@ -40,6 +43,8 @@ export default function ProductsAdmin({ loja = null }) {
       precoPromo: p.precoPromo ?? '',
       tamanhosStr: (p.tamanhos || []).join(', '),
       coresStr: (p.cores || []).join(', '),
+      modelosStr: (p.modelos || []).join(', '),
+      fotoDe: p.fotoDe || {},
     })
 
   const set = (campo, valor) => setForm((f) => ({ ...f, [campo]: valor }))
@@ -58,7 +63,29 @@ export default function ProductsAdmin({ loja = null }) {
       setEnviando(false)
     }
   }
-  const removerImagem = (i) => setForm((f) => ({ ...f, imagens: f.imagens.filter((_, idx) => idx !== i) }))
+  // Ao remover uma foto, as variações ligadas a ela ficam sem foto e as das
+  // fotos seguintes acompanham a nova posição.
+  const removerImagem = (i) =>
+    setForm((f) => ({
+      ...f,
+      imagens: f.imagens.filter((_, idx) => idx !== i),
+      fotoDe: Object.fromEntries(
+        Object.entries(f.fotoDe || {})
+          .filter(([, idx]) => idx !== i)
+          .map(([k, idx]) => [k, idx > i ? idx - 1 : idx])
+      ),
+    }))
+  const lista = (str) => (str || '').split(',').map((s) => s.trim()).filter(Boolean)
+  const ligarFoto = (chave, idx) =>
+    setForm((f) => {
+      const fotoDe = { ...(f.fotoDe || {}) }
+      if (fotoDe[chave] === idx || idx == null) delete fotoDe[chave]
+      else fotoDe[chave] = idx
+      return { ...f, fotoDe }
+    })
+  const variacoesComFoto = form
+    ? [...lista(form.coresStr).map((v) => ['cor', v]), ...lista(form.modelosStr).map((v) => ['modelo', v])]
+    : []
 
   const salvar = async (e) => {
     e.preventDefault()
@@ -70,8 +97,15 @@ export default function ProductsAdmin({ loja = null }) {
       preco: Number(form.preco) || 0,
       precoPromo: form.precoPromo === '' || form.precoPromo == null ? null : Number(form.precoPromo),
       descricao: form.descricao.trim(),
-      tamanhos: form.tamanhosStr.split(',').map((s) => s.trim()).filter(Boolean),
-      cores: form.coresStr.split(',').map((s) => s.trim()).filter(Boolean),
+      tamanhos: lista(form.tamanhosStr),
+      cores: lista(form.coresStr),
+      modelos: lista(form.modelosStr),
+      // Só as ligações de variações que ainda existem.
+      fotoDe: Object.fromEntries(
+        Object.entries(form.fotoDe || {}).filter(([k]) =>
+          variacoesComFoto.some(([t, v]) => chaveVariacao(t, v) === k)
+        )
+      ),
       estoque: Number(form.estoque) || 0,
       destaque: !!form.destaque,
       ativo: !!form.ativo,
@@ -202,6 +236,11 @@ export default function ProductsAdmin({ loja = null }) {
               <Field label="Cores" hint="Separe por vírgula. Ex.: Azul, Branco">
                 <input value={form.coresStr} onChange={(e) => set('coresStr', e.target.value)} className={inputCls} placeholder="Azul, Branco" />
               </Field>
+              <div className="sm:col-span-2">
+                <Field label="Modelos (opcional)" hint="Separe por vírgula. Ex.: Masculina, Feminina, Infantil">
+                  <input value={form.modelosStr || ''} onChange={(e) => set('modelosStr', e.target.value)} className={inputCls} placeholder="Masculina, Feminina, Infantil" />
+                </Field>
+              </div>
 
               {/* Imagens */}
               <div className="sm:col-span-2">
@@ -223,6 +262,43 @@ export default function ProductsAdmin({ loja = null }) {
                   </div>
                 </Field>
               </div>
+
+              {/* Foto de cada cor/modelo */}
+              {variacoesComFoto.length > 0 && form.imagens?.length > 0 && (
+                <div className="sm:col-span-2">
+                  <p className="mb-1 text-sm font-semibold text-navy-800">Foto de cada variação</p>
+                  <p className="mb-3 text-xs text-navy-400">
+                    Toque na foto de cada cor ou modelo. No site, quando o cliente escolher a variação, aparece essa foto.
+                  </p>
+                  <div className="space-y-3">
+                    {variacoesComFoto.map(([tipo, valor]) => {
+                      const chave = chaveVariacao(tipo, valor)
+                      const atual = form.fotoDe?.[chave]
+                      return (
+                        <div key={chave} className="flex flex-wrap items-center gap-2 rounded-xl border border-navy-100 bg-white p-2">
+                          <span className="w-28 shrink-0 text-sm font-medium text-navy-800">
+                            <span className="block text-[10px] uppercase tracking-wide text-navy-400">{tipo === 'cor' ? 'Cor' : 'Modelo'}</span>
+                            {valor}
+                          </span>
+                          {form.imagens.map((im, i) => (
+                            <button
+                              key={i}
+                              type="button"
+                              onClick={() => ligarFoto(chave, i)}
+                              aria-label={`Usar a foto ${i + 1} para ${valor}`}
+                              aria-pressed={atual === i}
+                              className={`h-12 w-12 overflow-hidden rounded-lg border-2 ${atual === i ? 'border-cyan-500 ring-2 ring-cyan-200' : 'border-navy-100 opacity-70 hover:opacity-100'}`}
+                            >
+                              <img src={im} alt="" className="h-full w-full object-cover" />
+                            </button>
+                          ))}
+                          {atual == null && <span className="text-xs text-navy-400">sem foto própria</span>}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
 
               {!loja && (
                 <label className="flex items-center gap-2 text-sm font-medium text-navy-800">

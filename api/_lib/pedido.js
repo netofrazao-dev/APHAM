@@ -16,6 +16,13 @@ const comissaoPct = (s) => {
   return Number.isFinite(v) && v >= 0 ? v : 10
 }
 const texto = (v, max) => String(v ?? '').trim().slice(0, max)
+// Igual a src/store/entrega.js → enderecoTexto.
+function enderecoTexto(e) {
+  const linha1 = [e.rua, e.numero].filter(Boolean).join(', ') + (e.complemento ? ` (${e.complemento})` : '')
+  const linha2 = [e.bairro, [e.cidade, e.uf].filter(Boolean).join('/')].filter(Boolean).join(', ')
+  const cep = e.cep ? `CEP ${e.cep.slice(0, 5)}-${e.cep.slice(5)}` : ''
+  return [linha1, linha2, cep].filter(Boolean).join(' — ')
+}
 
 export async function montarPedido(entrada) {
   const itensIn = Array.isArray(entrada.itens) ? entrada.itens.slice(0, 50) : []
@@ -55,16 +62,21 @@ export async function montarPedido(entrada) {
     if (p.estoque != null && porProduto[p.id] > Number(p.estoque)) return { erro: `Estoque insuficiente de “${p.nome}”.` }
     const tamanho = texto(i.tamanho, 20)
     const cor = texto(i.cor, 40)
+    const modelo = texto(i.modelo, 40)
     if (tamanho && p.tamanhos?.length && !p.tamanhos.includes(tamanho)) return { erro: `Tamanho inválido em “${p.nome}”.` }
     if (cor && p.cores?.length && !p.cores.includes(cor)) return { erro: `Cor inválida em “${p.nome}”.` }
+    if (modelo && p.modelos?.length && !p.modelos.includes(modelo)) return { erro: `Modelo inválido em “${p.nome}”.` }
+    // Foto da variação escolhida (cor/modelo), igual a src/store/lojas.js → fotoDaVariacao.
+    const iFoto = [cor && p.fotoDe?.[`cor:${cor}`], modelo && p.fotoDe?.[`modelo:${modelo}`]].find((x) => Number.isInteger(x))
     const base = arred(precoFinal(p))
     itens.push({
       id: p.id,
       nome: p.nome,
       preco: p.lojaId ? arred(base * (1 + pct / 100)) : base,
-      imagem: p.imagens?.[0] || '',
+      imagem: p.imagens?.[iFoto ?? 0] || p.imagens?.[0] || '',
       tamanho,
       cor,
+      modelo,
       qtd,
       ...(p.lojaId ? { lojaId: p.lojaId, lojaNome: loja?.data?.nome || '', precoLojista: base, comissaoPct: pct } : {}),
     })
@@ -82,7 +94,20 @@ export async function montarPedido(entrada) {
     desconto = arred(c.tipo === 'percent' ? (subtotal * Number(c.valor)) / 100 : Math.min(Number(c.valor), subtotal))
     cupomCodigo = c.codigo
   }
-  const entrega = entrada.entrega === 'entrega' ? 'entrega' : 'retirada'
+  // retirada | entrega (Breves, com taxa) | envio (todo o Brasil, frete calculado depois)
+  const entrega = ['entrega', 'envio'].includes(entrada.entrega) ? entrada.entrega : 'retirada'
+  const e = entrada.endereco && typeof entrada.endereco === 'object' ? entrada.endereco : {}
+  const end = {
+    cep: texto(e.cep, 9).replace(/\D/g, ''),
+    rua: texto(e.rua, 160),
+    numero: texto(e.numero, 20),
+    complemento: texto(e.complemento, 120),
+    bairro: texto(e.bairro, 80),
+    cidade: texto(e.cidade, 80),
+    uf: texto(e.uf, 2).toUpperCase(),
+  }
+  if (entrega !== 'retirada' && (!end.rua || !end.numero || !end.bairro || !end.cidade || !end.uf)) return { erro: 'Preencha o endereço de entrega.' }
+  if (entrega === 'envio' && end.cep.length !== 8) return { erro: 'Informe um CEP válido.' }
   let frete = 0
   if (entrega === 'entrega') {
     const gratis = settings.entregaGratisAcima
@@ -103,7 +128,9 @@ export async function montarPedido(entrada) {
     frete,
     total,
     entrega,
-    endereco: entrega === 'entrega' ? texto(entrada.endereco, 300) : '',
+    endereco: entrega === 'retirada' ? '' : enderecoTexto(end),
+    ...(entrega === 'retirada' ? {} : { enderecoDetalhado: end }),
+    ...(entrega === 'envio' ? { freteACalcular: true } : {}),
     pagamento: 'online',
     pagamentoOnline: { status: 'aguardando' },
     obs: texto(entrada.obs, 1000),
@@ -188,7 +215,10 @@ async function avisarAprovado(p) {
   const to = process.env.NOTIFY_EMAIL
   if (!key || !to) return
   const brl = (v) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-  const linhas = p.itens.map((i) => `• ${i.qtd}x ${i.nome}${i.tamanho || i.cor ? ` (${[i.tamanho, i.cor].filter(Boolean).join(', ')})` : ''} — ${brl(i.preco * i.qtd)}`)
+  const linhas = p.itens.map((i) => {
+    const v = [i.tamanho, i.modelo, i.cor].filter(Boolean).join(', ')
+    return `• ${i.qtd}x ${i.nome}${v ? ` (${v})` : ''} — ${brl(i.preco * i.qtd)}`
+  })
   await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
@@ -204,7 +234,7 @@ async function avisarAprovado(p) {
         '',
         `Total: ${brl(p.total)}`,
         `Cliente: ${p.cliente.nome} · ${p.cliente.telefone} · ${p.cliente.email}`,
-        `Entrega: ${p.entrega === 'entrega' ? `Entrega — ${p.endereco}` : 'Retirada'}`,
+        `Entrega: ${p.entrega === 'envio' ? 'Envio para o Brasil (frete a calcular)' : p.entrega === 'entrega' ? 'Entrega em Breves' : 'Retirada'}${p.endereco ? ` — ${p.endereco}` : ''}`,
         p.obs ? `Obs: ${p.obs}` : '',
       ]
         .filter(Boolean)

@@ -31,18 +31,30 @@ export function slugLoja(nome) {
 }
 export const urlLoja = (l) => `/loja/lojas/${l.slug || slugLoja(l.nome)}`
 
+// Variações do produto. `fotoDe` liga cada cor/modelo a uma foto (índice em
+// `imagens`), ex.: { 'cor:Azul': 2, 'modelo:Feminina': 0 }.
+export const chaveVariacao = (tipo, valor) => `${tipo}:${valor}`
+export const fotoDaVariacao = (produto, { cor, modelo } = {}) => {
+  const f = produto?.fotoDe || {}
+  const i = [cor && f[chaveVariacao('cor', cor)], modelo && f[chaveVariacao('modelo', modelo)]].find((x) => Number.isInteger(x))
+  return produto?.imagens?.[i ?? 0] || produto?.imagens?.[0] || ''
+}
+// "M · Feminina · Azul" (para carrinho, pedido e mensagens).
+export const variacoesTexto = (i, sep = ' · ') => [i.tamanho, i.modelo, i.cor].filter(Boolean).join(sep)
+
 // Item do carrinho de um produto (guarda o valor do lojista e a comissão do momento).
 export function itemCarrinho(produto, pct, extra = {}) {
   const base = {
     id: produto.id,
     nome: produto.nome,
     preco: precoVitrine(produto, pct),
-    imagem: produto.imagens?.[0] || '',
     tamanho: '',
     cor: '',
+    modelo: '',
     qtd: 1,
     ...extra,
   }
+  base.imagem = extra.imagem || fotoDaVariacao(produto, base)
   if (!produto.lojaId) return base
   return { ...base, lojaId: produto.lojaId, lojaNome: produto.lojaNome || '', precoLojista: arred(precoFinal(produto)), comissaoPct: pct }
 }

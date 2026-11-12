@@ -241,7 +241,7 @@ export default function Store() {
           )}
           <p className="mt-10 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-sm text-navy-500">
             <Truck className="h-4 w-4 text-cyan-600" />
-            Produtos à pronta entrega · retirada ou entrega em Breves · troca em até 7 dias.
+            Produtos à pronta entrega · retirada em Breves ou envio para todo o Brasil · troca em até 7 dias.
             <Link to="/loja/trocas" className="font-semibold text-cyan-700 hover:underline">
               Ver as regras
             </Link>

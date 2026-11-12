@@ -736,8 +736,8 @@ export const politicaLoja = {
       titulo: 'Entrega e retirada',
       itens: [
         'Retirada com a APHAM, em Breves (PA), ou entrega em casa em Breves, com a taxa mostrada no checkout.',
-        'Assim que o pagamento é confirmado, o pedido é separado e a APHAM combina a retirada ou a entrega pelo WhatsApp.',
-        'Para outras cidades do Marajó, o envio é combinado caso a caso, antes da compra.',
+        'Enviamos para todo o Brasil: no checkout, informe o CEP e o endereço. O frete é calculado depois da compra e a APHAM manda o valor pelo WhatsApp, para pagar à parte.',
+        'Assim que o pagamento é confirmado, o pedido é separado e a APHAM combina a retirada, a entrega ou o envio pelo WhatsApp.',
       ],
     },
     {
