@@ -3,7 +3,7 @@ import { carrosselLoja } from '../../data/content'
 
 const TROCA_MS = 4000
 // Rotação leve de cada imagem, para parecerem soltas (sem fundo) no espaço.
-const GIROS = [-8, 6, -4, 9, -6]
+const GIROS = [-4, 3, -2, 4, -3]
 
 // Carrossel da Loja SocialPlay: slides com frases e imagens sem fundo
 // (src/data/content.js → carrosselLoja). Troca sozinho, para com o mouse em
@@ -55,7 +55,9 @@ export default function CarrosselSocialPlay({ slides = carrosselLoja, className 
                 {s.sub && <p className="mt-1 text-sm font-medium text-cyan-200">{s.sub}</p>}
               </div>
             )}
-            <div className="flex max-w-md flex-wrap items-end justify-center gap-x-3 gap-y-2 sm:gap-x-5">
+            {/* As fotos dividem a largura (sem quebrar linha) e mantêm o formato:
+                bonés largos, chaveiros compridos etc. */}
+            <div className="flex w-full max-w-lg items-end justify-center gap-2 sm:gap-4">
               {s.imgs.map((src, k) => (
                 <img
                   key={src}
@@ -63,8 +65,8 @@ export default function CarrosselSocialPlay({ slides = carrosselLoja, className 
                   alt=""
                   loading="lazy"
                   draggable={false}
-                  className={`motion-safe:animate-float drop-shadow-[0_14px_16px_rgba(0,0,0,0.45)] ${
-                    comFrase ? 'h-16 w-16 sm:h-20 sm:w-20' : 'h-12 w-12 min-[400px]:h-14 min-[400px]:w-14 sm:h-24 sm:w-24'
+                  className={`min-w-0 flex-1 object-contain motion-safe:animate-float drop-shadow-[0_14px_16px_rgba(0,0,0,0.45)] ${
+                    comFrase ? 'h-24 max-w-[9rem] sm:h-28' : 'h-36 max-w-[10rem] sm:h-44'
                   }`}
                   style={{ rotate: `${GIROS[k % GIROS.length]}deg`, animationDelay: `${k * -1.3}s` }}
                 />

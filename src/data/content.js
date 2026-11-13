@@ -813,14 +813,16 @@ export const politicaLoja = {
 
 // Carrossel da Loja SocialPlay (topo da loja e página da novidade da loja).
 // Cada slide: frase (opcional), sub (opcional), legenda (quando não há frase) e
-// imagens SEM FUNDO (PNG/SVG transparente). As ilustrações atuais são da coleção
-// Fluent Emoji (Microsoft, licença MIT) — dá para trocar por fotos reais sem fundo.
+// imagens SEM FUNDO (PNG/WebP transparente). Fotos dos produtos em
+// public/midia/loja/produtos (fundo removido); ilustrações do slide de envio:
+// Fluent Emoji (Microsoft, licença MIT), em public/midia/loja/itens.
+const produto = (nome) => `/midia/loja/produtos/${nome}.webp`
 const item = (nome) => `/midia/loja/itens/${nome}.svg`
 export const carrosselLoja = [
-  { frase: 'Produtos personalizáveis!', sub: 'Com o seu nome, número ou time', imgs: ['bone', 'chaveiro', 'camisa'].map(item) },
-  { legenda: 'Acessórios esportivos', imgs: ['meias', 'luvas', 'cronometro', 'tenis', 'mochila'].map(item) },
-  { legenda: 'Bolas de vários esportes', imgs: ['bola-futebol', 'bola-basquete', 'bola-volei', 'bola-americana', 'bola-tenis'].map(item) },
-  { frase: 'Vista a camisa do handebol do Marajó', imgs: ['handebol', 'regata', 'short', 'trofeu'].map(item) },
+  { frase: 'Produtos personalizáveis!', sub: 'Com a marca da APHAM ou do seu time', imgs: ['bone-azul', 'caneca-huniv', 'chaveiro-bola-apham'].map(produto) },
+  { frase: 'Bonés APHAM', sub: 'Desde 2009 · em várias cores', imgs: ['bone-amarelo', 'bone-vermelho', 'bone-verde', 'bone-rosa', 'bone-preto'].map(produto) },
+  { legenda: 'Chaveiros de bola de handebol', imgs: ['chaveiro-bola-molten', 'chaveiro-bola-kempa', 'chaveiro-bola-apham'].map(produto) },
+  { legenda: 'Chaveiros de tênis de handebol', imgs: ['chaveiro-tenis-azul', 'chaveiro-tenis-kempa', 'chaveiro-tenis-preto'].map(produto) },
   { frase: 'Envio para todo o Brasil', sub: 'Frete calculado pelo seu CEP', imgs: ['caixa', 'caminhao', 'mapa'].map(item) },
 ]
 
