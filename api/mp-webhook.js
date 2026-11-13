@@ -20,6 +20,8 @@ export default async function handler(req, res) {
     if (row) await aplicarPagamento(row, mp)
     return res.status(200).json({ ok: true })
   } catch (e) {
+    // Order que não existe (ex.: botão "Simular" do painel do Mercado Pago): só confirma o recebimento.
+    if (e.status === 404) return res.status(200).json({ ok: true, ignorado: 'order não encontrada' })
     console.error('mp-webhook', e)
     // 500 faz o Mercado Pago tentar de novo mais tarde.
     return res.status(500).json({ ok: false })
