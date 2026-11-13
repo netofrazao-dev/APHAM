@@ -21,6 +21,10 @@ export default function PagamentoOnline({ pedido, onAprovado, onPixGerado }) {
   useEffect(() => {
     let cancelado = false
     let controle = null
+    // Se em 20 s o formulário não aparecer, avisa em vez de girar para sempre.
+    const demora = setTimeout(() => {
+      if (!cancelado) setErro('O pagamento do Mercado Pago está demorando para carregar. Atualize a página ou tente outro navegador (de preferência atualizado).')
+    }, 20000)
     carregarMercadoPago()
       .then(async (MercadoPago) => {
         if (cancelado) return
@@ -32,8 +36,18 @@ export default function PagamentoOnline({ pedido, onAprovado, onPixGerado }) {
             visual: { style: { theme: 'default' } },
           },
           callbacks: {
-            onReady: () => !cancelado && setCarregado(true),
-            onError: (e) => console.warn('Mercado Pago', e),
+            onReady: () => {
+              if (cancelado) return
+              setCarregado(true)
+              setErro('') // apareceu depois do aviso de demora
+              clearTimeout(demora)
+            },
+            // Erro do formulário (ex.: chave pública inválida, navegador antigo): mostra o motivo.
+            onError: (e) => {
+              console.warn('Mercado Pago', e)
+              if (cancelado || e?.type === 'non_critical') return
+              setErro(`O pagamento do Mercado Pago não carregou${e?.message ? ` (${e.message})` : ''}. Atualize a página ou tente outro navegador.`)
+            },
             onSubmit: async ({ selectedPaymentMethod, formData }) => {
               setErro('')
               try {
@@ -58,6 +72,7 @@ export default function PagamentoOnline({ pedido, onAprovado, onPixGerado }) {
       })
       .catch((e) => !cancelado && setErro(e.message))
     return () => {
+      clearTimeout(demora)
       cancelado = true
       controle?.unmount?.()
     }
