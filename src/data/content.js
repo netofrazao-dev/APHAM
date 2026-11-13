@@ -29,9 +29,9 @@ export const site = {
   lojaUrl: '#loja',
   // Loja pausada até ficar pronta: esconde o botão/bloco da loja e mostra "em breve".
   lojaPausada: false,
-  // Pagamento automático (Mercado Pago). Desligado até terminar a configuração no
-  // Mercado Pago e no Vercel (DEPLOY.md, 2.3); enquanto isso a loja recebe por Pix.
-  pagamentoAutomatico: false,
+  // Pagamento automático (Mercado Pago, DEPLOY.md 2.3). Ligado e testado em
+  // 13/11/2026. Com false, só o admin vê (modo de teste) e os clientes pagam por Pix manual.
+  pagamentoAutomatico: true,
 }
 
 // Sumário do site — cada item abre uma subpágina própria (conteúdo mais fixo).
