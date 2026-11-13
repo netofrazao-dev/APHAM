@@ -6,6 +6,9 @@ import { site } from '../data/content'
 export const MP_PUBLIC_KEY = import.meta.env.VITE_MP_PUBLIC_KEY || ''
 // Precisa da chave E de ligar em content.js (site.pagamentoAutomatico).
 export const pagamentoOnlineAtivo = Boolean(MP_PUBLIC_KEY) && site.pagamentoAutomatico === true
+// Modo de teste: com a chave configurada, o admin logado já vê a opção no
+// checkout (os clientes não), para testar antes de ligar para todos.
+export const pagamentoOnlineDisponivel = (isAdmin) => pagamentoOnlineAtivo || (Boolean(MP_PUBLIC_KEY) && isAdmin)
 
 let carregando = null
 export function carregarMercadoPago() {

@@ -11,7 +11,7 @@ import StoreFooter from '../components/store/StoreFooter'
 import OrderTimeline from '../components/store/OrderTimeline'
 import PixBox from '../components/store/PixBox'
 import PagamentoOnline from '../components/store/PagamentoOnline'
-import { pagamentoOnlineAtivo, criarPedidoOnline } from '../lib/mercadopago'
+import { pagamentoOnlineAtivo, pagamentoOnlineDisponivel, criarPedidoOnline } from '../lib/mercadopago'
 import { pixDaLoja } from '../store/pix'
 import { variacoesTexto } from '../store/lojas'
 import { ENTREGAS, precisaEndereco, enderecoVazio, enderecoTexto, rotuloEntrega, formatarCep, buscarCep, ehBreves } from '../store/entrega'
@@ -30,7 +30,9 @@ export default function Checkout() {
     atualizarPedidoLocal,
     enderecoEntrega,
     salvarEnderecoEntrega,
+    isAdmin,
   } = useStore()
+  const comPagamentoOnline = pagamentoOnlineDisponivel(isAdmin)
   const toast = useToast()
   const [form, setForm] = useState({
     nome: '',
@@ -39,7 +41,7 @@ export default function Checkout() {
     // Com endereço salvo (faixa "Enviar para"), já começa com ele.
     entrega: enderecoEntrega?.cidade ? (ehBreves(enderecoEntrega) ? 'entrega' : 'envio') : 'retirada',
     end: { ...enderecoVazio(), ...(enderecoEntrega || {}) },
-    pagamento: pagamentoOnlineAtivo ? 'online' : 'pix',
+    pagamento: comPagamentoOnline ? 'online' : 'pix',
     obs: '',
   })
   const pix = pixDaLoja(settings)
@@ -458,12 +460,13 @@ export default function Checkout() {
             <div className="rounded-2xl border border-navy-100 bg-white p-6">
               <h2 className="font-display font-bold text-navy-900">Pagamento</h2>
               <div className="mt-4 flex flex-wrap gap-3">
-                {pagamentoOnlineAtivo && (
+                {comPagamentoOnline && (
                   <label className={`cursor-pointer rounded-xl border px-4 py-3 text-sm font-medium ${form.pagamento === 'online' ? 'border-cyan-500 bg-cyan-50 text-cyan-700' : 'border-navy-200 text-navy-700'}`}>
                     <input type="radio" name="pagamento" value="online" checked={form.pagamento === 'online'} onChange={onChange} className="sr-only" />
                     <span className="inline-flex items-center gap-2">
                       <CreditCard className="h-4 w-4" />
                       Pix ou cartão — pagamento automático
+                      {!pagamentoOnlineAtivo && <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-800">teste · só o admin vê</span>}
                     </span>
                   </label>
                 )}
