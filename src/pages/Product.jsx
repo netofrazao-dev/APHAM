@@ -4,7 +4,8 @@ import { ChevronLeft, ChevronRight, Minus, Plus, ShoppingCart, Check, Heart, Sto
 import { useStore } from '../store/StoreContext'
 import { useToast } from '../components/Toast'
 import { formatBRL } from '../store/format'
-import { precoVitrine, precoCheioVitrine, itemCarrinho, urlLoja, chaveVariacao } from '../store/lojas'
+import { precoVitrine, precoCheioVitrine, itemCarrinho, urlLoja, chaveVariacao, tipoExtra } from '../store/lojas'
+import ZoomTela from '../components/store/ZoomTela'
 import { ehBreves } from '../store/entrega'
 import StoreHeader from '../components/store/StoreHeader'
 import StoreFooter from '../components/store/StoreFooter'
@@ -22,6 +23,9 @@ export default function Product() {
   const [tamanho, setTamanho] = useState('')
   const [cor, setCor] = useState('')
   const [modelo, setModelo] = useState('')
+  const [extras, setExtras] = useState({}) // variações livres: { Adesivo: 'Escudo' }
+  const [lupa, setLupa] = useState(null) // zoom ao passar o mouse: { x, y } em %
+  const [telaCheia, setTelaCheia] = useState(false)
   const toque = useRef(null)
   const [qtd, setQtd] = useState(1)
   const [added, setAdded] = useState(false)
@@ -57,10 +61,12 @@ export default function Product() {
   const temModelo = (produto.modelos?.length || 0) > 0
   const fotos = produto.imagens || []
   const irFoto = (i) => fotos.length && setImgIdx((i + fotos.length) % fotos.length)
-  // Escolher uma cor/modelo mostra a foto ligada a ela no painel (se houver).
+  const grupos = produto.variacoes || []
+  // Escolher uma cor/modelo/opção mostra a foto ligada a ela no painel (se houver).
   const escolher = (tipo, valor) => {
     if (tipo === 'cor') setCor(valor)
-    else setModelo(valor)
+    else if (tipo === 'modelo') setModelo(valor)
+    else setExtras((x) => ({ ...x, [tipo.slice(2)]: valor }))
     const i = produto.fotoDe?.[chaveVariacao(tipo, valor)]
     if (Number.isInteger(i) && i < fotos.length) setImgIdx(i)
   }
@@ -69,10 +75,12 @@ export default function Product() {
     if (Math.abs(dx) > 40) irFoto(dx < 0 ? imgIdx + 1 : imgIdx - 1)
   }
   const semEstoque = Number(produto.estoque) <= 0
-  const faltaEscolher = (temTam && !tamanho) || (temCor && !cor) || (temModelo && !modelo)
+  const gruposFaltando = grupos.filter((g) => !extras[g.nome])
+  const faltaEscolher = (temTam && !tamanho) || (temCor && !cor) || (temModelo && !modelo) || gruposFaltando.length > 0
   const favorito = isFavorito(produto.id)
 
-  const montarItem = () => itemCarrinho(produto, comissao, { tamanho, cor, modelo, qtd })
+  const montarItem = () =>
+    itemCarrinho(produto, comissao, { tamanho, cor, modelo, qtd, ...(grupos.length ? { extras } : {}) })
   const loja = produto.lojaId ? lojasPorId[produto.lojaId] : null
 
   const handleAdd = () => {
@@ -109,7 +117,21 @@ export default function Product() {
               onTouchEnd={fimToque}
             >
               {fotos.length ? (
-                <img src={fotos[imgIdx] || fotos[0]} alt={produto.nome} className="aspect-square w-full select-none object-cover" draggable={false} />
+                // Computador: passar o mouse amplia onde está o cursor. Toque/clique: tela cheia com zoom.
+                <img
+                  src={fotos[imgIdx] || fotos[0]}
+                  alt={produto.nome}
+                  draggable={false}
+                  onClick={() => setTelaCheia(true)}
+                  onPointerMove={(e) => {
+                    if (e.pointerType !== 'mouse') return
+                    const r = e.currentTarget.getBoundingClientRect()
+                    setLupa({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 })
+                  }}
+                  onPointerLeave={() => setLupa(null)}
+                  className="aspect-square w-full cursor-zoom-in select-none object-cover transition-transform duration-200 ease-out"
+                  style={lupa ? { transform: 'scale(2.2)', transformOrigin: `${lupa.x}% ${lupa.y}%` } : undefined}
+                />
               ) : (
                 <ProductImage produto={produto} className="aspect-square w-full" />
               )}
@@ -233,6 +255,24 @@ export default function Product() {
               </div>
             )}
 
+            {grupos.map((g) => (
+              <div key={g.nome} className="mt-5">
+                <p className="mb-2 text-sm font-semibold text-navy-800">{g.nome}</p>
+                <div className="flex flex-wrap gap-2">
+                  {g.opcoes.map((o) => (
+                    <button
+                      key={o}
+                      type="button"
+                      onClick={() => escolher(tipoExtra(g.nome), o)}
+                      className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${extras[g.nome] === o ? 'border-cyan-500 bg-cyan-50 text-cyan-700' : 'border-navy-200 text-navy-700 hover:border-navy-300'}`}
+                    >
+                      {o}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+
             <div className="mt-6">
               <p className="mb-2 text-sm font-semibold text-navy-800">Quantidade</p>
               <div className="inline-flex items-center rounded-xl border border-navy-200">
@@ -283,7 +323,11 @@ export default function Product() {
             </ul>
             {!semEstoque && faltaEscolher && (
               <p className="mt-3 text-sm text-navy-500">
-                Selecione {[temTam && !tamanho && 'o tamanho', temModelo && !modelo && 'o modelo', temCor && !cor && 'a cor'].filter(Boolean).join(' e ')}.
+                Selecione{' '}
+                {[temTam && !tamanho && 'o tamanho', temModelo && !modelo && 'o modelo', temCor && !cor && 'a cor', ...gruposFaltando.map((g) => g.nome.toLowerCase())]
+                  .filter(Boolean)
+                  .join(', ')}
+                .
               </p>
             )}
           </div>
@@ -302,6 +346,9 @@ export default function Product() {
       </div>
 
       <StoreFooter />
+      {telaCheia && fotos.length > 0 && (
+        <ZoomTela fotos={fotos} inicial={imgIdx} alt={produto.nome} onFechar={() => setTelaCheia(false)} />
+      )}
     </div>
   )
 }

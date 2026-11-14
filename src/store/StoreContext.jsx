@@ -269,7 +269,7 @@ export function StoreProvider({ children }) {
   }, [isAdmin])
 
   // ----- Carrinho (sempre local) -----
-  const cartKey = (x) => `${x.id}|${x.tamanho || ''}|${x.cor || ''}|${x.modelo || ''}`
+  const cartKey = (x) => `${x.id}|${x.tamanho || ''}|${x.cor || ''}|${x.modelo || ''}|${JSON.stringify(x.extras || {})}`
   const addToCart = useCallback(
     (item) =>
       setCart((c) => {

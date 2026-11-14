@@ -77,8 +77,19 @@ export async function montarPedido(entrada) {
     if (tamanho && p.tamanhos?.length && !p.tamanhos.includes(tamanho)) return { erro: `Tamanho inválido em “${p.nome}”.` }
     if (cor && p.cores?.length && !p.cores.includes(cor)) return { erro: `Cor inválida em “${p.nome}”.` }
     if (modelo && p.modelos?.length && !p.modelos.includes(modelo)) return { erro: `Modelo inválido em “${p.nome}”.` }
-    // Foto da variação escolhida (cor/modelo), igual a src/store/lojas.js → fotoDaVariacao.
-    const iFoto = [cor && p.fotoDe?.[`cor:${cor}`], modelo && p.fotoDe?.[`modelo:${modelo}`]].find((x) => Number.isInteger(x))
+    // Variações livres (ex.: Adesivo): uma opção válida de cada grupo do produto.
+    const extras = {}
+    for (const g of p.variacoes || []) {
+      const valor = texto(i.extras?.[g.nome], 60)
+      if (!valor || !(g.opcoes || []).includes(valor)) return { erro: `Escolha ${g.nome.toLowerCase()} em “${p.nome}”.` }
+      extras[g.nome] = valor
+    }
+    // Foto da variação escolhida, igual a src/store/lojas.js → fotoDaVariacao.
+    const iFoto = [
+      cor && p.fotoDe?.[`cor:${cor}`],
+      ...Object.entries(extras).map(([nome, valor]) => p.fotoDe?.[`v:${nome}:${valor}`]),
+      modelo && p.fotoDe?.[`modelo:${modelo}`],
+    ].find((x) => Number.isInteger(x))
     const base = arred(precoFinal(p))
     itens.push({
       id: p.id,
@@ -88,6 +99,7 @@ export async function montarPedido(entrada) {
       tamanho,
       cor,
       modelo,
+      ...(Object.keys(extras).length ? { extras } : {}),
       qtd,
       ...(p.lojaId ? { lojaId: p.lojaId, lojaNome: loja?.data?.nome || '', precoLojista: base, comissaoPct: pct } : {}),
     })
@@ -251,7 +263,7 @@ async function avisarAprovado(p) {
   if (!key || !to) return
   const brl = (v) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
   const linhas = p.itens.map((i) => {
-    const v = [i.tamanho, i.modelo, i.cor].filter(Boolean).join(', ')
+    const v = [i.tamanho, i.modelo, i.cor, ...Object.values(i.extras || {})].filter(Boolean).join(', ')
     return `• ${i.qtd}x ${i.nome}${v ? ` (${v})` : ''} — ${brl(i.preco * i.qtd)}`
   })
   await fetch('https://api.resend.com/emails', {

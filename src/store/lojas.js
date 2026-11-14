@@ -31,16 +31,24 @@ export function slugLoja(nome) {
 }
 export const urlLoja = (l) => `/loja/lojas/${l.slug || slugLoja(l.nome)}`
 
-// Variações do produto. `fotoDe` liga cada cor/modelo a uma foto (índice em
-// `imagens`), ex.: { 'cor:Azul': 2, 'modelo:Feminina': 0 }.
+// Variações do produto: tamanhos, cores, modelos e grupos livres em `variacoes`
+// ([{ nome: 'Adesivo', opcoes: ['Escudo', 'Nome'] }]); no carrinho, os grupos
+// livres vão em `extras` ({ Adesivo: 'Escudo' }). `fotoDe` liga cada opção a uma
+// foto (índice em `imagens`), ex.: { 'cor:Azul': 2, 'v:Adesivo:Escudo': 1 }.
 export const chaveVariacao = (tipo, valor) => `${tipo}:${valor}`
-export const fotoDaVariacao = (produto, { cor, modelo } = {}) => {
+export const tipoExtra = (nome) => `v:${nome}`
+export const fotoDaVariacao = (produto, { cor, modelo, extras } = {}) => {
   const f = produto?.fotoDe || {}
-  const i = [cor && f[chaveVariacao('cor', cor)], modelo && f[chaveVariacao('modelo', modelo)]].find((x) => Number.isInteger(x))
+  const i = [
+    cor && f[chaveVariacao('cor', cor)],
+    ...Object.entries(extras || {}).map(([nome, valor]) => f[chaveVariacao(tipoExtra(nome), valor)]),
+    modelo && f[chaveVariacao('modelo', modelo)],
+  ].find((x) => Number.isInteger(x))
   return produto?.imagens?.[i ?? 0] || produto?.imagens?.[0] || ''
 }
-// "M · Feminina · Azul" (para carrinho, pedido e mensagens).
-export const variacoesTexto = (i, sep = ' · ') => [i.tamanho, i.modelo, i.cor].filter(Boolean).join(sep)
+// "M · Feminina · Azul · Escudo" (para carrinho, pedido e mensagens).
+export const variacoesTexto = (i, sep = ' · ') =>
+  [i.tamanho, i.modelo, i.cor, ...Object.values(i.extras || {})].filter(Boolean).join(sep)
 
 // Item do carrinho de um produto (guarda o valor do lojista e a comissão do momento).
 export function itemCarrinho(produto, pct, extra = {}) {

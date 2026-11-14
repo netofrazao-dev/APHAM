@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Plus, Pencil, Trash2, Star, X, Upload, Image as ImageIcon } from 'lucide-react'
 import { useStore, slugify, novoId } from '../../store/StoreContext'
 import { formatBRL, precoFinal } from '../../store/format'
-import { chaveVariacao } from '../../store/lojas'
+import { chaveVariacao, tipoExtra } from '../../store/lojas'
 import { fileToOptimizedDataURL } from '../../store/images'
 import ProductImage from '../../components/store/ProductImage'
 import { PageTitle, Card, Field, inputCls, btnAccent, btnGhost, btnPrimary, btnDanger } from './ui'
@@ -17,6 +17,7 @@ const vazio = () => ({
   tamanhosStr: '',
   coresStr: '',
   modelosStr: '',
+  extrasForm: [], // grupos livres: [{ nome, opcoesStr }]
   fotoDe: {},
   estoque: 0,
   destaque: false,
@@ -57,6 +58,7 @@ export default function ProductsAdmin({ loja = null }) {
       tamanhosStr: (p.tamanhos || []).join(', '),
       coresStr: (p.cores || []).join(', '),
       modelosStr: (p.modelos || []).join(', '),
+      extrasForm: (p.variacoes || []).map((g) => ({ nome: g.nome, opcoesStr: (g.opcoes || []).join(', ') })),
       fotoDe: p.fotoDe || {},
       ...Object.fromEntries(MEDIDAS_ENVIO.map(([k]) => [k, p[k] ?? ''])),
     })
@@ -97,9 +99,20 @@ export default function ProductsAdmin({ loja = null }) {
       else fotoDe[chave] = idx
       return { ...f, fotoDe }
     })
+  // Grupos livres (ex.: Adesivo), sem os vazios.
+  const gruposExtras = (form?.extrasForm || [])
+    .map((g) => ({ nome: g.nome.trim(), opcoes: lista(g.opcoesStr) }))
+    .filter((g) => g.nome && g.opcoes.length)
   const variacoesComFoto = form
-    ? [...lista(form.coresStr).map((v) => ['cor', v]), ...lista(form.modelosStr).map((v) => ['modelo', v])]
+    ? [
+        ...lista(form.coresStr).map((v) => ['cor', v]),
+        ...lista(form.modelosStr).map((v) => ['modelo', v]),
+        ...gruposExtras.flatMap((g) => g.opcoes.map((v) => [tipoExtra(g.nome), v])),
+      ]
     : []
+  const rotuloTipo = (tipo) => (tipo === 'cor' ? 'Cor' : tipo === 'modelo' ? 'Modelo' : tipo.slice(2))
+  const setGrupo = (i, campo, valor) =>
+    setForm((f) => ({ ...f, extrasForm: f.extrasForm.map((g, k) => (k === i ? { ...g, [campo]: valor } : g)) }))
 
   const salvar = async (e) => {
     e.preventDefault()
@@ -114,6 +127,7 @@ export default function ProductsAdmin({ loja = null }) {
       tamanhos: lista(form.tamanhosStr),
       cores: lista(form.coresStr),
       modelos: lista(form.modelosStr),
+      variacoes: gruposExtras,
       // Só as ligações de variações que ainda existem.
       fotoDe: Object.fromEntries(
         Object.entries(form.fotoDe || {}).filter(([k]) =>
@@ -257,6 +271,38 @@ export default function ProductsAdmin({ loja = null }) {
                 </Field>
               </div>
 
+              {/* Variações livres (ex.: Adesivo, Estampa, Material) */}
+              <div className="sm:col-span-2">
+                <span className="mb-1.5 block text-sm font-semibold text-navy-800">Outras variações (opcional)</span>
+                <p className="mb-2 text-xs text-navy-400">
+                  Crie quantas quiser. Ex.: nome “Adesivo” e opções “Escudo, Nome, Número”. O cliente escolhe uma opção de cada.
+                </p>
+                <div className="space-y-2">
+                  {(form.extrasForm || []).map((g, i) => (
+                    <div key={i} className="grid grid-cols-1 gap-2 rounded-xl border border-navy-100 bg-white p-2 sm:grid-cols-[10rem_1fr_auto]">
+                      <input value={g.nome} onChange={(e) => setGrupo(i, 'nome', e.target.value)} className={inputCls} placeholder="Nome (ex.: Adesivo)" aria-label="Nome da variação" />
+                      <input value={g.opcoesStr} onChange={(e) => setGrupo(i, 'opcoesStr', e.target.value)} className={inputCls} placeholder="Opções, separadas por vírgula" aria-label="Opções da variação" />
+                      <button
+                        type="button"
+                        onClick={() => setForm((f) => ({ ...f, extrasForm: f.extrasForm.filter((_, k) => k !== i) }))}
+                        className="inline-flex h-11 items-center justify-center rounded-lg border border-red-200 px-3 text-red-600 hover:bg-red-50"
+                        aria-label="Remover variação"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setForm((f) => ({ ...f, extrasForm: [...(f.extrasForm || []), { nome: '', opcoesStr: '' }] }))}
+                  className={`${btnGhost} mt-2`}
+                >
+                  <Plus className="h-4 w-4" />
+                  Adicionar variação
+                </button>
+              </div>
+
               {/* Envio */}
               <div className="sm:col-span-2">
                 <span className="mb-1.5 block text-sm font-semibold text-navy-800">Envio pelos Correios (opcional)</span>
@@ -299,7 +345,7 @@ export default function ProductsAdmin({ loja = null }) {
                 <div className="sm:col-span-2">
                   <p className="mb-1 text-sm font-semibold text-navy-800">Foto de cada variação</p>
                   <p className="mb-3 text-xs text-navy-400">
-                    Toque na foto de cada cor ou modelo. No site, quando o cliente escolher a variação, aparece essa foto.
+                    Toque na foto de cada opção. No site, quando o cliente escolher a variação, aparece essa foto.
                   </p>
                   <div className="space-y-3">
                     {variacoesComFoto.map(([tipo, valor]) => {
@@ -308,7 +354,7 @@ export default function ProductsAdmin({ loja = null }) {
                       return (
                         <div key={chave} className="flex flex-wrap items-center gap-2 rounded-xl border border-navy-100 bg-white p-2">
                           <span className="w-28 shrink-0 text-sm font-medium text-navy-800">
-                            <span className="block text-[10px] uppercase tracking-wide text-navy-400">{tipo === 'cor' ? 'Cor' : 'Modelo'}</span>
+                            <span className="block text-[10px] uppercase tracking-wide text-navy-400">{rotuloTipo(tipo)}</span>
                             {valor}
                           </span>
                           {form.imagens.map((im, i) => (
