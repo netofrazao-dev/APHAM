@@ -158,14 +158,24 @@ export default function NewsAdmin() {
 
       {versoesNovas.map(({ seed, publicado }) => (
         <div key={seed.id} className="mb-3 flex flex-wrap items-center gap-3 rounded-xl border border-amber-300 bg-amber-50 p-3">
-          <img src={seed.img} alt="" className="h-14 w-24 shrink-0 rounded-lg object-cover" />
+          <img src={publicado.img || seed.img} alt="" className="h-14 w-24 shrink-0 rounded-lg object-cover" />
           <div className="min-w-0 flex-1">
             <p className="text-sm font-bold text-navy-900">Nova versão do post: “{seed.titulo}”</p>
-            <p className="text-xs text-navy-600">Troca o título, o texto e as fotos do post publicado pela versão nova (mantém a posição no News).</p>
+            <p className="text-xs text-navy-600">Troca o título e o texto do post publicado pela versão nova. A capa e a posição no News continuam as mesmas.</p>
           </div>
           <button
             type="button"
-            onClick={() => saveNovidade({ ...seed, ordem: publicado.ordem, arquivada: publicado.arquivada, sombra: publicado.sombra })}
+            onClick={() =>
+              saveNovidade({
+                ...seed,
+                // A capa que a APHAM colocou pelo painel continua (só o texto é atualizado).
+                img: publicado.img || seed.img,
+                imgs: publicado.img ? publicado.imgs : seed.imgs,
+                ordem: publicado.ordem,
+                arquivada: publicado.arquivada,
+                sombra: publicado.sombra,
+              })
+            }
             className={btnAccent}
           >
             Atualizar post

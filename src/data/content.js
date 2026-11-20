@@ -274,7 +274,7 @@ export const novidades = [
   },
   {
     id: 'nov-2',
-    versao: 3, // matéria completa (Montabo Athletic Club); o painel oferece "Atualizar"
+    versao: 4, // matéria completa (Montabo Athletic Club); "Atualizar" no painel mantém a capa publicada
     data: 'Setembro de 2026',
     tag: 'TFA',
     titulo: 'Montabo Athletic Club: a Guiana Francesa em Breves',
