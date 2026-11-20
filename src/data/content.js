@@ -274,15 +274,16 @@ export const novidades = [
   },
   {
     id: 'nov-2',
-    versao: 2, // matéria completa (Montabo Athletic Club); o painel oferece "Atualizar"
+    versao: 3, // matéria completa (Montabo Athletic Club); o painel oferece "Atualizar"
     data: 'Setembro de 2026',
     tag: 'TFA',
     titulo: 'Montabo Athletic Club: a Guiana Francesa em Breves',
     resumo:
       'A participação do clube de Caiena deu à TFA 2026 caráter internacional e colocou o Marajó no mapa do intercâmbio esportivo da Pan-Amazônia.',
     texto: '',
-    img: '/midia/eventos/tfa-montabo.jpg',
+    img: '/midia/eventos/tfa-logo.webp', // capa de sempre da TFA no APHAM News
     blocos: [
+      { tipo: 'imagem', img: '/midia/eventos/tfa-montabo.jpg', legenda: 'A delegação do Montabo Athletic Club, de Caiena, na TFA 2026.' },
       {
         tipo: 'texto',
         texto:
