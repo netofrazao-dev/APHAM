@@ -274,7 +274,7 @@ export const novidades = [
   },
   {
     id: 'nov-2',
-    versao: 4, // matéria completa (Montabo Athletic Club); "Atualizar" no painel mantém a capa publicada
+    versao: 5, // matéria completa (Montabo Athletic Club); "Atualizar" no painel mantém a capa publicada
     data: 'Setembro de 2026',
     tag: 'TFA',
     titulo: 'Montabo Athletic Club: a Guiana Francesa em Breves',
@@ -283,7 +283,6 @@ export const novidades = [
     texto: '',
     img: '/midia/eventos/tfa-logo.webp', // capa de sempre da TFA no APHAM News
     blocos: [
-      { tipo: 'imagem', img: '/midia/eventos/tfa-montabo.jpg', legenda: 'A delegação do Montabo Athletic Club, de Caiena, na TFA 2026.' },
       {
         tipo: 'texto',
         texto:
@@ -295,11 +294,7 @@ export const novidades = [
         texto:
           'Brasil e França compartilham na Amazônia sua maior fronteira terrestre. Mesmo assim, guianenses e marajoaras raramente se encontram, separados por rios, distâncias e pela falta de incentivo. A TFA 2026 aproximou esses dois povos amazônicos pelo esporte.\n\nDurante quatro dias, atletas que falam francês, crioulo guianense e português dividiram a quadra, o ginásio e a cidade. Compararam formas de treinar, de jogar e de viver o handebol. Fora da quadra, a convivência com a comunidade brevense promoveu o intercâmbio de idiomas e culturas que a APHAM sonhou desde a concepção do evento. Ficou provado que a Amazônia une mais do que separa.',
       },
-      {
-        tipo: 'imagem',
-        img: '/midia/eventos/tfa-montabo-apham.jpg',
-        legenda: 'Montabo Athletic Club e equipes da APHAM reunidos no Ginásio Ferdinando Costa e Silva, em Breves.',
-      },
+      { tipo: 'imagem', img: '/midia/eventos/tfa-montabo.jpg', legenda: 'A delegação do Montabo Athletic Club, de Caiena, na TFA 2026.' },
       { tipo: 'subtitulo', texto: 'Uma campanha de respeito' },
       {
         tipo: 'texto',
@@ -311,6 +306,11 @@ export const novidades = [
         tipo: 'texto',
         texto:
           'Para Breves, receber uma delegação internacional foi muito mais que sediar jogos. Mais de 2.000 torcedores passaram pelas arquibancadas ao longo do feriado da Independência e acolheram os visitantes com o calor típico do povo marajoara. A movimentação de atletas, comissões e público aqueceu a economia local. A cidade também mostrou a capacidade administrativa e logística da APHAM para conduzir um evento de porte internacional.\n\nA parceria com o Montabo e a chancela da Fundación Sudamericana Internacional de Balonmano, por meio de sua Embaixada no Brasil, projetam a APHAM e o município para além das fronteiras nacionais. O evento passa a servir de credencial para novos apoios, patrocínios e projetos via Leis de Incentivo ao Esporte. Os talentos do Marajó, por sua vez, entram no radar esportivo da Região Norte.',
+      },
+      {
+        tipo: 'imagem',
+        img: '/midia/eventos/tfa-montabo-apham.jpg',
+        legenda: 'Montabo Athletic Club e equipes da APHAM reunidos no Ginásio Ferdinando Costa e Silva, em Breves.',
       },
       { tipo: 'subtitulo', texto: 'Inspiração para a nova geração' },
       {
