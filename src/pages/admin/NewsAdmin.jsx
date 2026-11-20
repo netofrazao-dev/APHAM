@@ -59,10 +59,11 @@ export default function NewsAdmin() {
   const faltando = novidadesSeed.filter((s) => s.id !== 'nov-loja' && !novidades.some((n) => n.id === s.id))
   // Card pronto da Loja APHAM (feito no código), publicado com um clique no topo.
   const cardLoja = novidadesSeed.find((s) => s.id === 'nov-loja' && !novidades.some((n) => n.id === s.id))
-  // Já publicado, mas o card mudou no código (campo `versao`): oferece atualizar.
-  const seedLoja = novidadesSeed.find((s) => s.id === 'nov-loja')
-  const lojaPublicada = novidades.find((n) => n.id === 'nov-loja')
-  const cardLojaNovo = lojaPublicada && (lojaPublicada.versao || 1) < (seedLoja?.versao || 1) ? seedLoja : null
+  // Posts já publicados cuja versão no código é mais nova (campo `versao`):
+  // oferece atualizar o texto e as fotos, mantendo a posição no News.
+  const versoesNovas = novidadesSeed
+    .map((seed) => ({ seed, publicado: novidades.find((n) => n.id === seed.id) }))
+    .filter(({ seed, publicado }) => publicado && (publicado.versao || 1) < (seed.versao || 1))
   const restaurarFaltando = () => faltando.forEach((s) => saveNovidade(s))
 
   const salvarPost = (e) => {
@@ -155,22 +156,22 @@ export default function NewsAdmin() {
         </div>
       )}
 
-      {cardLojaNovo && (
-        <div className="mb-3 flex flex-wrap items-center gap-3 rounded-xl border border-amber-300 bg-amber-50 p-3">
-          <img src={cardLojaNovo.img} alt="" className="h-14 w-24 shrink-0 rounded-lg object-cover" />
+      {versoesNovas.map(({ seed, publicado }) => (
+        <div key={seed.id} className="mb-3 flex flex-wrap items-center gap-3 rounded-xl border border-amber-300 bg-amber-50 p-3">
+          <img src={seed.img} alt="" className="h-14 w-24 shrink-0 rounded-lg object-cover" />
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-bold text-navy-900">Nova versão do card da loja: “{cardLojaNovo.titulo}”</p>
-            <p className="text-xs text-navy-600">Troca o título e o texto do card publicado pela versão nova (mantém a posição no News).</p>
+            <p className="text-sm font-bold text-navy-900">Nova versão do post: “{seed.titulo}”</p>
+            <p className="text-xs text-navy-600">Troca o título, o texto e as fotos do post publicado pela versão nova (mantém a posição no News).</p>
           </div>
           <button
             type="button"
-            onClick={() => saveNovidade({ ...cardLojaNovo, ordem: lojaPublicada.ordem, arquivada: lojaPublicada.arquivada, sombra: lojaPublicada.sombra })}
+            onClick={() => saveNovidade({ ...seed, ordem: publicado.ordem, arquivada: publicado.arquivada, sombra: publicado.sombra })}
             className={btnAccent}
           >
-            Atualizar card da loja
+            Atualizar post
           </button>
         </div>
-      )}
+      ))}
 
       {/* Recriar cards de exemplo que faltam (ex.: o card da taça com 2 fotos) */}
       {faltando.length > 0 && (
