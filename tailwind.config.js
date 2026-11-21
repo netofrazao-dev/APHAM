@@ -53,6 +53,11 @@ export default {
           '0%': { opacity: '0', transform: 'translateY(24px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        // Assinatura Social Play da loja: cresce e volta, devagar.
+        respira: {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.07)' },
+        },
         float: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-12px)' },
@@ -65,6 +70,7 @@ export default {
       animation: {
         'fade-up': 'fade-up 0.7s ease-out both',
         float: 'float 6s ease-in-out infinite',
+        respira: 'respira 3.2s ease-in-out infinite',
         kenburns: 'kenburns 12s ease-out both',
       },
     },

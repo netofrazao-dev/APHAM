@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { MapPin, Calendar, Plus, Minus } from 'lucide-react'
-import { eventos } from '../data/content'
+import { useStore } from '../store/StoreContext'
+import { listaEventos } from '../lib/conteudo'
 import Reveal from './Reveal'
 
 function EventCard({ ev, index }) {
@@ -11,7 +12,7 @@ function EventCard({ ev, index }) {
       <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-soft transition-all duration-300 hover:shadow-lift">
         <div className="relative aspect-[16/10] overflow-hidden">
           <img
-            src={ev.img}
+            src={ev.img || '/midia/fotos/foto6.jpeg'}
             alt={ev.nome}
             loading="lazy"
             decoding="async"
@@ -37,15 +38,17 @@ function EventCard({ ev, index }) {
           <h3 className="font-display text-lg font-bold text-navy-900">{ev.nome}</h3>
           <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/70">{ev.resumo}</p>
 
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            className="mt-4 inline-flex w-fit items-center gap-2 text-sm font-semibold text-cyan-700 transition-colors hover:text-cyan-800"
-            aria-expanded={open}
-          >
-            {open ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-            {open ? 'Fechar história' : 'Ler a história'}
-          </button>
+          {ev.historia && (
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              className="mt-4 inline-flex w-fit items-center gap-2 text-sm font-semibold text-cyan-700 transition-colors hover:text-cyan-800"
+              aria-expanded={open}
+            >
+              {open ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+              {open ? 'Fechar história' : 'Ler a história'}
+            </button>
+          )}
 
           <AnimatePresence initial={false}>
             {open && (
@@ -56,7 +59,7 @@ function EventCard({ ev, index }) {
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 className="overflow-hidden"
               >
-                <p className="mt-4 border-t border-navy-100 pt-4 text-sm leading-relaxed text-ink/70">
+                <p className="mt-4 whitespace-pre-line border-t border-navy-100 pt-4 text-sm leading-relaxed text-ink/70">
                   {ev.historia}
                 </p>
               </motion.div>
@@ -69,6 +72,7 @@ function EventCard({ ev, index }) {
 }
 
 export default function Events() {
+  const eventos = listaEventos(useStore().settings) // editados em Admin → Competições e eventos
   return (
     <section id="eventos" className="section-pad py-24 lg:py-28">
       <div className="container-x">
@@ -89,7 +93,7 @@ export default function Events() {
 
         <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {eventos.map((ev, i) => (
-            <EventCard key={ev.nome} ev={ev} index={i} />
+            <EventCard key={`${i}-${ev.nome}`} ev={ev} index={i} />
           ))}
         </div>
       </div>

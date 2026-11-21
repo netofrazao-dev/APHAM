@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, ArrowUpRight, MapPin, Play, PlayCircle, Quote, Shield, Swords, Trophy, Tv, Users } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, MapPin, Play, PlayCircle, Quote, Shield, Swords, Trophy, Tv, Users, CalendarDays, UserRound, Layers } from 'lucide-react'
+import Icon from '../components/Icon'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import BackToTop from '../components/BackToTop'
@@ -85,6 +86,9 @@ export default function TimePage() {
   const torneios = [...new Set(jogos.map((j) => j.torneio).filter(Boolean))]
   const adversarios = [...new Set(jogos.map((j) => j.adversario))]
   const titulos = time.titulos || []
+  // Instagram do time: aceita link completo ou "@usuario".
+  const ig = String(time.instagram || '').trim()
+  const instagram = !ig ? '' : /^https?:\/\//i.test(ig) ? ig : `https://instagram.com/${ig.replace(/^@/, '').replace(/^instagram\.com\//i, '')}`
   const outros = clubes.filter((c) => c.slug !== slug)
 
   const numeros = [
@@ -137,6 +141,30 @@ export default function TimePage() {
                   <MapPin className="h-4 w-4" style={{ color: destaque }} />
                   {time.cidade}
                 </span>
+              )}
+              {time.fundacao && (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white ring-1 ring-white/15">
+                  <CalendarDays className="h-4 w-4" style={{ color: destaque }} />
+                  Desde {time.fundacao}
+                </span>
+              )}
+              {time.tecnico && (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white ring-1 ring-white/15">
+                  <UserRound className="h-4 w-4" style={{ color: destaque }} />
+                  Técnico: {time.tecnico}
+                </span>
+              )}
+              {time.categorias && (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white ring-1 ring-white/15">
+                  <Layers className="h-4 w-4" style={{ color: destaque }} />
+                  {time.categorias}
+                </span>
+              )}
+              {instagram && (
+                <a href={instagram} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-navy-900 transition-opacity hover:opacity-90">
+                  <Icon name="Instagram" className="h-4 w-4" />
+                  Instagram
+                </a>
               )}
               {finalista.length > 0 && (
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400 px-4 py-1.5 text-sm font-extrabold text-navy-950">

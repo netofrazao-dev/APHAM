@@ -15,23 +15,31 @@ import {
   Mail,
   Store,
   HandHeart,
+  Info,
+  UserPlus,
+  Trophy,
 } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
 
+// Menu em grupos: primeiro as informações da APHAM (o que mais se edita),
+// depois a loja. `grupo` abre um título no menu do computador.
 const links = [
   { to: '/admin', label: 'Painel', icon: LayoutDashboard, end: true },
+  { grupo: 'Informações da APHAM', to: '/admin/sobre', label: 'Quem somos', icon: Info },
+  { to: '/admin/participar', label: 'Participar', icon: UserPlus },
+  { to: '/admin/equipes', label: 'Clubes e equipes', icon: Users },
+  { to: '/admin/eventos', label: 'Competições e eventos', icon: Trophy },
+  { to: '/admin/calendario', label: 'Calendário', icon: CalendarDays },
+  { to: '/admin/novidades', label: 'Novidades', icon: Newspaper },
+  { to: '/admin/lives', label: 'Lives APHAM', icon: Radio },
+  { to: '/admin/doacoes', label: 'Doações', icon: HandHeart },
+  { to: '/admin/mensagens', label: 'Mensagens', icon: Mail },
+  { grupo: 'Loja', to: '/admin/pedidos', label: 'Pedidos', icon: ClipboardList },
   { to: '/admin/produtos', label: 'Produtos', icon: Package },
   { to: '/admin/lojas', label: 'Lojas parceiras', icon: Store },
   { to: '/admin/categorias', label: 'Categorias', icon: Tags },
   { to: '/admin/cupons', label: 'Cupons', icon: Ticket },
-  { to: '/admin/pedidos', label: 'Pedidos', icon: ClipboardList },
-  { to: '/admin/mensagens', label: 'Mensagens', icon: Mail },
-  { to: '/admin/novidades', label: 'Novidades', icon: Newspaper },
-  { to: '/admin/lives', label: 'Lives APHAM', icon: Radio },
-  { to: '/admin/doacoes', label: 'Doações', icon: HandHeart },
-  { to: '/admin/calendario', label: 'Calendário', icon: CalendarDays },
-  { to: '/admin/equipes', label: 'Equipes', icon: Users },
-  { to: '/admin/config', label: 'Configurações', icon: Settings },
+  { grupo: 'Site', to: '/admin/config', label: 'Configurações', icon: Settings },
 ]
 
 export default function AdminLayout() {
@@ -48,13 +56,21 @@ export default function AdminLayout() {
   return (
     <div className="min-h-screen bg-paper lg:flex">
       {/* Sidebar */}
-      <aside className="shrink-0 bg-navy-950 lg:sticky lg:top-0 lg:h-screen lg:w-64">
+      <aside className="shrink-0 bg-navy-950 lg:sticky lg:top-0 lg:h-screen lg:w-64 lg:overflow-y-auto">
         <div className="flex items-center gap-3 px-5 py-5">
-          <img src="/midia/logo-apham.png" alt="APHAM" className="h-10 w-auto" />
+          {/* A logo leva de volta ao site (no celular é o único atalho). */}
+          <Link to="/" title="Voltar para o site" aria-label="Voltar para o site" className="rounded-lg transition-opacity hover:opacity-80">
+            <img src="/midia/logo-apham.png" alt="APHAM" className="h-10 w-auto" />
+          </Link>
           <span className="font-display text-sm font-bold text-white">Admin</span>
         </div>
         <nav className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-col lg:overflow-visible">
-          {links.map((l) => (
+          {links.map((l) => [
+            l.grupo && (
+              <p key={`g-${l.grupo}`} className="hidden px-3.5 pb-1 pt-4 text-[11px] font-bold uppercase tracking-[0.16em] text-navy-100/40 lg:block">
+                {l.grupo}
+              </p>
+            ),
             <NavLink key={l.to} to={l.to} end={l.end} className={linkCls}>
               <l.icon className="h-5 w-5 shrink-0" />
               <span className="whitespace-nowrap">{l.label}</span>
@@ -63,8 +79,8 @@ export default function AdminLayout() {
                   {badge(l.to)}
                 </span>
               )}
-            </NavLink>
-          ))}
+            </NavLink>,
+          ])}
         </nav>
         <div className="hidden gap-1 px-3 lg:flex lg:flex-col">
           <Link to="/" className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-navy-100/70 transition-colors hover:bg-navy-800 hover:text-white">

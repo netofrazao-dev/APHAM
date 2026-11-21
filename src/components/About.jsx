@@ -1,10 +1,12 @@
 import { ShieldCheck, CalendarDays, Target, Flag } from 'lucide-react'
-import { sobre } from '../data/content'
+import { useStore } from '../store/StoreContext'
+import { conteudoSobre } from '../lib/conteudo'
 import Reveal from './Reveal'
 
 const destaqueIcons = [CalendarDays, ShieldCheck]
 
 export default function About() {
+  const sobre = conteudoSobre(useStore().settings) // editado em Admin → Quem somos
   return (
     <section id="sobre" className="section-pad py-24 lg:py-32">
       <div className="container-x">
@@ -27,7 +29,7 @@ export default function About() {
                   const IconCmp = destaqueIcons[i] || ShieldCheck
                   return (
                     <div
-                      key={d.titulo}
+                      key={i}
                       className="flex max-w-[230px] items-start gap-3 rounded-2xl border border-navy-100 bg-white p-4 shadow-lift"
                     >
                       <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-cyan-100 text-cyan-700">

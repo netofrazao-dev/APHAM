@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus, Pencil, Trash2, X, Check, Upload, Trophy } from 'lucide-react'
+import { Plus, Pencil, Trash2, X, Check, Upload, Trophy, ChevronUp, ChevronDown } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
 import { listarClubes } from '../../lib/clubes'
 import { fileToOptimizedDataURL } from '../../store/images'
@@ -67,12 +67,24 @@ export default function EquipesAdmin() {
       historia: time.historia?.trim() || '',
       titulos: (time.titulosTexto || '').split('\n').map((s) => s.trim()).filter(Boolean),
       foto: time.foto || '',
+      fundacao: time.fundacao?.trim() || '',
+      tecnico: time.tecnico?.trim() || '',
+      categorias: time.categorias?.trim() || '',
+      instagram: time.instagram?.trim() || '',
     }
     const lista = [...times]
     if (time.idx != null) lista[time.idx] = t
     else lista.push(t)
     persistir(lista)
     setTime(null)
+  }
+
+  const mover = (idx, d) => {
+    const j = idx + d
+    if (j < 0 || j >= times.length) return
+    const l = [...times]
+    ;[l[idx], l[j]] = [l[j], l[idx]]
+    persistir(l)
   }
 
   const remover = (idx) => {
@@ -82,10 +94,10 @@ export default function EquipesAdmin() {
 
   return (
     <div>
-      <PageTitle title="Equipes" subtitle="Os times do campeonato — escudo, história e títulos">
+      <PageTitle title="Equipes" subtitle="Os times dos campeonatos — escudo, ficha, história e títulos. Use as setas para mudar a ordem no site.">
         <div className="flex items-center gap-2">
           {salvo && <span className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-600"><Check className="h-4 w-4" />Salvo</span>}
-          <button type="button" onClick={() => setTime({ nome: '', nomeCompleto: '', cidade: '', lema: '', escudo: '', fundoEscudo: '#ffffff', corPrimaria: '#0b2a52', corSecundaria: '#22d3ee', historia: '', titulosTexto: '', foto: '' })} className={btnAccent}>
+          <button type="button" onClick={() => setTime({ nome: '', nomeCompleto: '', cidade: '', lema: '', escudo: '', fundoEscudo: '#ffffff', corPrimaria: '#0b2a52', corSecundaria: '#22d3ee', historia: '', titulosTexto: '', foto: '', fundacao: '', tecnico: '', categorias: '', instagram: '' })} className={btnAccent}>
             <Plus className="h-4 w-4" />
             Novo time
           </button>
@@ -103,10 +115,14 @@ export default function EquipesAdmin() {
               <p className="mt-0.5 text-xs text-navy-500">
                 {t.titulos?.length ? `${t.titulos.length} título(s)` : 'Sem títulos'} ·{' '}
                 {t.historia ? 'com história' : 'sem história'}
+                {t.fundacao ? ` · desde ${t.fundacao}` : ''}
+                {t.tecnico ? ` · técnico: ${t.tecnico}` : ''}
               </p>
             </div>
             <div className="flex gap-1.5">
-              <button type="button" onClick={() => setTime({ idx, nome: t.nome, nomeCompleto: t.nomeCompleto || '', cidade: t.cidade || '', lema: t.lema || '', escudo: t.escudo || '', fundoEscudo: t.fundoEscudo || '#ffffff', corPrimaria: t.cores?.primaria || '#0b2a52', corSecundaria: t.cores?.secundaria || '#22d3ee', historia: t.historia || '', titulosTexto: (t.titulos || []).join('\n'), foto: t.foto || '' })} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-700 hover:bg-navy-50" aria-label="Editar"><Pencil className="h-4 w-4" /></button>
+              <button type="button" onClick={() => mover(idx, -1)} disabled={idx === 0} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-600 hover:bg-navy-50 disabled:opacity-30" aria-label="Subir"><ChevronUp className="h-4 w-4" /></button>
+              <button type="button" onClick={() => mover(idx, 1)} disabled={idx === times.length - 1} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-600 hover:bg-navy-50 disabled:opacity-30" aria-label="Descer"><ChevronDown className="h-4 w-4" /></button>
+              <button type="button" onClick={() => setTime({ idx, nome: t.nome, nomeCompleto: t.nomeCompleto || '', cidade: t.cidade || '', lema: t.lema || '', escudo: t.escudo || '', fundoEscudo: t.fundoEscudo || '#ffffff', corPrimaria: t.cores?.primaria || '#0b2a52', corSecundaria: t.cores?.secundaria || '#22d3ee', historia: t.historia || '', titulosTexto: (t.titulos || []).join('\n'), foto: t.foto || '', fundacao: t.fundacao || '', tecnico: t.tecnico || '', categorias: t.categorias || '', instagram: t.instagram || '' })} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-navy-200 text-navy-700 hover:bg-navy-50" aria-label="Editar"><Pencil className="h-4 w-4" /></button>
               <button type="button" onClick={() => remover(idx)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-red-200 text-red-600 hover:bg-red-50" aria-label="Remover"><Trash2 className="h-4 w-4" /></button>
             </div>
           </Card>
@@ -127,6 +143,12 @@ export default function EquipesAdmin() {
                 <Field label="Nome completo"><input value={time.nomeCompleto} onChange={(e) => setTime((p) => ({ ...p, nomeCompleto: e.target.value }))} className={inputCls} placeholder="Canibal Handebol Clube" /></Field>
                 <Field label="Cidade"><input value={time.cidade} onChange={(e) => setTime((p) => ({ ...p, cidade: e.target.value }))} className={inputCls} placeholder="Breves — PA" /></Field>
               </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Fundado em" hint="Ano (ex.: 2015)"><input value={time.fundacao} onChange={(e) => setTime((p) => ({ ...p, fundacao: e.target.value }))} className={inputCls} placeholder="2015" /></Field>
+                <Field label="Técnico / responsável"><input value={time.tecnico} onChange={(e) => setTime((p) => ({ ...p, tecnico: e.target.value }))} className={inputCls} placeholder="Nome do técnico" /></Field>
+              </div>
+              <Field label="Categorias" hint="Ex.: Adulto masculino, Feminino, Sub-17"><input value={time.categorias} onChange={(e) => setTime((p) => ({ ...p, categorias: e.target.value }))} className={inputCls} /></Field>
+              <Field label="Instagram do time" hint="Cole o link ou o @"><input value={time.instagram} onChange={(e) => setTime((p) => ({ ...p, instagram: e.target.value }))} className={inputCls} placeholder="@time ou https://instagram.com/time" /></Field>
               <Field label="Lema"><input value={time.lema} onChange={(e) => setTime((p) => ({ ...p, lema: e.target.value }))} className={inputCls} placeholder="Frase do time (aparece em destaque na página)" /></Field>
               <div className="grid grid-cols-3 gap-4">
                 <Field label="Cor principal"><input type="color" value={time.corPrimaria} onChange={(e) => setTime((p) => ({ ...p, corPrimaria: e.target.value }))} className="h-10 w-full cursor-pointer rounded-lg border border-navy-200" /></Field>

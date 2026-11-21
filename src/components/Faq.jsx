@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Plus, HelpCircle } from 'lucide-react'
-import { faq } from '../data/content'
+import { useStore } from '../store/StoreContext'
+import { listaFaq } from '../lib/conteudo'
 import Reveal from './Reveal'
 
 export default function Faq() {
   const [aberto, setAberto] = useState(0)
+  const faq = listaFaq(useStore().settings) // editadas em Admin → Participar
 
   return (
     <section id="faq" className="section-pad py-24 lg:py-28">
@@ -27,7 +29,7 @@ export default function Faq() {
           {faq.map((item, i) => {
             const isOpen = aberto === i
             return (
-              <Reveal key={item.pergunta} delay={0.04 * i}>
+              <Reveal key={i} delay={0.04 * i}>
                 <div
                   className={`overflow-hidden rounded-2xl border bg-white transition-colors ${
                     isOpen ? 'border-cyan-200 shadow-soft' : 'border-navy-100'

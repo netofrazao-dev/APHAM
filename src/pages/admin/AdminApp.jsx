@@ -15,6 +15,9 @@ import SettingsAdmin from './SettingsAdmin'
 import CouponsAdmin from './CouponsAdmin'
 import MessagesAdmin from './MessagesAdmin'
 import LojasAdmin from './LojasAdmin'
+import ParticiparAdmin from './ParticiparAdmin'
+import EventosAdmin from './EventosAdmin'
+import SobreAdmin from './SobreAdmin'
 
 export default function AdminApp() {
   const { isAdmin } = useStore()
@@ -34,6 +37,9 @@ export default function AdminApp() {
         <Route path="doacoes" element={<DoacoesAdmin />} />
         <Route path="calendario" element={<CalendarAdmin />} />
         <Route path="equipes" element={<EquipesAdmin />} />
+        <Route path="participar" element={<ParticiparAdmin />} />
+        <Route path="eventos" element={<EventosAdmin />} />
+        <Route path="sobre" element={<SobreAdmin />} />
         <Route path="config" element={<SettingsAdmin />} />
         <Route path="*" element={<Dashboard />} />
       </Route>

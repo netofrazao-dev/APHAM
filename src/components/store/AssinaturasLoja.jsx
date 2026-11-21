@@ -18,8 +18,25 @@ export default function AssinaturasLoja() {
   return (
     <div className="relative h-72 sm:h-96 lg:h-[28rem]" role="img" aria-label="Social Play e Cooperativa Social COOPTE*SE">
       <div className={fase(0)} aria-hidden={i !== 0}>
-        <img src={assinaturaSocialPlay} alt="" className="h-[88%] w-auto max-w-full object-contain drop-shadow-[0_8px_24px_rgba(0,0,0,0.5)]" draggable={false} />
-        <p className="mt-1 text-lg font-medium text-white/85 sm:text-xl">Para além do Jogo!</p>
+        {/* O texto fica no vão embaixo da assinatura, entre a perna do "p" e a do
+            "y" (medido no PNG: ~47–86% da largura, ~55–78% da altura). Só a
+            assinatura pulsa; o texto fica parado. */}
+        <div className="relative h-[88%] [container-type:inline-size]" style={{ aspectRatio: '760 / 636' }}>
+          <img
+            src={assinaturaSocialPlay}
+            alt=""
+            className="h-full w-full object-contain drop-shadow-[0_8px_24px_rgba(0,0,0,0.5)] motion-safe:animate-respira"
+            draggable={false}
+          />
+          <p
+            className="absolute left-[47%] top-[56%] w-[38%] text-center font-semibold leading-tight text-white/90"
+            style={{ fontSize: 'clamp(11px, 5cqw, 26px)' }}
+          >
+            Para além
+            <br />
+            do Jogo!
+          </p>
+        </div>
       </div>
       <div className={fase(1)} aria-hidden={i !== 1}>
         <span className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-300">Cooperativa Social</span>

@@ -1,10 +1,14 @@
-import { MessageCircle, ClipboardList, Users, CalendarClock, MapPin, Clock, Info } from 'lucide-react'
-import { participar, site } from '../data/content'
+import { MessageCircle, ClipboardList, Users, CalendarClock, MapPin, Clock, Info, FileText, Shirt, HeartHandshake } from 'lucide-react'
+import { useStore } from '../store/StoreContext'
+import { conteudoParticipar, linkWhatsApp } from '../lib/conteudo'
 import Reveal from './Reveal'
 
-const ICONES = { MessageCircle, ClipboardList, Users }
+const ICONES = { MessageCircle, ClipboardList, Users, CalendarClock, MapPin, FileText, Shirt, HeartHandshake }
 
 export default function Participar() {
+  // Textos, horários e passos editados no painel (Admin → Participar).
+  const { settings } = useStore()
+  const participar = conteudoParticipar(settings)
   return (
     <section id="participar" className="section-pad py-24 lg:py-28">
       <div className="container-x">
@@ -32,8 +36,8 @@ export default function Participar() {
               </div>
 
               <ul className="mt-6 divide-y divide-navy-100">
-                {participar.horarios.map((h) => (
-                  <li key={h.turma} className="py-4 first:pt-0 last:pb-0">
+                {participar.horarios.map((h, i) => (
+                  <li key={i} className="py-4 first:pt-0 last:pb-0">
                     <p className="font-display text-base font-bold text-navy-900">{h.turma}</p>
                     <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-ink/70">
                       <span className="inline-flex items-center gap-1.5">
@@ -70,7 +74,7 @@ export default function Participar() {
                 {participar.passos.map((p, i) => {
                   const Ic = ICONES[p.icone] || Users
                   return (
-                    <li key={p.titulo} className="flex gap-4 rounded-2xl border border-navy-100 bg-white p-5 shadow-soft">
+                    <li key={i} className="flex gap-4 rounded-2xl border border-navy-100 bg-white p-5 shadow-soft">
                       <span className="relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-500 text-white">
                         <Ic className="h-5 w-5" />
                         <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-navy-900 text-[11px] font-bold text-white">
@@ -91,8 +95,8 @@ export default function Participar() {
                   Para o primeiro dia
                 </p>
                 <ul className="mt-3 space-y-1.5 text-sm text-ink/75">
-                  {participar.requisitos.map((r) => (
-                    <li key={r} className="flex items-start gap-2">
+                  {participar.requisitos.map((r, i) => (
+                    <li key={i} className="flex items-start gap-2">
                       <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-500" />
                       {r}
                     </li>
@@ -101,7 +105,7 @@ export default function Participar() {
               </div>
 
               <a
-                href={site.whatsapp}
+                href={linkWhatsApp(settings, 'Olá! Quero participar dos treinos da APHAM.')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary mt-6 w-full sm:w-fit"

@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom'
-import { Package, ClipboardList, Newspaper, Plus, Store, AlertTriangle, CheckCircle2, ChevronRight } from 'lucide-react'
+import { Package, ClipboardList, Newspaper, Plus, Store, AlertTriangle, CheckCircle2, ChevronRight, UserPlus, Users, Trophy, CalendarDays, Info, Settings } from 'lucide-react'
+import { conteudoParticipar, listaFaq, listaEventos } from '../../lib/conteudo'
+import { listarClubes } from '../../lib/clubes'
+import { calendario } from '../../data/content'
 import { useStore } from '../../store/StoreContext'
 import { formatBRL } from '../../store/format'
 import { statusInfo } from '../../store/constants'
@@ -7,7 +10,7 @@ import { saldoDaLoja } from '../../store/lojas'
 import { PageTitle, Card, btnAccent, btnGhost } from './ui'
 
 export default function Dashboard() {
-  const { produtos, orders, novidades, lojas, repasses } = useStore()
+  const { produtos, orders, novidades, lojas, repasses, settings } = useStore()
   const ativos = produtos.filter((p) => p.ativo !== false).length
   const novos = orders.filter((o) => o.status === 'recebido').length
   const faturamento = orders
@@ -57,6 +60,16 @@ export default function Dashboard() {
     },
   ].filter((a) => a.n > 0)
 
+  const part = conteudoParticipar(settings)
+  const infos = [
+    { to: '/admin/participar', icon: UserPlus, titulo: 'Participar', texto: `${part.horarios?.length || 0} turma(s) de treino · ${listaFaq(settings).length} pergunta(s) frequente(s)` },
+    { to: '/admin/equipes', icon: Users, titulo: 'Clubes e equipes', texto: `${listarClubes(settings).length} clube(s) · escudo, ficha, história e títulos` },
+    { to: '/admin/eventos', icon: Trophy, titulo: 'Competições e eventos', texto: `${listaEventos(settings).length} evento(s) com foto e história` },
+    { to: '/admin/calendario', icon: CalendarDays, titulo: 'Calendário', texto: `${(settings?.calendarioEventos ?? calendario.eventos).length} data(s) na agenda` },
+    { to: '/admin/sobre', icon: Info, titulo: 'Quem somos', texto: 'História, missão e lema da APHAM' },
+    { to: '/admin/config', icon: Settings, titulo: 'Contatos', texto: 'Endereço, e-mail, telefone e WhatsApp (em Configurações)' },
+  ]
+
   return (
     <div>
       <PageTitle title="Painel" subtitle="Visão geral do site e da loja">
@@ -71,6 +84,25 @@ export default function Dashboard() {
           </Link>
         </div>
       </PageTitle>
+
+      {/* Atalhos para as informações da APHAM (o que o admin mais atualiza). */}
+      <Card className="mb-6">
+        <h2 className="font-display text-base font-bold text-navy-900">Informações da APHAM</h2>
+        <p className="mt-0.5 text-sm text-navy-500">Você é quem tem as informações: mantenha o site em dia por aqui.</p>
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {infos.map((x) => (
+            <Link key={x.to} to={x.to} className="group flex items-start gap-3 rounded-xl border border-navy-100 p-3 transition-colors hover:border-cyan-300 hover:bg-cyan-50/50">
+              <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-cyan-100 text-cyan-700">
+                <x.icon className="h-5 w-5" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-bold text-navy-900 group-hover:text-cyan-700">{x.titulo}</span>
+                <span className="block text-xs text-navy-500">{x.texto}</span>
+              </span>
+            </Link>
+          ))}
+        </div>
+      </Card>
 
       <Card className="mb-6">
         <h2 className="flex items-center gap-2 font-display text-base font-bold text-navy-900">
