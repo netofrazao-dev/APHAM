@@ -4,7 +4,8 @@ import { assinaturaSocialPlay } from '../../data/content'
 const TROCA_MS = 4500
 
 // Lado esquerdo do banner da loja: alterna a assinatura da Social Play e a da
-// Cooperativa Social (COOPTE*SE — "Para além do Jogo!"). A da cooperativa é um
+// Cooperativa Social (COOPTE*SE — Cooperativa de Tecnologia Social e
+// Empreendedorismo da APHAM). A da cooperativa é um
 // letreiro em texto; se chegar o arquivo da marca, troque por uma <img>.
 export default function AssinaturasLoja() {
   const [i, setI] = useState(0)
@@ -15,16 +16,17 @@ export default function AssinaturasLoja() {
   const fase = (n) => `absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000 md:items-start ${i === n ? 'opacity-100 scale-100' : 'pointer-events-none opacity-0 scale-95'}`
 
   return (
-    <div className="relative h-48 sm:h-56 lg:h-64" role="img" aria-label="Social Play e Cooperativa Social COOPTE*SE">
+    <div className="relative h-64 sm:h-80 lg:h-96" role="img" aria-label="Social Play e Cooperativa Social COOPTE*SE">
       <div className={fase(0)} aria-hidden={i !== 0}>
-        <img src={assinaturaSocialPlay} alt="" className="h-full max-h-60 w-auto object-contain drop-shadow-[0_8px_24px_rgba(0,0,0,0.5)]" draggable={false} />
+        <img src={assinaturaSocialPlay} alt="" className="h-[84%] w-auto max-w-full object-contain drop-shadow-[0_8px_24px_rgba(0,0,0,0.5)]" draggable={false} />
+        <p className="mt-1 text-lg font-medium text-white/85 sm:text-xl">Para além do Jogo!</p>
       </div>
       <div className={fase(1)} aria-hidden={i !== 1}>
         <span className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-300">Cooperativa Social</span>
         <p className="mt-2 font-display text-5xl font-black leading-none tracking-tight text-white sm:text-6xl lg:text-7xl">
           COOPTE<span className="text-cyan-400">✱</span>SE
         </p>
-        <p className="mt-3 text-lg font-medium text-white/85 sm:text-xl">Para além do Jogo!</p>
+        <p className="mt-3 max-w-md text-base font-medium leading-snug text-white/85 sm:text-lg">Cooperativa de Tecnologia Social e Empreendedorismo da APHAM</p>
       </div>
       <div className="absolute -bottom-4 left-1/2 flex -translate-x-1/2 gap-1.5 md:left-0 md:translate-x-0">
         {[0, 1].map((n) => (
