@@ -470,10 +470,13 @@ export default function Checkout() {
                     </span>
                   </label>
                 )}
-                <label className={`cursor-pointer rounded-xl border px-4 py-3 text-sm font-medium ${form.pagamento === 'pix' ? 'border-cyan-500 bg-cyan-50 text-cyan-700' : 'border-navy-200 text-navy-700'}`}>
-                  <input type="radio" name="pagamento" value="pix" checked={form.pagamento === 'pix'} onChange={onChange} className="sr-only" />
-                  Pix
-                </label>
+                {/* Pix manual (comprovante pelo WhatsApp) só quando o pagamento automático estiver desligado. */}
+                {!comPagamentoOnline && (
+                  <label className={`cursor-pointer rounded-xl border px-4 py-3 text-sm font-medium ${form.pagamento === 'pix' ? 'border-cyan-500 bg-cyan-50 text-cyan-700' : 'border-navy-200 text-navy-700'}`}>
+                    <input type="radio" name="pagamento" value="pix" checked={form.pagamento === 'pix'} onChange={onChange} className="sr-only" />
+                    Pix
+                  </label>
+                )}
               </div>
               {form.pagamento === 'pix' && (
                 <p className="mt-3 text-xs text-navy-500">

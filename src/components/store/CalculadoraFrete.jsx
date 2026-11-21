@@ -7,7 +7,7 @@ import { useFrete, prazoTexto } from '../../store/frete'
 
 // Simulação do frete no carrinho. O CEP é o mesmo da faixa "Enviar para": fica
 // salvo neste aparelho e o endereço já vem preenchido no checkout.
-export default function CalculadoraFrete({ itens }) {
+export default function CalculadoraFrete({ itens, className = 'mt-4 border-t border-navy-100 pt-4', dica = 'Você escolhe o envio no checkout.' }) {
   const { enderecoEntrega, salvarEnderecoEntrega, settings } = useStore()
   const [cep, setCep] = useState(formatarCep(enderecoEntrega?.cep))
   const [buscando, setBuscando] = useState(false)
@@ -32,7 +32,7 @@ export default function CalculadoraFrete({ itens }) {
   }
 
   return (
-    <div className="mt-4 border-t border-navy-100 pt-4">
+    <div className={className}>
       <label htmlFor="cep-frete" className="mb-1.5 flex items-center gap-1.5 text-sm font-semibold text-navy-800">
         <Truck className="h-4 w-4 text-cyan-600" />
         Calcular o frete
@@ -71,7 +71,7 @@ export default function CalculadoraFrete({ itens }) {
               <span className="font-semibold text-navy-900">{formatBRL(o.preco)}</span>
             </li>
           ))}
-          <li className="pt-1 text-xs text-navy-400">Você escolhe o envio no checkout.</li>
+          {dica && <li className="pt-1 text-xs text-navy-400">{dica}</li>}
         </ul>
       ) : salvo ? (
         <p className="mt-2 text-xs text-navy-500">Enviamos para todo o Brasil. O frete é calculado depois da compra, pelo seu CEP.</p>

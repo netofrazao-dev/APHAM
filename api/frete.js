@@ -17,7 +17,9 @@ export default async function handler(req, res) {
   if (cep.length !== 8) return res.status(400).json({ ok: false, erro: 'Informe um CEP com 8 números.' })
   const itensIn = Array.isArray(req.body?.itens) ? req.body.itens.slice(0, 50) : []
   if (!itensIn.length) return res.status(400).json({ ok: false, erro: 'Carrinho vazio.' })
-  if (!freteConfigurado() || !supabaseOk()) return res.status(200).json({ ok: true, automatico: false })
+  // `motivo` explica por que não houve cotação (aparece no teste do painel).
+  if (!freteConfigurado()) return res.status(200).json({ ok: true, automatico: false, motivo: 'MELHOR_ENVIO_TOKEN não está no Vercel (ou falta redeploy).' })
+  if (!supabaseOk()) return res.status(200).json({ ok: true, automatico: false, motivo: 'Supabase do servidor não configurado.' })
 
   try {
     const ids = [...new Set(itensIn.map((i) => String(i?.id ?? '').slice(0, 120)).filter(Boolean))]
@@ -26,7 +28,7 @@ export default async function handler(req, res) {
       sb('settings?select=data&id=eq.1'),
     ])
     const settings = settingsRows?.[0]?.data || {}
-    if (!freteAtivo(settings)) return res.status(200).json({ ok: true, automatico: false })
+    if (!freteAtivo(settings)) return res.status(200).json({ ok: true, automatico: false, motivo: 'Frete automático desligado em Configurações.' })
     const produtos = Object.fromEntries(produtosRows.map((r) => [r.id, { ...r.data, id: r.id }]))
     const itens = itensIn
       .map((i) => ({ produto: produtos[String(i?.id ?? '')], qtd: Math.floor(Number(i?.qtd)) }))
@@ -35,9 +37,11 @@ export default async function handler(req, res) {
     if (!itens.length) return res.status(400).json({ ok: false, erro: 'Nenhum produto disponível no carrinho.' })
 
     const opcoes = await cotarFrete({ cep, itens, settings })
-    return res.status(200).json({ ok: true, automatico: true, opcoes })
+    const motivo = opcoes.length ? undefined : 'O Melhor Envio não devolveu opções para esse CEP e pacote.'
+    return res.status(200).json({ ok: true, automatico: true, opcoes, motivo })
   } catch (e) {
     console.error('frete', e)
-    return res.status(200).json({ ok: true, automatico: false, falhou: true })
+    // Sem o token: só o código/mensagem de erro do Melhor Envio (ex.: 401 Unauthenticated).
+    return res.status(200).json({ ok: true, automatico: false, falhou: true, motivo: String(e.message || e).slice(0, 240) })
   }
 }

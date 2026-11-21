@@ -13,10 +13,10 @@ export async function buscarFrete(cep, cart) {
       body: JSON.stringify({ cep, itens: cart.map(({ id, qtd }) => ({ id, qtd })) }),
     })
     const j = await r.json()
-    if (!r.ok || !j.ok) return { automatico: false, opcoes: [] }
-    return { automatico: Boolean(j.automatico), opcoes: Array.isArray(j.opcoes) ? j.opcoes : [] }
+    if (!r.ok || !j.ok) return { automatico: false, opcoes: [], motivo: j.erro || `Erro ${r.status}` }
+    return { automatico: Boolean(j.automatico), opcoes: Array.isArray(j.opcoes) ? j.opcoes : [], motivo: j.motivo || '' }
   } catch {
-    return { automatico: false, opcoes: [] }
+    return { automatico: false, opcoes: [], motivo: 'Não foi possível falar com o servidor (só funciona no site publicado).' }
   }
 }
 

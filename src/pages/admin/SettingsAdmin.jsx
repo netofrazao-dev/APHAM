@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { Save, Download, Upload, RotateCcw, Check, Database, UploadCloud, Truck } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
 import { formatarCep } from '../../store/entrega'
+import { buscarFrete, prazoTexto } from '../../store/frete'
+import { formatBRL } from '../../store/format'
 import { PageTitle, Card, Field, inputCls, btnPrimary, btnGhost } from './ui'
 
 // Iguais aos de api/_lib/frete.js (o servidor usa estes quando o campo está vazio).
@@ -12,6 +14,44 @@ const MEDIDAS_PACOTE = [
   ['largura', 'Largura (cm)', '1'],
   ['comprimento', 'Comprimento (cm)', '1'],
 ]
+
+// Cota um CEP com o primeiro produto da loja e mostra o resultado ou o motivo da falha.
+function TesteFrete() {
+  const { produtosVitrine } = useStore()
+  const [cep, setCep] = useState('66015-250')
+  const [res, setRes] = useState(null)
+  const [testando, setTestando] = useState(false)
+  const produto = produtosVitrine?.[0]
+  const testar = async () => {
+    if (!produto) return setRes({ opcoes: [], motivo: 'Cadastre um produto para testar.' })
+    setTestando(true)
+    setRes(await buscarFrete(cep, [{ id: produto.id, qtd: 1 }]))
+    setTestando(false)
+  }
+  return (
+    <div className="mt-4 rounded-xl border border-navy-100 bg-paper p-3">
+      <p className="mb-2 text-sm font-semibold text-navy-800">Testar o frete{produto ? ` (1× ${produto.nome})` : ''}</p>
+      <div className="flex gap-2">
+        <input inputMode="numeric" value={cep} onChange={(e) => setCep(formatarCep(e.target.value))} className={`${inputCls} max-w-[10rem]`} aria-label="CEP para testar" />
+        <button type="button" onClick={testar} disabled={testando} className={btnGhost}>
+          {testando ? 'Testando…' : 'Testar'}
+        </button>
+      </div>
+      {res &&
+        (res.opcoes.length ? (
+          <ul className="mt-2 space-y-1 text-sm text-navy-700">
+            {res.opcoes.map((o) => (
+              <li key={o.id}>
+                ✓ {o.nome}: <strong>{formatBRL(o.preco)}</strong> {o.prazo ? `(${prazoTexto(o.prazo)})` : ''}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-2 text-sm font-medium text-amber-700">Sem cotação: {res.motivo || 'motivo desconhecido.'}</p>
+        ))}
+    </div>
+  )
+}
 
 // Diz se o token do Melhor Envio está na Vercel (o token em si nunca vem ao navegador).
 function StatusMelhorEnvio() {
@@ -171,6 +211,7 @@ export default function SettingsAdmin() {
             etiqueta no Melhor Envio e posta nos Correios.
           </p>
           <StatusMelhorEnvio />
+          <TesteFrete />
           <label className="mt-4 flex items-center gap-2 text-sm font-medium text-navy-800">
             <input type="checkbox" checked={form.freteAutomatico !== false} onChange={(e) => set('freteAutomatico', e.target.checked)} className="h-4 w-4 rounded border-navy-300 text-cyan-500" />
             Calcular o frete automaticamente

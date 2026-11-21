@@ -6,6 +6,7 @@ import { useToast } from '../components/Toast'
 import { formatBRL } from '../store/format'
 import { precoVitrine, precoCheioVitrine, itemCarrinho, urlLoja, chaveVariacao, tipoExtra } from '../store/lojas'
 import ZoomTela from '../components/store/ZoomTela'
+import CalculadoraFrete from '../components/store/CalculadoraFrete'
 import { ehBreves } from '../store/entrega'
 import StoreHeader from '../components/store/StoreHeader'
 import StoreFooter from '../components/store/StoreFooter'
@@ -304,14 +305,23 @@ export default function Product() {
                     <span>Pronta entrega: retirada ou entrega em <strong>Breves (PA)</strong>.</span>
                   ) : (
                     <span>
-                      Enviar para <strong>{destino.cidade}/{destino.uf}</strong>: o frete é calculado depois da compra.
+                      Enviar para <strong>{destino.cidade}/{destino.uf}</strong>. Veja o frete abaixo.
                     </span>
                   )
                 ) : (
                   'Pronta entrega: retirada ou entrega em Breves (PA), ou envio para todo o Brasil.'
                 )}
               </li>
-              <li className="flex items-start gap-2.5">
+              {!semEstoque && (
+                <li>
+                  <CalculadoraFrete
+                    itens={[{ id: produto.id, qtd }]}
+                    className="border-t border-navy-100 pt-3"
+                    dica={qtd > 1 ? `Frete para ${qtd} unidades. Você escolhe o envio no checkout.` : 'Você escolhe o envio no checkout.'}
+                  />
+                </li>
+              )}
+              <li className="flex items-start gap-2.5 border-t border-navy-100 pt-3">
                 <RotateCcw className="mt-0.5 h-4 w-4 shrink-0 text-cyan-600" />
                 <span>
                   Troca ou desistência em até 7 dias após receber.{' '}
