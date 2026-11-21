@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom'
 import { Search, SlidersHorizontal, ShoppingBag, Store as StoreIcon, ArrowUpRight, BadgeCheck, Truck } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
 import { precoVitrine, urlLoja } from '../store/lojas'
-import { lojaConceito, assinaturaSocialPlay, site } from '../data/content'
+import { lojaConceito, assinaturaSocialPlay, carrosselLoja, site } from '../data/content'
 import StoreHeader from '../components/store/StoreHeader'
 import StoreFooter from '../components/store/StoreFooter'
 import ProductCard from '../components/store/ProductCard'
 import CarrosselSocialPlay from '../components/store/CarrosselSocialPlay'
+import AssinaturasLoja from '../components/store/AssinaturasLoja'
 
 function Grupo({ icone: Icone, titulo, texto, produtos }) {
   return (
@@ -107,17 +108,11 @@ export default function Store() {
         {/* Degradê leve só para a leitura do texto à esquerda */}
         <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/70 to-transparent" />
         <div className="container-x section-pad relative grid grid-cols-1 items-center gap-6 py-12 md:grid-cols-2 lg:py-16">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-navy-950/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100">
-              <ShoppingBag className="h-3.5 w-3.5 text-cyan-400" />
-              {lojaConceito.marca}
-            </span>
-            <h1 className="mt-5 max-w-2xl font-akbar text-5xl font-extrabold tracking-tight text-white sm:text-6xl">
-              {lojaConceito.conceito}
-            </h1>
-            <p className="mt-4 max-w-xl text-white/80">{settings.descricao || lojaConceito.descricao}</p>
-          </div>
-          <CarrosselSocialPlay className="h-64 sm:h-72 lg:h-80" />
+          <AssinaturasLoja />
+          <CarrosselSocialPlay
+            className="h-64 sm:h-72 lg:h-80"
+            slides={[{ card: true, frase: lojaConceito.conceito, sub: settings.descricao || lojaConceito.descricao }, ...carrosselLoja]}
+          />
         </div>
       </section>
 

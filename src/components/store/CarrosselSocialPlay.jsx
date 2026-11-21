@@ -49,7 +49,14 @@ export default function CarrosselSocialPlay({ slides = carrosselLoja, className 
               ativo ? 'translate-x-0 opacity-100' : 'pointer-events-none translate-x-6 opacity-0'
             }`}
           >
-            {comFrase && (
+            {/* Slide-card: só texto, num cartão (ex.: "Vestuário Conceito"). */}
+            {s.card && (
+              <div className="mx-auto max-w-md rounded-3xl border border-cyan-400/30 bg-navy-900/70 px-7 py-8 text-center shadow-[0_20px_50px_rgba(0,0,0,0.45)] backdrop-blur-sm">
+                <p className="font-akbar text-4xl leading-tight text-white sm:text-5xl">{s.frase}</p>
+                {s.sub && <p className="mt-3 text-sm leading-relaxed text-white/80 sm:text-base">{s.sub}</p>}
+              </div>
+            )}
+            {comFrase && !s.card && (
               <div>
                 <p className="font-akbar text-3xl leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] sm:text-4xl">{s.frase}</p>
                 {s.sub && <p className="mt-1 text-sm font-medium text-cyan-200">{s.sub}</p>}
@@ -58,7 +65,7 @@ export default function CarrosselSocialPlay({ slides = carrosselLoja, className 
             {/* As fotos dividem a largura (sem quebrar linha) e mantêm o formato:
                 bonés largos, chaveiros compridos etc. */}
             <div className="flex w-full max-w-lg items-end justify-center gap-2 sm:gap-4">
-              {s.imgs.map((src, k) => (
+              {(s.imgs || []).map((src, k) => (
                 <img
                   key={src}
                   src={src}
