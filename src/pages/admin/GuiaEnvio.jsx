@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Copy, Check, ExternalLink, Package, MessageCircle, ChevronDown, CircleCheck, Circle, Loader2, Printer, Wallet, AlertCircle, Sparkles } from 'lucide-react'
+import { Copy, Check, ExternalLink, Package, MessageCircle, ChevronDown, CircleCheck, Circle, Loader2, Printer, Wallet, AlertCircle, Sparkles, FileText } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
 import { formatBRL } from '../../store/format'
 import { formatarCep } from '../../store/entrega'
@@ -7,6 +7,7 @@ import { variacoesTexto } from '../../store/lojas'
 import { PAGAMENTO_ONLINE } from '../../store/constants'
 import { doacao, site } from '../../data/content'
 import { acaoEnvio } from '../../lib/envio'
+import { abrirDeclaracao } from './declaracaoConteudo'
 
 // Guia passo a passo para o dono da APHAM despachar um pedido "Envio pelos
 // Correios". A etiqueta sai pelo próprio painel (api/envio.js → Melhor Envio):
@@ -78,6 +79,16 @@ const Painel = ({ children = 'Abrir o painel do Melhor Envio', href = PAINEL }) 
   </a>
 )
 
+// Abre a Declaração de Conteúdo preenchida (para imprimir e assinar).
+function BotaoDeclaracao({ onClick }) {
+  return (
+    <button type="button" onClick={onClick} className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-300 bg-white px-3 py-2 text-sm font-semibold text-cyan-800 hover:bg-cyan-50">
+      <FileText className="h-4 w-4" />
+      Imprimir declaração de conteúdo
+    </button>
+  )
+}
+
 const MEDIDAS = [
   ['peso', 'Peso (kg)', '0.01'],
   ['altura', 'Altura (cm)', '1'],
@@ -86,7 +97,7 @@ const MEDIDAS = [
 ]
 
 // Passo da etiqueta automática: preparar → pagar com o saldo → imprimir.
-function EtiquetaAuto({ o, volume }) {
+function EtiquetaAuto({ o, volume, onDeclaracao }) {
   const { atualizarPedidoLocal } = useStore()
   const et = o.etiqueta?.status && o.etiqueta.status !== 'cancelada' ? o.etiqueta : null
   const [saldo, setSaldo] = useState(null)
@@ -211,6 +222,7 @@ function EtiquetaAuto({ o, volume }) {
                 Abrir etiqueta para imprimir
               </a>
             ) : null}
+            <BotaoDeclaracao onClick={onDeclaracao} />
             <Botao acao="imprimir" onClick={() => rodar('imprimir')} cor={et.url ? 'bg-navy-500 hover:bg-navy-600' : 'bg-cyan-500 hover:bg-cyan-600'}>
               <Printer className="h-4 w-4" />
               {et.url ? 'Gerar o link de novo' : 'Imprimir etiqueta'}
@@ -257,6 +269,9 @@ export default function GuiaEnvio({ o }) {
   const pagoOnline = o.pagamento === 'online' && o.pagamentoOnline?.status === 'aprovado'
   const conteudo = (o.itens || []).map((i) => `${i.qtd}x ${i.nome}${variacoesTexto(i) ? ` (${variacoesTexto(i, ', ')})` : ''} — ${formatBRL(i.preco * i.qtd)}`).join('\n')
   const etiquetaPronta = o.etiqueta?.status === 'gerada'
+  const imprimirDeclaracao = () => {
+    if (!abrirDeclaracao({ pedido: o, settings, peso: volume.peso })) window.alert('O navegador bloqueou a janela. Permita pop-ups para este site e clique de novo.')
+  }
 
   const salvarRastreio = () => {
     const c = codigo.trim().toUpperCase()
@@ -326,16 +341,19 @@ export default function GuiaEnvio({ o }) {
       id: 'etiqueta',
       titulo: 'Gere a etiqueta (automático)',
       feito: etiquetaPronta,
-      corpo: <EtiquetaAuto o={o} volume={volume} />,
+      corpo: <EtiquetaAuto o={o} volume={volume} onDeclaracao={imprimirDeclaracao} />,
     },
     {
       id: 'imprimir',
-      titulo: 'Imprima e cole a etiqueta',
+      titulo: 'Imprima e cole a etiqueta e a declaração',
       corpo: (
         <>
           <p>
-            Clique em <strong>Abrir etiqueta para imprimir</strong> (passo anterior) e imprima. Junto sai a <strong>declaração de conteúdo</strong>.
+            Clique em <strong>Abrir etiqueta para imprimir</strong> (passo anterior) e imprima. Imprima também a <strong>declaração de conteúdo</strong>: ela já sai preenchida com a APHAM, o cliente, os produtos, os valores e o peso.
           </p>
+          <div className="my-2">
+            <BotaoDeclaracao onClick={imprimirDeclaracao} />
+          </div>
           <p className="mt-1">
             Cole a <strong>etiqueta</strong> bem esticada na maior face do pacote, sem fita por cima do código de barras. Assine a <strong>declaração</strong> e cole junto, num saquinho plástico ou por fora.
           </p>
@@ -483,9 +501,11 @@ export default function GuiaEnvio({ o }) {
                 </div>
                 {!end.cep && o.endereco && <Copiar rotulo="Endereço completo" valor={o.endereco} />}
                 <p>
-                  3. Marque <strong>Declaração de conteúdo</strong> e descreva:
+                  3. Quando pedir <strong>nota fiscal ou declaração de conteúdo</strong>, escolha <strong>Declaração de conteúdo</strong> e descreva os produtos:
                 </p>
                 <Copiar rotulo="Conteúdo do pacote" valor={conteudo} />
+                <p>Depois imprima a declaração preenchida para assinar e colar no pacote:</p>
+                <BotaoDeclaracao onClick={imprimirDeclaracao} />
                 <p>
                   4. Remetente (se pedir): <span className="text-navy-500">{doacao.titular} · CNPJ {doacao.cnpj} · {settings.endereco || site.endereco}</span>
                 </p>
