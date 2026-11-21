@@ -5,16 +5,16 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 // sem atendimento, Melhor Envio fora do ar ou no `npm run dev` (que não roda as
 // funções da Vercel) — vem automatico=false e a loja segue como antes: a APHAM
 // calcula o frete depois da compra.
-export async function buscarFrete(cep, cart) {
+export async function buscarFrete(cep, cart, { diagnostico = false } = {}) {
   try {
     const r = await fetch('/api/frete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cep, itens: cart.map(({ id, qtd }) => ({ id, qtd })) }),
+      body: JSON.stringify({ cep, itens: cart.map(({ id, qtd }) => ({ id, qtd })), ...(diagnostico ? { diagnostico: true } : {}) }),
     })
     const j = await r.json()
     if (!r.ok || !j.ok) return { automatico: false, opcoes: [], motivo: j.erro || `Erro ${r.status}` }
-    return { automatico: Boolean(j.automatico), opcoes: Array.isArray(j.opcoes) ? j.opcoes : [], motivo: j.motivo || '' }
+    return { automatico: Boolean(j.automatico), opcoes: Array.isArray(j.opcoes) ? j.opcoes : [], motivo: j.motivo || '', ...(j.detalhe ? { detalhe: j.detalhe } : {}) }
   } catch {
     return { automatico: false, opcoes: [], motivo: 'Não foi possível falar com o servidor (só funciona no site publicado).' }
   }

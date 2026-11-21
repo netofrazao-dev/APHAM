@@ -31,3 +31,23 @@ export async function lerPedido(id) {
   const [row] = await sb(`pedidos?select=id,numero,status,data&id=eq.${encodeURIComponent(id)}`)
   return row || null
 }
+
+// Confere se quem chamou é admin: o navegador manda o token de login do Supabase
+// (Authorization: Bearer ...); o servidor pergunta ao Supabase de quem é e olha
+// a tabela admins. Devolve o id do usuário ou null.
+export async function usuarioAdmin(req) {
+  const auth = String(req.headers?.authorization || '')
+  const jwt = auth.startsWith('Bearer ') ? auth.slice(7).trim() : ''
+  if (!jwt || !supabaseOk()) return null
+  try {
+    const apikey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || chave()
+    const r = await fetch(`${base()}/auth/v1/user`, { headers: { apikey, Authorization: `Bearer ${jwt}` } })
+    if (!r.ok) return null
+    const u = await r.json()
+    if (!u?.id) return null
+    const rows = await sb(`admins?select=user_id&user_id=eq.${encodeURIComponent(u.id)}`)
+    return rows?.length ? u.id : null
+  } catch {
+    return null
+  }
+}

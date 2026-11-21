@@ -15,6 +15,32 @@ const MEDIDAS_PACOTE = [
   ['comprimento', 'Comprimento (cm)', '1'],
 ]
 
+// Explica o preço: o pacote enviado ao Melhor Envio e o que ele devolveu.
+function DetalheFrete({ d }) {
+  const p = d.enviado?.[0]
+  return (
+    <details className="mt-3 text-xs text-navy-600">
+      <summary className="cursor-pointer font-semibold text-navy-700">Por que esse preço? (detalhes)</summary>
+      <div className="mt-2 space-y-1">
+        <p>
+          De {formatarCep(d.origem)} para {formatarCep(d.destino)}.
+          {p && ` Pacote do produto: ${p.weight} kg · ${p.height} × ${p.width} × ${p.length} cm.`}
+          {' '}Seguro: {d.seguro ? 'ligado' : 'desligado'}. Taxa de embalagem: {formatBRL(d.adicional || 0)}.
+        </p>
+        {(d.melhorEnvio || []).map((s) => (
+          <p key={s.nome}>
+            {s.nome}: {s.erro ? `não atende (${s.erro})` : `Melhor Envio cobra ${formatBRL(Number(s.custom_price ?? s.price))}`}
+            {s.pacotes?.[0] && ` · calculado como ${s.pacotes[0].peso} kg, ${s.pacotes[0].height} × ${s.pacotes[0].width} × ${s.pacotes[0].length} cm`}
+          </p>
+        ))}
+        <p className="text-navy-400">
+          O preço dos Correios sobe com o peso e com o tamanho da caixa (peso cúbico: altura × largura × comprimento ÷ 6000). Confira o peso e as medidas no cadastro do produto e a embalagem padrão acima.
+        </p>
+      </div>
+    </details>
+  )
+}
+
 // Cota um CEP com o primeiro produto da loja e mostra o resultado ou o motivo da falha.
 function TesteFrete() {
   const { produtosVitrine } = useStore()
@@ -25,7 +51,7 @@ function TesteFrete() {
   const testar = async () => {
     if (!produto) return setRes({ opcoes: [], motivo: 'Cadastre um produto para testar.' })
     setTestando(true)
-    setRes(await buscarFrete(cep, [{ id: produto.id, qtd: 1 }]))
+    setRes(await buscarFrete(cep, [{ id: produto.id, qtd: 1 }], { diagnostico: true }))
     setTestando(false)
   }
   return (
@@ -49,9 +75,25 @@ function TesteFrete() {
         ) : (
           <p className="mt-2 text-sm font-medium text-amber-700">Sem cotação: {res.motivo || 'motivo desconhecido.'}</p>
         ))}
+      {res?.detalhe && <DetalheFrete d={res.detalhe} />}
     </div>
   )
 }
+
+// Dados de quem envia (vão na etiqueta). [campo, rótulo, exemplo, colunas]
+const CAMPOS_REMETENTE = [
+  ['nome', 'Nome', 'Se vazio: APHAM', 'sm:col-span-3'],
+  ['documento', 'CNPJ', 'Se vazio: 11.089.865/0001-92', 'sm:col-span-3'],
+  ['telefone', 'Telefone *', 'Se vazio: o telefone do site', 'sm:col-span-3'],
+  ['email', 'E-mail', 'Se vazio: o e-mail do site', 'sm:col-span-3'],
+  ['cep', 'CEP', 'Se vazio: 68800-000', 'sm:col-span-2'],
+  ['rua', 'Rua *', 'Ex.: Rua Presidente Vargas', 'sm:col-span-4'],
+  ['numero', 'Número *', 'Ex.: 123 ou s/n', 'sm:col-span-2'],
+  ['complemento', 'Complemento', 'Opcional', 'sm:col-span-4'],
+  ['bairro', 'Bairro *', 'Ex.: Centro', 'sm:col-span-3'],
+  ['cidade', 'Cidade', 'Se vazio: Breves', 'sm:col-span-2'],
+  ['uf', 'UF', 'PA', 'sm:col-span-1'],
+]
 
 // Diz se o token do Melhor Envio está na Vercel (o token em si nunca vem ao navegador).
 function StatusMelhorEnvio() {
@@ -247,6 +289,32 @@ export default function SettingsAdmin() {
             <input type="checkbox" checked={form.freteSoCorreios !== false} onChange={(e) => set('freteSoCorreios', e.target.checked)} className="h-4 w-4 rounded border-navy-300 text-cyan-500" />
             Mostrar só os Correios (outras transportadoras quase não atendem o Marajó)
           </label>
+          <label className="mt-3 flex items-start gap-2 text-sm font-medium text-navy-800">
+            <input type="checkbox" checked={form.freteSeguro === true} onChange={(e) => set('freteSeguro', e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-navy-300 text-cyan-500" />
+            <span>
+              Declarar o valor dos produtos (seguro)
+              <span className="block text-xs font-normal text-navy-400">
+                Desmarcado, o frete fica mais barato, igual à cotação padrão do Melhor Envio. Marcado, os Correios cobram um adicional e indenizam o valor declarado em caso de extravio.
+              </span>
+            </span>
+          </label>
+
+          <p className="mb-1 mt-6 text-sm font-semibold text-navy-800">Remetente das etiquetas</p>
+          <p className="mb-3 text-xs text-navy-400">Vai impresso em todas as etiquetas geradas pelo painel (Pedidos → Como enviar). Preencha uma vez: os campos com * são obrigatórios.</p>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-6">
+            {CAMPOS_REMETENTE.map(([k, rotulo, ph, col]) => (
+              <div key={k} className={col}>
+                <Field label={rotulo}>
+                  <input
+                    value={form.remetente?.[k] ?? ''}
+                    onChange={(e) => set('remetente', { ...(form.remetente || {}), [k]: k === 'cep' ? formatarCep(e.target.value) : k === 'uf' ? e.target.value.toUpperCase().slice(0, 2) : e.target.value })}
+                    placeholder={ph}
+                    className={inputCls}
+                  />
+                </Field>
+              </div>
+            ))}
+          </div>
         </Card>
 
         <Card>

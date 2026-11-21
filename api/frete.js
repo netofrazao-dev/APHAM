@@ -36,9 +36,11 @@ export default async function handler(req, res) {
       .map((i) => ({ ...i, preco: precoDeVenda(i.produto, settings) }))
     if (!itens.length) return res.status(400).json({ ok: false, erro: 'Nenhum produto disponível no carrinho.' })
 
-    const opcoes = await cotarFrete({ cep, itens, settings })
+    // diagnostico: o teste do painel mostra o pacote enviado e os preços crus.
+    const detalhe = req.body?.diagnostico === true ? {} : undefined
+    const opcoes = await cotarFrete({ cep, itens, settings, detalhe })
     const motivo = opcoes.length ? undefined : 'O Melhor Envio não devolveu opções para esse CEP e pacote.'
-    return res.status(200).json({ ok: true, automatico: true, opcoes, motivo })
+    return res.status(200).json({ ok: true, automatico: true, opcoes, motivo, ...(detalhe ? { detalhe } : {}) })
   } catch (e) {
     console.error('frete', e)
     // Sem o token: só o código/mensagem de erro do Melhor Envio (ex.: 401 Unauthenticated).
