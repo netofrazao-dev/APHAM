@@ -24,7 +24,7 @@ export default function OrderTracking() {
   useEffect(() => {
     if (!orderId) return
     statusPedido(orderId, orderNumero)
-      .then((r) => atualizarPedidoLocal(orderId, { status: r.status, ...(r.pagamento ? { pagamentoOnline: { status: r.pagamento } } : {}) }))
+      .then((r) => atualizarPedidoLocal(orderId, { status: r.status, ...(r.pagamento ? { pagamentoOnline: { status: r.pagamento } } : {}), ...(r.rastreio ? { rastreio: r.rastreio } : {}) }))
       .catch(() => {})
   }, [orderId, orderNumero, atualizarPedidoLocal])
 
@@ -87,6 +87,17 @@ export default function OrderTracking() {
                 <div className="mt-6">
                   <OrderTimeline status={order.status} />
                 </div>
+                {order.rastreio && (
+                  <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-cyan-50 p-4">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-cyan-700">Postado nos Correios · código de rastreio</p>
+                      <p className="font-mono text-lg font-bold text-navy-900">{order.rastreio}</p>
+                    </div>
+                    <a href={`https://melhorrastreio.com.br/rastreio/${encodeURIComponent(order.rastreio)}`} target="_blank" rel="noopener noreferrer" className="btn-accent">
+                      Rastrear entrega
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
 

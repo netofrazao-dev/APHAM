@@ -132,6 +132,12 @@ export async function montarPedido(entrada) {
   }
   if (entrega !== 'retirada' && (!end.rua || !end.numero || !end.bairro || !end.cidade || !end.uf)) return { erro: 'Preencha o endereço de entrega.' }
   if (entrega === 'envio' && end.cep.length !== 8) return { erro: 'Informe um CEP válido.' }
+  // Os Correios (Melhor Envio) pedem o CPF de quem recebe para gerar a etiqueta.
+  if (entrega === 'envio') {
+    const cpf = texto(entrada.cliente?.cpf, 20).replace(/\D/g, '')
+    if (cpf.length !== 11) return { erro: 'Informe o CPF de quem vai receber (os Correios pedem).' }
+    cliente.cpf = cpf
+  }
   let frete = 0
   let envio = null // { freteServico, freteServicoId, fretePrazo }
   if (entrega === 'entrega') {
@@ -297,4 +303,5 @@ export const resumoPublico = (row) => ({
   numero: row.numero,
   status: row.status,
   pagamento: row.data.pagamentoOnline?.status || null,
+  rastreio: row.data.rastreio || null,
 })

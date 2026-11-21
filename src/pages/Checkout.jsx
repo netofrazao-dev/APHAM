@@ -17,6 +17,11 @@ import { variacoesTexto } from '../store/lojas'
 import { ENTREGAS, precisaEndereco, enderecoVazio, enderecoTexto, rotuloEntrega, formatarCep, buscarCep, ehBreves } from '../store/entrega'
 import { useFrete, prazoTexto } from '../store/frete'
 
+const mascaraCpf = (v) => {
+  const d = String(v || '').replace(/\D/g, '').slice(0, 11)
+  return d.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+}
+
 export default function Checkout() {
   const {
     cart,
@@ -37,6 +42,7 @@ export default function Checkout() {
   const [form, setForm] = useState({
     nome: '',
     telefone: '',
+    cpf: '',
     email: '',
     // Com endereço salvo (faixa "Enviar para"), já começa com ele.
     entrega: enderecoEntrega?.cidade ? (ehBreves(enderecoEntrega) ? 'entrega' : 'envio') : 'retirada',
@@ -145,8 +151,8 @@ export default function Checkout() {
     setEnviando(true)
     try {
       const { pedido: p } = await criarPedidoOnline({
-        itens: cart.map(({ id, qtd, tamanho, cor }) => ({ id, qtd, tamanho, cor })),
-        cliente: { nome: form.nome, telefone: form.telefone, email: form.email },
+        itens: cart.map(({ id, qtd, tamanho, cor, modelo, extras }) => ({ id, qtd, tamanho, cor, modelo, extras })),
+        cliente: { nome: form.nome, telefone: form.telefone, email: form.email, ...(envio ? { cpf: form.cpf } : {}) },
         entrega: form.entrega,
         endereco: form.end,
         freteServico: opcaoFrete?.id || '',
@@ -183,7 +189,7 @@ export default function Checkout() {
       id: novoId('order'),
       numero: 'APHAM-' + Date.now().toString().slice(-6),
       data: new Date().toISOString(),
-      cliente: { nome: form.nome, telefone: form.telefone, email: form.email },
+      cliente: { nome: form.nome, telefone: form.telefone, email: form.email, ...(envio ? { cpf: form.cpf } : {}) },
       itens: cart,
       subtotal,
       desconto,
@@ -365,6 +371,24 @@ export default function Checkout() {
                   <input name="email" type="email" required={form.pagamento === 'online'} value={form.email} onChange={onChange} className={inputCls} placeholder="voce@email.com" />
                   {form.pagamento === 'online' && <p className="mt-1 text-xs text-navy-500">Para o comprovante do pagamento.</p>}
                 </div>
+                {envio && (
+                  <div className="sm:col-span-2">
+                    <label htmlFor="cpf" className="mb-1.5 block text-sm font-semibold text-navy-800">CPF de quem vai receber *</label>
+                    <input
+                      id="cpf"
+                      name="cpf"
+                      required
+                      inputMode="numeric"
+                      value={form.cpf}
+                      onChange={(e) => setForm((f) => ({ ...f, cpf: mascaraCpf(e.target.value) }))}
+                      pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
+                      title="Digite os 11 números do CPF"
+                      className={inputCls}
+                      placeholder="000.000.000-00"
+                    />
+                    <p className="mt-1 text-xs text-navy-500">Os Correios pedem o CPF do destinatário para gerar a etiqueta.</p>
+                  </div>
+                )}
               </div>
             </div>
 

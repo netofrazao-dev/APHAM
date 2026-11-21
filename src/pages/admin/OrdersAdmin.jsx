@@ -6,6 +6,7 @@ import { ORDER_STATUSES, statusInfo, statusCor, PAGAMENTO_ONLINE } from '../../s
 import { PageTitle, Card } from './ui'
 import { variacoesTexto } from '../../store/lojas'
 import { rotuloEntrega } from '../../store/entrega'
+import GuiaEnvio from './GuiaEnvio'
 
 const STATUS_IDS = [...ORDER_STATUSES.map((s) => s.id), 'cancelado']
 
@@ -106,13 +107,16 @@ export default function OrdersAdmin() {
                       {o.freteACalcular && <p className="mt-1 text-xs font-semibold text-amber-700">Calcule o frete para o CEP e mande o valor ao cliente pelo WhatsApp.</p>}
                       {o.freteServico && (
                         <p className="mt-1 text-xs font-semibold text-cyan-700">
-                          Frete cobrado no pedido ({formatBRL(o.frete)}{o.fretePrazo ? `, prazo informado: até ${o.fretePrazo} dias úteis` : ''}). Compre a etiqueta {o.freteServico} no Melhor Envio e poste nos Correios.
+                          Frete cobrado no pedido: {o.freteServico} · {formatBRL(o.frete)}{o.fretePrazo ? ` (até ${o.fretePrazo} dias úteis)` : ''}.
                         </p>
                       )}
+                      {o.cliente?.cpf && <p><span className="text-navy-400">CPF:</span> {o.cliente.cpf}</p>}
                       <p><span className="text-navy-400">Pagamento:</span> {o.pagamento === 'online' ? `Mercado Pago — ${PAGAMENTO_ONLINE[o.pagamentoOnline?.status] || 'aguardando'}` : o.pagamento === 'pix' ? 'PIX' : 'A combinar'}</p>
                       {o.obs && <p className="mt-1"><span className="text-navy-400">Obs:</span> {o.obs}</p>}
                     </div>
                   </div>
+
+                  {o.entrega === 'envio' && o.status !== 'cancelado' && <GuiaEnvio o={o} />}
 
                   <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-navy-100 pt-4">
                     <label className="text-sm font-medium text-navy-700">
