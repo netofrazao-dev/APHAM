@@ -16,9 +16,9 @@ export default function AssinaturasLoja() {
   const fase = (n) => `absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000 md:items-start ${i === n ? 'opacity-100 scale-100' : 'pointer-events-none opacity-0 scale-95'}`
 
   return (
-    <div className="relative h-64 sm:h-80 lg:h-96" role="img" aria-label="Social Play e Cooperativa Social COOPTE*SE">
+    <div className="relative h-72 sm:h-96 lg:h-[28rem]" role="img" aria-label="Social Play e Cooperativa Social COOPTE*SE">
       <div className={fase(0)} aria-hidden={i !== 0}>
-        <img src={assinaturaSocialPlay} alt="" className="h-[84%] w-auto max-w-full object-contain drop-shadow-[0_8px_24px_rgba(0,0,0,0.5)]" draggable={false} />
+        <img src={assinaturaSocialPlay} alt="" className="h-[88%] w-auto max-w-full object-contain drop-shadow-[0_8px_24px_rgba(0,0,0,0.5)]" draggable={false} />
         <p className="mt-1 text-lg font-medium text-white/85 sm:text-xl">Para além do Jogo!</p>
       </div>
       <div className={fase(1)} aria-hidden={i !== 1}>
