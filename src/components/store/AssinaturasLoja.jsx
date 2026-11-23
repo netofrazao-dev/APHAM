@@ -29,12 +29,10 @@ export default function AssinaturasLoja() {
             draggable={false}
           />
           <p
-            className="absolute left-[47%] top-[56%] w-[38%] text-center font-semibold leading-tight text-white/90"
-            style={{ fontSize: 'clamp(11px, 5cqw, 26px)' }}
+            className="absolute left-[44%] top-[62%] w-[44%] whitespace-nowrap text-center font-semibold leading-tight text-white/90"
+            style={{ fontSize: 'clamp(10px, 3.9cqw, 22px)' }}
           >
-            Para além
-            <br />
-            do Jogo!
+            Para além do Jogo!
           </p>
         </div>
       </div>

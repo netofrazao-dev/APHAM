@@ -70,7 +70,7 @@ export default {
       animation: {
         'fade-up': 'fade-up 0.7s ease-out both',
         float: 'float 6s ease-in-out infinite',
-        respira: 'respira 3.2s ease-in-out infinite',
+        respira: 'respira 5s ease-in-out infinite',
         kenburns: 'kenburns 12s ease-out both',
       },
     },

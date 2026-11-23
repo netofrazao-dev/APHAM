@@ -1,24 +1,20 @@
+import { useState } from 'react'
 import { Youtube, Radio, PlayCircle } from 'lucide-react'
 import PageShell from '../components/PageShell'
 import LiveGameCard from '../components/LiveGameCard'
 import { livesInfo } from '../data/content'
 import { useStore } from '../store/StoreContext'
 import { youtubeEmbed } from '../lib/youtube'
+import { livesPorCategoria } from '../lib/lives'
 
 export default function LivesPage() {
   const { lives, settings } = useStore()
   const aoVivo = settings?.aoVivoAtivo && settings?.aoVivoUrl
   const embed = aoVivo ? youtubeEmbed(settings.aoVivoUrl) : null
-  // Agrupa os jogos por torneio, preservando a ordem.
-  const torneios = []
-  for (const j of lives) {
-    let g = torneios.find((t) => t.nome === j.torneio)
-    if (!g) {
-      g = { nome: j.torneio, jogos: [] }
-      torneios.push(g)
-    }
-    g.jogos.push(j)
-  }
+  // Jogos por categoria, na ordem definida no painel (Admin → Lives APHAM).
+  const grupos = livesPorCategoria(settings, lives)
+  const [filtro, setFiltro] = useState('')
+  const torneios = filtro ? grupos.filter((g) => g.nome === filtro) : grupos
 
   return (
     <PageShell eyebrow={livesInfo.eyebrow} titulo={livesInfo.titulo} descricao={livesInfo.intro}>
@@ -67,6 +63,26 @@ export default function LivesPage() {
               Ver no YouTube
             </a>
           </div>
+
+          {/* Filtro por categoria */}
+          {grupos.length > 1 && (
+            <div className="mt-8 flex flex-wrap gap-2" role="tablist" aria-label="Categorias das lives">
+              {[{ nome: '', rotulo: 'Todas', n: lives.length }, ...grupos.map((g) => ({ nome: g.nome, rotulo: g.nome, n: g.jogos.length }))].map((c) => (
+                <button
+                  key={c.nome || 'todas'}
+                  type="button"
+                  role="tab"
+                  aria-selected={filtro === c.nome}
+                  onClick={() => setFiltro(c.nome)}
+                  className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+                    filtro === c.nome ? 'bg-cyan-500 text-white' : 'bg-white/10 text-white/80 hover:bg-white/20'
+                  }`}
+                >
+                  {c.rotulo} <span className="opacity-60">· {c.n}</span>
+                </button>
+              ))}
+            </div>
+          )}
 
           {torneios.map((t) => (
             <div key={t.nome} className="mt-12 first:mt-10">
