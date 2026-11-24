@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Plus, Pencil, Trash2, X, Radio, StopCircle, ChevronUp, ChevronDown, FolderPlus, Tag } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
-import { youtubeId } from '../../lib/youtube'
+import { youtubeId, tituloYoutube } from '../../lib/youtube'
 import { categoriasLives, livesPorCategoria } from '../../lib/lives'
 import { PageTitle, Card, Field, inputCls, btnAccent, btnGhost, btnPrimary, btnDanger } from './ui'
 
@@ -225,7 +225,20 @@ export default function LivesAdmin() {
             </div>
             <div className="space-y-4">
               <Field label="Link do vídeo no YouTube *" hint="Cole o link do jogo (ex.: https://www.youtube.com/watch?v=...).">
-                <input required value={jogo.link} onChange={(e) => setJogo((p) => ({ ...p, link: e.target.value }))} className={inputCls} placeholder="https://www.youtube.com/watch?v=..." />
+                <input
+                  required
+                  value={jogo.link}
+                  onChange={(e) => setJogo((p) => ({ ...p, link: e.target.value }))}
+                  onBlur={async () => {
+                    // Título em branco: busca o do vídeo no YouTube.
+                    const id = youtubeId(jogo.link)
+                    if (!id || jogo.titulo) return
+                    const t = await tituloYoutube(id)
+                    if (t) setJogo((p) => (p && !p.titulo ? { ...p, titulo: t } : p))
+                  }}
+                  className={inputCls}
+                  placeholder="https://www.youtube.com/watch?v=..."
+                />
               </Field>
               <Field label="Categoria" hint="Em qual grupo o jogo aparece no site.">
                 <select value={jogo.torneio} onChange={(e) => setJogo((p) => ({ ...p, torneio: e.target.value }))} className={inputCls}>
@@ -243,8 +256,8 @@ export default function LivesAdmin() {
                   <input autoFocus value={jogo.novaCategoria || ''} onChange={(e) => setJogo((p) => ({ ...p, novaCategoria: e.target.value }))} className={inputCls} placeholder="Ex.: Jogos Escolares 2026" />
                 </Field>
               )}
-              <Field label="Título / jogo *">
-                <input required value={jogo.titulo} onChange={(e) => setJogo((p) => ({ ...p, titulo: e.target.value }))} className={inputCls} placeholder="Final — Bulls x Canibal" />
+              <Field label="Título / jogo" hint="Se deixar em branco, o site usa o título do vídeo no YouTube.">
+                <input value={jogo.titulo} onChange={(e) => setJogo((p) => ({ ...p, titulo: e.target.value }))} className={inputCls} placeholder="Final — Bulls x Canibal" />
               </Field>
             </div>
             <div className="mt-6 flex justify-end gap-3">

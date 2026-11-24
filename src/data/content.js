@@ -409,6 +409,14 @@ export const livesInfo = {
   canal: 'https://www.youtube.com/@handebolmarajo/streams',
 }
 
+// Jogos novos adicionados pelo código: entram no site mesmo com as lives já no
+// banco (sem apagar nada). Sem título: o site busca o título no YouTube. Se o
+// admin remover um deles, ele não volta (settings.livesRemovidas).
+export const livesNovas = [
+  { id: 'EOBpM_RuJpE', torneio: '', titulo: '' },
+  { id: 'PGzea5imB98', torneio: '', titulo: '' },
+]
+
 export const lives = [
   { id: 'U_IiwoyRwNI', torneio: 'TFA', titulo: 'Final — Bulls x Canibal' },
   { id: 'oymU5yU2yiw', torneio: 'TFA', titulo: 'Final Juvenil — Acha x Santos (premiação)' },

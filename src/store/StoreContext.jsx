@@ -8,8 +8,10 @@ import {
   livesSeed,
   cuponsSeed,
 } from './seed'
+import { livesNovas } from '../data/content'
 import { isSupabaseEnabled, supabase } from '../lib/supabaseClient'
 import * as sb from './sync'
+import { tituloYoutube } from '../lib/youtube'
 import { limparNovidade, limparSettings } from './limpeza'
 import { comissaoPct, slugLoja } from './lojas'
 import { resumoPublico, hojeISO } from '../lib/doacoes'
@@ -102,7 +104,7 @@ export function StoreProvider({ children }) {
   const [settings, setSettings] = usePersistent('settings', settingsSeed)
   const [novidades, setNovidades] = usePersistent('novidades', novidadesSeed)
   const [stories, setStories] = usePersistent('stories', storiesSeed)
-  const [lives, setLives] = usePersistent('lives', livesSeed)
+  const [lives, setLives] = usePersistent('lives', [...livesNovas, ...livesSeed])
   const [orders, setOrders] = usePersistent('orders', [])
   const [cart, setCart] = usePersistent('cart', [])
   const [cupons, setCupons] = usePersistent('cupons', cuponsSeed)
@@ -169,7 +171,12 @@ export function StoreProvider({ children }) {
       // Só troca pelo banco se houver conteúdo lá (senão mantém o seed do site).
       if (nov && nov.length) setNovidades(nov.map(limparNovidade))
       if (sto && sto.length) setStories(sto)
-      if (liv && liv.length) setLives(liv)
+      if (liv && liv.length) {
+        // Junta os jogos novos do código que ainda não estão no banco.
+        const removidas = setg?.livesRemovidas || []
+        const extras = livesNovas.filter((n) => !liv.some((l) => l.id === n.id) && !removidas.includes(n.id))
+        setLives([...extras, ...liv])
+      }
       if (setg) setSettings((s) => limparSettings({ ...s, ...setg }))
     })()
     return () => {
@@ -431,9 +438,33 @@ export function StoreProvider({ children }) {
     (id) => {
       setLives((l) => l.filter((x) => x.id !== id))
       sb.sbDelete('lives', id)
+      // Jogo novo do código: lembra que foi removido para não voltar.
+      if (livesNovas.some((n) => n.id === id))
+        setSettings((s) => {
+          const n = { ...s, livesRemovidas: [...new Set([...(s.livesRemovidas || []), id])] }
+          sb.sbUpsertSettings(n)
+          return n
+        })
     },
-    [setLives]
+    [setLives, setSettings]
   )
+
+  // Jogos sem título (cadastrados só com o link): busca o título no YouTube.
+  // Com o admin logado, já salva no banco.
+  useEffect(() => {
+    const sem = lives.filter((j) => j.id && !String(j.titulo || '').trim())
+    if (!sem.length) return
+    let vivo = true
+    sem.forEach(async (j) => {
+      const titulo = await tituloYoutube(j.id)
+      if (!vivo || !titulo) return
+      setLives((l) => l.map((x) => (x.id === j.id && !x.titulo ? { ...x, titulo } : x)))
+      if (isAdmin) sb.sbUpsert('lives', { ...j, titulo })
+    })
+    return () => {
+      vivo = false
+    }
+  }, [lives, isAdmin, setLives])
 
   // ----- Doações (Lei de Incentivo) -----
   useEffect(() => {

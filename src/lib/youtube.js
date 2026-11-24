@@ -27,3 +27,35 @@ export function youtubeEmbed(url, { autoplay = false } = {}) {
   if (autoplay) params.set('autoplay', '1')
   return `https://www.youtube.com/embed/${id}?${params.toString()}`
 }
+
+// Título de um vídeo do YouTube (para jogos cadastrados só com o link). Tenta o
+// oEmbed do YouTube e, se o navegador bloquear, o noembed.com. Guarda no
+// aparelho para não buscar de novo.
+export async function tituloYoutube(id) {
+  const chave = `apham:ytTitulo:${id}`
+  try {
+    const salvo = localStorage.getItem(chave)
+    if (salvo) return salvo
+  } catch {
+    /* sem localStorage */
+  }
+  const url = encodeURIComponent(`https://www.youtube.com/watch?v=${id}`)
+  for (const fonte of [`https://www.youtube.com/oembed?format=json&url=${url}`, `https://noembed.com/embed?url=${url}`]) {
+    try {
+      const r = await fetch(fonte)
+      if (!r.ok) continue
+      const j = await r.json()
+      if (j?.title) {
+        try {
+          localStorage.setItem(chave, j.title)
+        } catch {
+          /* ignora */
+        }
+        return j.title
+      }
+    } catch {
+      /* tenta a próxima fonte */
+    }
+  }
+  return ''
+}
