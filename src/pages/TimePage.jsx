@@ -91,12 +91,23 @@ export default function TimePage() {
   const instagram = !ig ? '' : /^https?:\/\//i.test(ig) ? ig : `https://instagram.com/${ig.replace(/^@/, '').replace(/^instagram\.com\//i, '')}`
   const outros = clubes.filter((c) => c.slug !== slug)
 
+  // Mesmo layout para todos os times: os quatro números aparecem sempre (com
+  // "—" enquanto não houver dado) e cada seção mostra um aviso amigável até o
+  // admin preencher (Admin → Clubes e equipes).
   const numeros = [
-    titulos.length > 0 && { valor: titulos.length, label: titulos.length === 1 ? 'título' : 'títulos', Icone: Trophy },
-    jogos.length > 0 && { valor: jogos.length, label: jogos.length === 1 ? 'jogo transmitido' : 'jogos transmitidos', Icone: Tv },
-    adversarios.length > 0 && { valor: adversarios.length, label: 'adversários enfrentados', Icone: Swords },
-    torneios.length > 0 && { valor: torneios.join(' · '), label: torneios.length === 1 ? 'competição' : 'competições', Icone: Shield },
-  ].filter(Boolean)
+    { valor: titulos.length || '—', label: titulos.length === 1 ? 'título' : 'títulos', Icone: Trophy },
+    { valor: jogos.length || '—', label: jogos.length === 1 ? 'jogo transmitido' : 'jogos transmitidos', Icone: Tv },
+    { valor: adversarios.length || '—', label: 'adversários enfrentados', Icone: Swords },
+    { valor: torneios.length ? torneios.join(' · ') : '—', label: torneios.length === 1 ? 'competição' : 'competições', Icone: Shield },
+  ]
+  const ficha = [
+    ['Nome completo', time.nomeCompleto || time.nome],
+    ['Fundado em', time.fundacao],
+    ['Cidade', time.cidade],
+    ['Técnico', time.tecnico],
+    ['Categorias', time.categorias],
+  ]
+  const corIcone = primaria === '#141414' || primaria === '#101010' ? '#0b2a52' : primaria
 
   return (
     <div className="min-h-screen bg-paper">
@@ -182,79 +193,92 @@ export default function TimePage() {
       </header>
 
       <main>
-        {/* Números (sobrepostos ao hero) */}
-        {numeros.length > 0 && (
-          <section className="section-pad relative -mt-14">
-            <div className={`container-x grid grid-cols-2 gap-4 ${numeros.length >= 4 ? 'lg:grid-cols-4' : numeros.length === 3 ? 'lg:grid-cols-3' : ''}`}>
-              {numeros.map((n, i) => (
-                <Reveal key={n.label} delay={0.05 * i} className={numeros.length % 2 && i === numeros.length - 1 ? 'col-span-2 lg:col-span-1' : ''}>
-                  <div className="h-full rounded-2xl bg-white p-5 text-center shadow-lift ring-1 ring-navy-100">
-                    <n.Icone className="mx-auto h-6 w-6" style={{ color: primaria === '#141414' || primaria === '#101010' ? '#0b2a52' : primaria }} />
-                    <p className="mt-2 font-display text-2xl font-extrabold text-navy-900 sm:text-3xl">{n.valor}</p>
-                    <p className="mt-1 text-sm text-ink/60">{n.label}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Lema + história */}
-        {(time.lema || time.historia) && (
-          <section className="section-pad py-16 lg:py-20">
-            <div className="container-x max-w-3xl text-center">
-              {time.lema && (
-                <Reveal>
-                  <Quote className="mx-auto h-8 w-8" style={{ color: destaque }} />
-                  <p className="mt-4 font-display text-xl font-bold leading-relaxed text-navy-900 sm:text-2xl">“{time.lema}”</p>
-                  <p className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-navy-400">Lema do escudo</p>
-                </Reveal>
-              )}
-              {time.historia && (
-                <Reveal delay={0.05}>
-                  <span className="eyebrow mt-12 flex justify-center">
-                    <span className="h-px w-6 bg-cyan-400" />
-                    História
-                    <span className="h-px w-6 bg-cyan-400" />
-                  </span>
-                  <p className="mt-5 whitespace-pre-line text-left text-base leading-relaxed text-ink/80 sm:text-lg">{time.historia}</p>
-                </Reveal>
-              )}
-            </div>
-          </section>
-        )}
-
-        {/* Sem lema nem história ainda: apresenta o time com o que se sabe */}
-        {!time.lema && !time.historia && (
-          <section className="section-pad py-16 lg:py-20">
-            <Reveal className="container-x max-w-4xl">
-              <div className="grid grid-cols-1 items-center gap-8 rounded-3xl bg-white p-6 shadow-lift ring-1 ring-navy-100 sm:p-10 md:grid-cols-[200px_1fr]">
-                <Escudo src={time.escudo} fundo={time.fundoEscudo} className="mx-auto aspect-square w-40 rounded-2xl md:w-full" />
-                <div className="text-center md:text-left">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">Sobre o time</p>
-                  <h2 className="mt-2 font-display text-2xl font-extrabold text-navy-900 sm:text-3xl">{time.nomeCompleto || time.nome}</h2>
-                  <p className="mt-3 leading-relaxed text-ink/75">
-                    O {time.nome} é uma das equipes que disputam os campeonatos de handebol organizados pela APHAM no Marajó.
-                    {jogos.length === 0 && ' Acompanhe as próximas partidas pelas lives da associação.'}
-                  </p>
+        {/* Números (sobrepostos ao hero) — sempre os quatro */}
+        <section className="section-pad relative -mt-14">
+          <div className="container-x grid grid-cols-2 gap-4 lg:grid-cols-4">
+            {numeros.map((n, i) => (
+              <Reveal key={n.label} delay={0.05 * i}>
+                <div className="h-full rounded-2xl bg-white p-5 text-center shadow-lift ring-1 ring-navy-100">
+                  <n.Icone className="mx-auto h-6 w-6" style={{ color: corIcone }} />
+                  <p className={`mt-2 font-display font-extrabold ${n.valor === '—' ? 'text-navy-300' : 'text-navy-900'} ${String(n.valor).length > 8 ? 'text-lg sm:text-xl' : 'text-2xl sm:text-3xl'}`}>{n.valor}</p>
+                  <p className="mt-1 text-sm text-ink/60">{n.label}</p>
                 </div>
-              </div>
-            </Reveal>
-          </section>
-        )}
-
-        {/* Conquistas */}
-        {titulos.length > 0 && (
-          <section className="section-pad border-t border-navy-100 bg-white py-16 lg:py-20">
-            <div className="container-x">
-              <Reveal className="mx-auto max-w-2xl text-center">
-                <span className="eyebrow flex justify-center">
-                  <span className="h-px w-6 bg-cyan-400" />
-                  Conquistas
-                  <span className="h-px w-6 bg-cyan-400" />
-                </span>
-                <h2 className="mt-4 font-display text-3xl font-extrabold text-navy-900">Galeria de títulos</h2>
               </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* Sobre o time: foto do grupo + lema, história e ficha */}
+        <section className="section-pad py-16 lg:py-20">
+          <div className="container-x grid grid-cols-1 items-start gap-10 lg:grid-cols-2 lg:gap-14">
+            <Reveal>
+              {time.foto ? (
+                <figure className="overflow-hidden rounded-3xl shadow-lift">
+                  <img src={time.foto} alt={`Time ${time.nome}`} loading="lazy" className="aspect-[4/3] w-full object-cover" />
+                </figure>
+              ) : (
+                <div className="relative flex aspect-[4/3] flex-col items-center justify-center overflow-hidden rounded-3xl p-8 text-center shadow-lift" style={{ background: `linear-gradient(140deg, ${primaria}, #0a1326)` }}>
+                  <div className="absolute inset-0 dot-grid opacity-15" />
+                  <Escudo src={time.escudo} fundo={time.fundoEscudo} className="relative aspect-square w-32 rounded-2xl ring-4 ring-white/15" />
+                  <p className="relative mt-5 font-display text-lg font-bold text-white">Foto do time em breve</p>
+                  <p className="relative mt-1 text-sm text-white/65">A foto do grupo do {time.nome} vai aparecer aqui.</p>
+                </div>
+              )}
+            </Reveal>
+
+            <Reveal delay={0.05}>
+              <span className="eyebrow flex">
+                <span className="h-px w-6 bg-cyan-400" />
+                Sobre o time
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-extrabold text-navy-900">{time.nomeCompleto || time.nome}</h2>
+              <div className="mt-5 rounded-2xl bg-white p-5 shadow-soft ring-1 ring-navy-100">
+                <Quote className="h-6 w-6" style={{ color: destaque === '#d6d6d6' ? '#06b6d4' : destaque }} />
+                <p className={`mt-2 font-display text-lg font-bold leading-relaxed ${time.lema ? 'text-navy-900' : 'text-navy-300'}`}>
+                  {time.lema ? `“${time.lema}”` : 'Lema do time em breve.'}
+                </p>
+              </div>
+              <h3 className="mt-7 text-xs font-semibold uppercase tracking-[0.2em] text-navy-400">História</h3>
+              <p className={`mt-2 whitespace-pre-line leading-relaxed ${time.historia ? 'text-ink/80' : 'text-ink/50'}`}>
+                {time.historia ||
+                  `O ${time.nome} é uma das equipes que disputam os campeonatos de handebol organizados pela APHAM no Marajó. A história completa do time será publicada em breve.`}
+              </p>
+              <dl className="mt-7 grid grid-cols-1 gap-x-6 gap-y-3 rounded-2xl bg-navy-50/70 p-5 sm:grid-cols-2">
+                {ficha.map(([rotulo, valor]) => (
+                  <div key={rotulo}>
+                    <dt className="text-[11px] font-semibold uppercase tracking-wider text-navy-400">{rotulo}</dt>
+                    <dd className={`mt-0.5 text-sm font-semibold ${valor ? 'text-navy-900' : 'text-navy-300'}`}>{valor || 'Em breve'}</dd>
+                  </div>
+                ))}
+                <div>
+                  <dt className="text-[11px] font-semibold uppercase tracking-wider text-navy-400">Instagram</dt>
+                  <dd className="mt-0.5 text-sm font-semibold">
+                    {instagram ? (
+                      <a href={instagram} target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">
+                        {ig.startsWith('@') ? ig : `@${instagram.replace(/\/+$/, '').split('/').pop()}`}
+                      </a>
+                    ) : (
+                      <span className="text-navy-300">Em breve</span>
+                    )}
+                  </dd>
+                </div>
+              </dl>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* Conquistas — sempre */}
+        <section className="section-pad border-t border-navy-100 bg-white py-16 lg:py-20">
+          <div className="container-x">
+            <Reveal className="mx-auto max-w-2xl text-center">
+              <span className="eyebrow flex justify-center">
+                <span className="h-px w-6 bg-cyan-400" />
+                Conquistas
+                <span className="h-px w-6 bg-cyan-400" />
+              </span>
+              <h2 className="mt-4 font-display text-3xl font-extrabold text-navy-900">Galeria de títulos</h2>
+            </Reveal>
+            {titulos.length > 0 ? (
               <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {titulos.map((t, i) => (
                   <Reveal key={t} delay={0.05 * i}>
@@ -267,53 +291,63 @@ export default function TimePage() {
                   </Reveal>
                 ))}
               </div>
-            </div>
-          </section>
-        )}
-
-        {/* Na quadra: jogos transmitidos */}
-        {jogos.length > 0 && (
-          <section className="section-pad relative overflow-hidden bg-navy-950 py-16 lg:py-20">
-            <div className="absolute inset-0 dot-grid opacity-15" />
-            <div className="container-x relative">
-              <Reveal className="mx-auto max-w-2xl text-center">
-                <span className="eyebrow flex justify-center text-white/80">
-                  <span className="h-px w-6" style={{ backgroundColor: destaque }} />
-                  Na quadra
-                  <span className="h-px w-6" style={{ backgroundColor: destaque }} />
-                </span>
-                <h2 className="mt-4 font-display text-3xl font-extrabold text-white sm:text-4xl">Jogos do {time.nome}</h2>
-                <p className="mt-3 text-white/65">Partidas transmitidas ao vivo pela APHAM — assista aqui mesmo.</p>
+            ) : (
+              <Reveal>
+                <div className="mx-auto mt-10 flex max-w-md items-center gap-4 rounded-2xl border-2 border-dashed border-amber-300 bg-amber-50/60 p-5">
+                  <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
+                    <Trophy className="h-6 w-6" />
+                  </span>
+                  <p className="text-sm text-navy-600">Os títulos do {time.nome} vão aparecer aqui em breve.</p>
+                </div>
               </Reveal>
+            )}
+          </div>
+        </section>
+
+        {/* Na quadra: jogos transmitidos — sempre */}
+        <section className="section-pad relative overflow-hidden bg-navy-950 py-16 lg:py-20">
+          <div className="absolute inset-0 dot-grid opacity-15" />
+          <div className="container-x relative">
+            <Reveal className="mx-auto max-w-2xl text-center">
+              <span className="eyebrow flex justify-center text-white/80">
+                <span className="h-px w-6" style={{ backgroundColor: destaque }} />
+                Na quadra
+                <span className="h-px w-6" style={{ backgroundColor: destaque }} />
+              </span>
+              <h2 className="mt-4 font-display text-3xl font-extrabold text-white sm:text-4xl">Jogos do {time.nome}</h2>
+              <p className="mt-3 text-white/65">Partidas transmitidas ao vivo pela APHAM — assista aqui mesmo.</p>
+            </Reveal>
+            {jogos.length > 0 ? (
               <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {jogos.map((j, i) => (
                   <JogoCard key={j.id} j={j} nome={time.nome} cor={destaque === '#d6d6d6' ? '#06b6d4' : destaque} i={i} />
                 ))}
               </div>
-              {adversarios.length > 0 && (
-                <Reveal>
-                  <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
-                    <span className="mr-1 text-sm font-semibold text-white/60">Adversários:</span>
-                    {adversarios.map((a) => (
-                      <span key={a} className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white ring-1 ring-white/10">{a}</span>
-                    ))}
-                  </div>
-                </Reveal>
-              )}
-            </div>
-          </section>
-        )}
-
-        {/* Foto do time */}
-        {time.foto && (
-          <section className="section-pad py-16 lg:py-20">
-            <Reveal className="container-x max-w-4xl">
-              <figure className="overflow-hidden rounded-3xl shadow-lift">
-                <img src={time.foto} alt={`Time ${time.nome}`} loading="lazy" className="w-full object-cover" />
-              </figure>
-            </Reveal>
-          </section>
-        )}
+            ) : (
+              <Reveal>
+                <div className="mx-auto mt-10 max-w-md rounded-2xl border border-white/15 bg-white/5 p-6 text-center">
+                  <Tv className="mx-auto h-8 w-8 text-white/50" />
+                  <p className="mt-3 font-semibold text-white">Nenhum jogo transmitido ainda</p>
+                  <p className="mt-1 text-sm text-white/60">Quando o {time.nome} jogar numa live da APHAM, o jogo aparece aqui.</p>
+                  <Link to="/lives" className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-300 hover:underline">
+                    <PlayCircle className="h-4 w-4" />
+                    Ver todas as lives
+                  </Link>
+                </div>
+              </Reveal>
+            )}
+            {adversarios.length > 0 && (
+              <Reveal>
+                <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
+                  <span className="mr-1 text-sm font-semibold text-white/60">Adversários:</span>
+                  {adversarios.map((a) => (
+                    <span key={a} className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white ring-1 ring-white/10">{a}</span>
+                  ))}
+                </div>
+              </Reveal>
+            )}
+          </div>
+        </section>
 
         {/* Chamada */}
         <section className="section-pad py-16 lg:py-20">
